@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<assembly manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" xmlns="urn:schemas-microsoft-com:asm.v1">
+	<assemblyIdentity name="python.exe" version="2.0.0.2" type="win32" />
+	<file name="FwKernel.dll" asmv2:size="530944">
+		<typelib tlbid="{f1ef76e0-be04-11d3-8d9a-005004defec4}" version="1.0" helpdir="" resourceid="0" flags="HASDISKIMAGE" />
+		<comClass clsid="{6a46d810-7f14-4151-80f5-0b13ffc1f917}" threadingModel="Apartment" description="SIL Action Handler" tlbid="{f1ef76e0-be04-11d3-8d9a-005004defec4}" progid="SIL.Views.ActionHandler" />
+		<comClass clsid="{f1ef76e9-be04-11d3-8d9a-005004defec4}" threadingModel="Both" description="FieldWorks String Factory" tlbid="{f1ef76e0-be04-11d3-8d9a-005004defec4}" progid="FieldWorks.TsStrFactory" />
+		<comClass clsid="{f1ef76ea-be04-11d3-8d9a-005004defec4}" threadingModel="Both" description="FieldWorks Text Properties Factory" tlbid="{f1ef76e0-be04-11d3-8d9a-005004defec4}" progid="FieldWorks.TsPropsFactory" />
+		<comClass clsid="{f1ef76eb-be04-11d3-8d9a-005004defec4}" threadingModel="Both" description="FieldWorks String Builder" tlbid="{f1ef76e0-be04-11d3-8d9a-005004defec4}" progid="FieldWorks.TsStrBldr" />
+		<comClass clsid="{f1ef76ec-be04-11d3-8d9a-005004defec4}" threadingModel="Both" description="FieldWorks Incremental String Builder" tlbid="{f1ef76e0-be04-11d3-8d9a-005004defec4}" progid="FieldWorks.TsIncStrBldr" />
+		<comClass clsid="{f1ef76ed-be04-11d3-8d9a-005004defec4}" threadingModel="Both" description="FieldWorks Text Properties Builder" tlbid="{f1ef76e0-be04-11d3-8d9a-005004defec4}" progid="FieldWorks.TsPropsBldr" />
+		<comClass clsid="{7a1b89c0-c2d6-11d3-9bb7-00400541f9e9}" threadingModel="Apartment" description="FieldWorks MultiString" tlbid="{f1ef76e0-be04-11d3-8d9a-005004defec4}" progid="FieldWorks.TsMultiString" />
+	</file>
+	<file name="Language.dll" asmv2:size="673280">
+		<comClass clsid="{6eacab83-6bdc-49ca-8f66-8c116d3eebd8}" threadingModel="Apartment" description="SIL Roman renderer" tlbid="{f1ef76e0-be04-11d3-8d9a-005004defec4}" progid="SIL.Language1.RomRenderEngine" />
+		<comClass clsid="{1287735c-3cad-41cd-986c-39d7c0df0314}" threadingModel="Apartment" description="SIL Uniscribe wrapper" tlbid="{f1ef76e0-be04-11d3-8d9a-005004defec4}" progid="SIL.Language1.UniscribeEngine" />
+		<comClass clsid="{659c2c2f-7af6-4f9e-ac6f-7a03c8418fc9}" threadingModel="Apartment" description="SIL Input Method Editor" tlbid="{f1ef76e0-be04-11d3-8d9a-005004defec4}" progid="SIL.Language1.LgInputMethodEditor" />
+		<comClass clsid="{02c3f580-796d-4b5f-be43-166d97319da5}" threadingModel="Apartment" description="SIL Font Manager" tlbid="{f1ef76e0-be04-11d3-8d9a-005004defec4}" progid="SIL.Language1.FontManager" />
+		<comClass clsid="{13d5c6d3-39d9-4bda-a3f8-a5caf6a6940a}" threadingModel="Apartment" description="SIL Regex Matcher Wrapper" tlbid="{f1ef76e0-be04-11d3-8d9a-005004defec4}" progid="SIL.Language1.RegexMatcherWrapper" />
+		<comClass clsid="{e361f805-c902-4306-a5d8-f7802b0e7365}" threadingModel="Apartment" description="SIL OS collater" tlbid="{f1ef76e0-be04-11d3-8d9a-005004defec4}" progid="SIL.Language1.LgSystemCollater" />
+		<comClass clsid="{0d9900d2-1693-481f-aa70-7ea64f264ec4}" threadingModel="Apartment" description="SIL Unicode collater" tlbid="{f1ef76e0-be04-11d3-8d9a-005004defec4}" progid="SIL.Language1.LgUnicodeCollater" />
+		<comClass clsid="{e771361c-ff54-4120-9525-98a0b7a9accf}" threadingModel="Apartment" description="SIL Icu collater" tlbid="{f1ef76e0-be04-11d3-8d9a-005004defec4}" progid="SIL.Language1.LgIcuCollator" />
+		<comClass clsid="{30d75676-a10f-48fe-9627-ebf4061ea49d}" threadingModel="Both" description="SIL char properties" tlbid="{f1ef76e0-be04-11d3-8d9a-005004defec4}" progid="SIL.Language1.LgIcuCharPropEngine" />
+		<comClass clsid="{69aca99c-f852-4c2c-9b5f-ff83238a17a5}" threadingModel="Apartment" description="SIL Keyman Handler" tlbid="{f1ef76e0-be04-11d3-8d9a-005004defec4}" progid="SIL.Language1.LgKeymanHandler" />
+		<comClass clsid="{720485c5-e8d5-4761-92f0-f70d2b3cf980}" threadingModel="Apartment" description="SIL Text Services" tlbid="{f1ef76e0-be04-11d3-8d9a-005004defec4}" progid="SIL.Language1.TextServices" />
+		<comClass clsid="{9045f113-8626-41c0-a61e-a73fbe5920d1}" threadingModel="Apartment" description="SIL code page enumerator" tlbid="{f1ef76e0-be04-11d3-8d9a-005004defec4}" progid="SIL.Language1.LgCodePageEnumerator" />
+		<comClass clsid="{b887505b-74de-4adc-a1d9-5553428c8d02}" threadingModel="Apartment" description="SIL language enumerator" tlbid="{f1ef76e0-be04-11d3-8d9a-005004defec4}" progid="SIL.Language1.LgLanguageEnumerator" />
+		<comClass clsid="{9e729461-f80d-4796-ba17-086bc61907f1}" threadingModel="Apartment" description="SIL Icu Converter enumerator" tlbid="{f1ef76e0-be04-11d3-8d9a-005004defec4}" progid="SIL.Language1.LgIcuConverterEnumerator" />
+		<comClass clsid="{3f1fd0a4-b2b1-4589-bc82-9cef5ba84f4e}" threadingModel="Apartment" description="SIL Icu Transliterator enumerator" tlbid="{f1ef76e0-be04-11d3-8d9a-005004defec4}" progid="SIL.Language1.LgIcuTransliteratorEnumerator" />
+		<comClass clsid="{0dd7fc1a-ab97-4a39-882c-269760d86619}" threadingModel="Apartment" description="SIL Icu Resource Bundle" tlbid="{f1ef76e0-be04-11d3-8d9a-005004defec4}" progid="SIL.Language1.LgIcuResourceBundle" />
+		<comClass clsid="{e426656c-64f7-480e-92f4-d41a7bffd066}" threadingModel="Apartment" description="SIL Icu Locale Enumerator" tlbid="{f1ef76e0-be04-11d3-8d9a-005004defec4}" progid="SIL.Language1.LgIcuLocaleEnumerator" />
+		<typelib tlbid="{b80ee180-c0f1-11d2-8078-0000c0fb81b5}" version="1.0" helpdir="" resourceid="0" flags="HASDISKIMAGE" />
+		<comClass clsid="{295b2e11-b149-49c5-9be9-9f46185609aa}" threadingModel="Both" description="PSFactoryBuffer" />
+	</file>
+	<comInterfaceExternalProxyStub iid="{08f649d0-d8ab-447b-aab6-21f85cfa743c}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="ILgIcuLocaleEnumerator" numMethods="9" />
+	<comInterfaceExternalProxyStub iid="{09fca8d5-5bf6-4bff-a317-e0126410d79a}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="ILgSearchEngine" numMethods="8" />
+	<comInterfaceExternalProxyStub iid="{0f8ea3be-c982-40f8-b674-25b8482eb222}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="IActionHandler" numMethods="37" />
+	<comInterfaceExternalProxyStub iid="{1141174b-923f-4c43-ba43-8a326b76a3f2}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="IJustifyingRenderer" numMethods="7" />
+	<comInterfaceExternalProxyStub iid="{22376578-bfeb-4c46-8d72-c9154890dd16}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="ILgWritingSystemFactory" numMethods="14" />
+	<comInterfaceExternalProxyStub iid="{22d5e030-5239-4924-bf1b-6b4f2cbbaba5}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="IVwJustifier" numMethods="4" />
+	<comInterfaceExternalProxyStub iid="{295b2e11-b149-49c5-9be9-9f46185609aa}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="ITsString" numMethods="39" />
+	<comInterfaceExternalProxyStub iid="{2cfcf4b7-2ffe-4cf8-91be-fbb57cc7782a}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="ILgCodePageEnumerator" numMethods="5" />
+	<comInterfaceExternalProxyStub iid="{3818e245-6a0b-45a7-a5d6-52694931279e}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="ILgSegment" numMethods="38" />
+	<comInterfaceExternalProxyStub iid="{3f42144b-509f-4def-8dd3-6d8d26677001}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="ILgKeymanHandler" numMethods="10" />
+	<comInterfaceExternalProxyStub iid="{4fa0b99a-5a56-41a4-be8b-b89bc62251a5}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="ITsTextProps" numMethods="15" />
+	<comInterfaceExternalProxyStub iid="{50f2492c-6c46-48ba-8b7f-5f04153ab2cc}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="ILgIcuTransliteratorEnumerator" numMethods="6" />
+	<comInterfaceExternalProxyStub iid="{577c6da1-cfc1-4afb-82b2-af818ec2fe9f}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="ILgTokenizer" numMethods="6" />
+	<comInterfaceExternalProxyStub iid="{5b6303de-e635-4dd7-a7fc-345beef352d8}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="ILgTextServices" numMethods="4" />
+	<comInterfaceExternalProxyStub iid="{6433d19e-2da2-4041-b202-db118ee1694d}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="ISimpleInit" numMethods="5" />
+	<comInterfaceExternalProxyStub iid="{6c0465ac-17c5-4c9c-8af3-62221f2f7707}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="IVwTextSource" numMethods="19" />
+	<comInterfaceExternalProxyStub iid="{6c62ccf0-4ee1-493c-8092-319b6cfbeebc}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="IRegexMatcher" numMethods="9" />
+	<comInterfaceExternalProxyStub iid="{73718689-b701-4241-a408-4c389ecd6664}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="ILgFontManager" numMethods="7" />
+	<comInterfaceExternalProxyStub iid="{746a16e1-0c36-4268-a261-e8012b0d67c5}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="ILgLanguageEnumerator" numMethods="5" />
+	<comInterfaceExternalProxyStub iid="{75afe861-3c17-4f16-851f-a36f5ffabcc6}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="IRenderingFeatures" numMethods="7" />
+	<comInterfaceExternalProxyStub iid="{7f4b8f79-2a40-408c-944b-848b14d65d23}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="IRenderEngine" numMethods="11" />
+	<comInterfaceExternalProxyStub iid="{890c5b18-6e95-438e-8ade-a4ffaddf0684}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="ILgCharacterPropertyEngine" numMethods="55" />
+	<comInterfaceExternalProxyStub iid="{8be2c911-6a81-48b5-a27f-b8ce63983082}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="ILgStringConverter" numMethods="5" />
+	<comInterfaceExternalProxyStub iid="{8dce56a6-cff1-4402-95fe-2b574912b54e}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="ITsPropsFactory" numMethods="9" />
+	<comInterfaceExternalProxyStub iid="{8e6d558e-8755-4ea1-9ff6-039d375312e9}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="ILgIcuConverterEnumerator" numMethods="6" />
+	<comInterfaceExternalProxyStub iid="{9f74a170-e8bb-466d-8848-5fdb28ac5af8}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="ILgWritingSystem" numMethods="24" />
+	<comInterfaceExternalProxyStub iid="{9f9298f5-fd41-44b0-83ba-bed9f56cf974}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="ILgSpellCheckFactory" numMethods="4" />
+	<comInterfaceExternalProxyStub iid="{b831f535-0d5f-42c8-bf9f-7f5eca2c4657}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="IUndoAction" numMethods="9" />
+	<comInterfaceExternalProxyStub iid="{c10ea417-8317-4048-ac90-103f8bdfb325}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="ITsStrFactory" numMethods="16" />
+	<comInterfaceExternalProxyStub iid="{c243c72a-0d15-44d9-abcb-a6e875a7659a}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="ILgIcuResourceBundle" numMethods="12" />
+	<comInterfaceExternalProxyStub iid="{c38348d3-392c-4e02-bd50-a01dc4189e1d}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="IUndoGrouper" numMethods="6" />
+	<comInterfaceExternalProxyStub iid="{c955e295-a259-47d4-8158-4c7a3539d35e}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="IVwGraphicsWin32" numMethods="42" />
+	<comInterfaceExternalProxyStub iid="{ca9aaf91-4c34-4c6a-8e07-97c1a7b3486a}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="IComDisposable" numMethods="4" />
+	<comInterfaceExternalProxyStub iid="{cbbf35e1-ce39-4eec-aebd-5b4aaaa52b6c}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="ILgNumericEngine" numMethods="12" />
+	<comInterfaceExternalProxyStub iid="{d27a3d8c-d3fe-4e25-9097-8f4a1fb30361}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="ILgCollatingEngine" numMethods="12" />
+	<comInterfaceExternalProxyStub iid="{dd409520-c212-11d3-9bb7-00400541f9e9}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="ITsMultiString" numMethods="7" />
+	<comInterfaceExternalProxyStub iid="{e1b27a5f-dd1b-4bba-9b72-00bde03162fc}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="ILgInputMethodEditor" numMethods="8" />
+	<comInterfaceExternalProxyStub iid="{e3661af5-26c6-4907-9243-610dad84d9d4}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="ILgSpellChecker" numMethods="12" />
+	<comInterfaceExternalProxyStub iid="{e8689492-7622-427b-8518-6339294fd227}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="ILgIcuCharPropEngine" numMethods="57" />
+	<comInterfaceExternalProxyStub iid="{edbb1ded-7065-4b56-a262-746453835451}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="IFwMetaDataCache" numMethods="32" />
+	<comInterfaceExternalProxyStub iid="{f1ef76e6-be04-11d3-8d9a-005004defec4}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="ITsStrBldr" numMethods="26" />
+	<comInterfaceExternalProxyStub iid="{f1ef76e7-be04-11d3-8d9a-005004defec4}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="ITsIncStrBldr" numMethods="16" />
+	<comInterfaceExternalProxyStub iid="{f1ef76e8-be04-11d3-8d9a-005004defec4}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="ITsPropsBldr" numMethods="14" />
+	<comInterfaceExternalProxyStub iid="{f7233278-ea87-4fc9-83e2-cb7cc45debe7}" proxyStubClsid32="{295b2e11-b149-49c5-9be9-9f46185609aa}" name="IVwGraphics" numMethods="37" />
+</assembly>
