@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+<head>
+  <meta content="text/html; charset=UTF-8">
+  <title>Merging Duplicates Help</title>
+</head>
+
+<html>
+
+<body style="font-family:sans-serif; background-color:#FFF4C5">
+
+<h1>Merging Duplicates</h1>
+<h2>Introduction</h2>
+<p>
+This help document explains how to use the following FLExTools modules, which provide
+a means to semi-automate merging of duplicate entries:
+<ul>
+<li>Find Duplicate Entries</li>
+<li>Merge Entries</li>
+<li>Merge Senses</li>
+</ul>
+
+<p>The first two modules implement a two-step process. <em>Find Duplicate Entries</em> puts tags in the FTFlags entry-level field indicating potential candidates for merging. The user then reviews those tags and edits them to control the merging. Next, <em>Merge Entries</em> merges the entries and updates FTFlags so that the user can review the changed entries. </p>
+<p>
+<em>Merge Senses</em> is provided for merging duplicate senses, which can be numerous after merging entries (either manually, or with the <em>Merge Entries</em> module.)
+</p>
+<p>The following sections explain how to use these modules.</p>
+<h2>
+
+<h2>Merging Entries</h2>
+
+<ol>
+<li>Create a custom field at entry-level called FTFlags. Set the type to Single-line Text.</li>
+<br/>
+<li>Run <em>Find Duplicate Entries</em> in FLExTools</li>
+<p>This module finds all sets of homographs with the same morpheme type, ignoring affixes, variants and complex forms. Entries are grouped with other homographs that have exactly the same set of grammatical categories (e.g. having both Noun and Verb senses). Any entries with data in FTFlags are ignored.</p>
+<ol>
+<li>Do a 'dry run' first (click the Run button) and check the
+report to see which entries are found as duplicates. Double-click in the report to jump to the entry in Fieldworks.</li>
+<li>Run with 'Modify Enabled' by holding the Shift key while clicking
+Run. (Or use the keyboard short-cut Ctrl-Shift-R). This writes the tag “m” to FTFlags in all sets of homographs. If any homographs have only one in the set, then “review” is written to FTFlags. 
+</li>
+</ol>
+<br/>
+<li>Open the database in Fieldworks and show the FTFlags column in Lexicon Edit. Filter the FTFlags field for non-blanks.</li>
+<br/>
+
+<li>Work through all the entries making decisions about merging:</li>
+
+<ol>
+<li>If they <em>aren't</em> true duplicates then either delete the 'm's,
+or change them to '-' so the entries will be ignored next time.</li>
+<li>If there are multiple sets of duplicates, such as the following four entries in English:
+	<ul>
+	<li>bank(1) 'financial institution'</li>
+    <li>bank(2) 'embankment, verge of a river, etc.'</li>
+    <li>bank(3) 'financial institution'</li>
+    <li>bank(4) 'embankment, verge of a river, etc.'</li>
+	</ul>
+</li>
+<p>then these need to be merged in two steps (otherwise all
+four will be merged into one entry.) First merge bank(3) into bank(1) within Fieldworks, 
+and then delete the 'm' in bank(1). Leave bank(2) and bank(4) to be merged with the <em>Merge Entries</em> FLExTools module.</p>
+
+<li>To choose which entry is the target entry for merging,
+edit FTFlags to 'mt' for that entry. (Otherwise the target is
+chosen randomly.)</li>
+
+<li>The default merging behaviour is to <em>append</em> any text data that is
+different (for example, in the Note field.) To <em>discard</em> any conflicting
+text data from an entry, change FTFlags to 'md.' All entries
+tagged 'm' or 'mt' are merged first, then entries tagged 'md' are merged.</li>
+
+<li>To automatically delete any entries, set FTFlags to 'del'.</li>
+</ol>
+<p>Note: It is important to do steps 1 and 2 above to avoid merging entries 
+that shouldn't be merged. Steps 3 and 4 are optional, but give you more control 
+over the merge operation. 
+</p>
+<li>Run <em>Merge Entries</em> in FLExTools</li>
+<ol>
+<li>Do a 'dry run' first to check that the merging operations are correct.</li>
+<li>Run with 'Modify Enabled.'</li>
+</ol>
+<br/>
+
+<li>Review all the entries that have been merged by filtering for 'merged' in FTFlags.</li>
+</ol>
+
+<h2>Merging Senses</h2>
+<ol>
+<li>Run <em>Merge Senses</em> in FLExTools</li>
+</p>This module merges all top-level senses that have the same grammatical category 
+and the same gloss or definition (if the gloss is blank then the definition is compared.) Later senses are merged into earlier matching ones. Definitions, etc. are appended.</p>
+<ol>
+<li>Do a 'dry run' first to check that the merging
+operations are correct. Double-click in the report to jump to the entry in Fieldworks.</li>
+<li>Run with 'Modify Enabled.' If the FTFlags field exists then 'merged-senses' is added to that field.</li>
+</ol>
+</ol>
+
+</body>
+</html>
+

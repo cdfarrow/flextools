@@ -1,0 +1,628 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>FLExLibs Package &mdash; FLExLibs  documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="FLExLibs  documentation" href="index.html" />
+    <link rel="prev" title="Welcome to the FLExTools API documentation!" href="index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to the FLExTools API documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">FLExLibs  documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="flexlibs-package">
+<h1>FLExLibs Package<a class="headerlink" href="#flexlibs-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-FLExLibs.FLExDBAccess">
+<span id="flexdbaccess-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">FLExDBAccess</span></code> Module<a class="headerlink" href="#module-FLExLibs.FLExDBAccess" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="FLExLibs.FLExDBAccess.FDA_DLLError">
+<em class="property">exception </em><code class="descclassname">FLExLibs.FLExDBAccess.</code><code class="descname">FDA_DLLError</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FDA_DLLError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<dl class="docutils">
+<dt>Exception raised for a COM error, which indicates that the</dt>
+<dd>FwKernel and Language DLLs can&#8217;t be found.</dd>
+<dt>Attributes:</dt>
+<dd><ul class="first last simple">
+<li>message &#8211; explanation of the error</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="exception">
+<dt id="FLExLibs.FLExDBAccess.FDA_DatabaseError">
+<em class="property">exception </em><code class="descclassname">FLExLibs.FLExDBAccess.</code><code class="descname">FDA_DatabaseError</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FDA_DatabaseError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Exception raised for any problems opening or using the database.</p>
+<dl class="docutils">
+<dt>Attributes:</dt>
+<dd><ul class="first last simple">
+<li>message &#8211; explanation of the error</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="exception">
+<dt id="FLExLibs.FLExDBAccess.FDA_ReadOnlyError">
+<em class="property">exception </em><code class="descclassname">FLExLibs.FLExDBAccess.</code><code class="descname">FDA_ReadOnlyError</code><a class="headerlink" href="#FLExLibs.FLExDBAccess.FDA_ReadOnlyError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#FLExLibs.FLExDBAccess.FDA_DatabaseError" title="FLExLibs.FLExDBAccess.FDA_DatabaseError"><code class="xref py py-class docutils literal"><span class="pre">FLExLibs.FLExDBAccess.FDA_DatabaseError</span></code></a></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="FLExLibs.FLExDBAccess.FDA_WritingSystemError">
+<em class="property">exception </em><code class="descclassname">FLExLibs.FLExDBAccess.</code><code class="descname">FDA_WritingSystemError</code><span class="sig-paren">(</span><em>writingSystemName</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FDA_WritingSystemError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#FLExLibs.FLExDBAccess.FDA_DatabaseError" title="FLExLibs.FLExDBAccess.FDA_DatabaseError"><code class="xref py py-class docutils literal"><span class="pre">FLExLibs.FLExDBAccess.FDA_DatabaseError</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess">
+<em class="property">class </em><code class="descclassname">FLExLibs.FLExDBAccess.</code><code class="descname">FLExDBAccess</code><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Class for accessing a FieldWorks database. The methods here
+hide the gory details of FDO.
+For quick testing, db and lp can be used directly; However, for
+continued use new methods should be added to this class.</p>
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.BestStr">
+<code class="descname">BestStr</code><span class="sig-paren">(</span><em>stringObj</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.BestStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generic string extraction function returning the best Analysis or Vernacular string.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.BuildGotoURL">
+<code class="descname">BuildGotoURL</code><span class="sig-paren">(</span><em>objectOrGuid</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.BuildGotoURL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds a URL that can be used with os.startfile() to jump to the
+object in Fieldworkds. Currently supports:
+- Lexical Entries
+- Reversal Entries
+- Wordforms</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.GetAllAnalysisWSs">
+<code class="descname">GetAllAnalysisWSs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.GetAllAnalysisWSs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a set of language tags for all analysis writing systems used
+in this database.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.GetAllSemanticDomains">
+<code class="descname">GetAllSemanticDomains</code><span class="sig-paren">(</span><em>flat=False</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.GetAllSemanticDomains" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a nested or flat list of all Semantic Domains defined
+in this database. The list is ordered.</p>
+<dl class="docutils">
+<dt>Return items are objects with properties/methods:</dt>
+<dd><ul class="first last simple">
+<li>Hvo         - ID (value not the same across databases)</li>
+<li>Guid        - Global Unique ID (same across all databases)</li>
+<li>ToString()  - String representation of the semantic domain.</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.GetAllVernacularWSs">
+<code class="descname">GetAllVernacularWSs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.GetAllVernacularWSs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a set of language tags for all vernacular writing systems used
+in this database.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.GetCustomFieldValue">
+<code class="descname">GetCustomFieldValue</code><span class="sig-paren">(</span><em>senseOrEntryOrHvo</em>, <em>flid</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.GetCustomFieldValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the field value for String, MultiString and Integer fields.
+Returns None for other field types.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.GetDatabaseNames">
+<code class="descname">GetDatabaseNames</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.GetDatabaseNames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of the FieldWorks databases available on this machine.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.GetDateLastModified">
+<code class="descname">GetDateLastModified</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.GetDateLastModified" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.GetDefaultAnalysisWS">
+<code class="descname">GetDefaultAnalysisWS</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.GetDefaultAnalysisWS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the Default Analysis Writing System: (Language-tag, Name)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.GetDefaultVernacularWS">
+<code class="descname">GetDefaultVernacularWS</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.GetDefaultVernacularWS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the Default Vernacular Writing System: (Language-tag, Name)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.GetPartsOfSpeech">
+<code class="descname">GetPartsOfSpeech</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.GetPartsOfSpeech" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of the Parts of Speech defined in this
+database.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.GetWritingSystems">
+<code class="descname">GetWritingSystems</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.GetWritingSystems" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the Writing Systems that are active in this database as a
+list of tuples: (Name, Language-tag, Handle, IsVernacular).
+Use the Language-tag when specifying Writing System to other
+functions.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.LexiconAddTagToField">
+<code class="descname">LexiconAddTagToField</code><span class="sig-paren">(</span><em>senseOrEntryOrHvo</em>, <em>fieldID</em>, <em>tag</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconAddTagToField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Appends the tag string to the end of the given field in the
+sense or entry inserting a semicolon between tags.
+If the tag is already in the field then it isn&#8217;t added.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.LexiconAllEntries">
+<code class="descname">LexiconAllEntries</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconAllEntries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an iterator over all entries in the lexicon.</p>
+<dl class="docutils">
+<dt>Each entry is of type:</dt>
+<dd><dl class="first last docutils">
+<dt>SIL.FieldWorks.FDO.ILexEntry, which contains:</dt>
+<dd><ul class="first last">
+<li><p class="first">HomographNumber :: integer</p>
+</li>
+<li><p class="first">HomographForm :: string</p>
+</li>
+<li><dl class="first docutils">
+<dt>LexemeFormOA ::  SIL.FieldWorks.FDO.Ling.MoForm</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt>Form :: SIL.FieldWorks.FDO.MultiUnicodeAccessor</dt>
+<dd><ul class="first last simple">
+<li>GetAlternative : Get String for given WS type</li>
+<li>SetAlternative : Set string for given WS type</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>SensesOS :: Ordered collection of SIL.FieldWorks.FDO.Ling.LexSense </dt>
+<dd><ul class="first last">
+<li><p class="first">Gloss :: SIL.FieldWorks.FDO.MultiUnicodeAccessor</p>
+</li>
+<li><p class="first">Definition :: SIL.FieldWorks.FDO.MultiStringAccessor</p>
+</li>
+<li><p class="first">SenseNumber :: string</p>
+</li>
+<li><dl class="first docutils">
+<dt>ExamplesOS :: Ordered collection of LexExampleSentence</dt>
+<dd><ul class="first last simple">
+<li>Example :: MultiStringAccessor</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.LexiconEntryAnalysesCount">
+<code class="descname">LexiconEntryAnalysesCount</code><span class="sig-paren">(</span><em>entry</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconEntryAnalysesCount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a count of the occurences of the entry in the text corpus.
+Note: as of Fieldworks 8.0.10 this calculation can be slightly off (the same analysis
+in the same text segment is only counted once), but is the same as reported in 
+Fieldworks in the Number of Analyses column. See LT-13997.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.LexiconFieldIsStringType">
+<code class="descname">LexiconFieldIsStringType</code><span class="sig-paren">(</span><em>fieldID</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconFieldIsStringType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the given field is a string type suitable for use
+with LexiconAddTagToField(), otherwise returns False.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetCitationForm">
+<code class="descname">LexiconGetCitationForm</code><span class="sig-paren">(</span><em>entry</em>, <em>languageTagOrHandle=None</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetCitationForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the citation form for the entry in the Default Vernacular WS
+or other WS as specified by languageTagOrHandle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetEntryCustomFieldNamed">
+<code class="descname">LexiconGetEntryCustomFieldNamed</code><span class="sig-paren">(</span><em>fieldName</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetEntryCustomFieldNamed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the entry-level field (its ID) given its name.
+NOTE: fieldName is case-sensitive.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetEntryCustomFields">
+<code class="descname">LexiconGetEntryCustomFields</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetEntryCustomFields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of the custom fields defined at Entry level.
+Each item in the list is a tuple of (flid, label)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetExample">
+<code class="descname">LexiconGetExample</code><span class="sig-paren">(</span><em>example</em>, <em>languageTagOrHandle=None</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetExample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the example text in the Default Vernacular WS or
+other WS as specified by languageTagOrHandle.
+Note: Analysis language translations of example sentences are
+stored as a collection (list). E.g.:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>for translation in example.TranslationsOC:</dt>
+<dd>print DB.LexiconGetExampleTranslation(translation)</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetExampleTranslation">
+<code class="descname">LexiconGetExampleTranslation</code><span class="sig-paren">(</span><em>translation</em>, <em>languageTagOrHandle=None</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetExampleTranslation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the translation of an example in the Default Analysis WS or
+other WS as specified by languageTagOrHandle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetFieldText">
+<code class="descname">LexiconGetFieldText</code><span class="sig-paren">(</span><em>senseOrEntryOrHvo</em>, <em>fieldID</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetFieldText" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the text value for the given entry/sense and field (ID).
+Provided for use with custom fields.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetHeadword">
+<code class="descname">LexiconGetHeadword</code><span class="sig-paren">(</span><em>entry</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetHeadword" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the headword for the entry</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetLexemeForm">
+<code class="descname">LexiconGetLexemeForm</code><span class="sig-paren">(</span><em>entry</em>, <em>languageTagOrHandle=None</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetLexemeForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the lexeme form for the entry in the Default Vernacular WS
+or other WS as specified by languageTagOrHandle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetPronunciation">
+<code class="descname">LexiconGetPronunciation</code><span class="sig-paren">(</span><em>pronunciation</em>, <em>languageTagOrHandle=None</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetPronunciation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the Form for the Pronunciation in the Default Vernacular WS
+or other WS as specified by languageTagOrHandle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetPublishInCount">
+<code class="descname">LexiconGetPublishInCount</code><span class="sig-paren">(</span><em>entry</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetPublishInCount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the PublishIn Count</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetSenseCustomFieldNamed">
+<code class="descname">LexiconGetSenseCustomFieldNamed</code><span class="sig-paren">(</span><em>fieldName</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetSenseCustomFieldNamed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the sense-level field (its ID) given its name.
+NOTE: fieldName is case-sensitive.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetSenseCustomFields">
+<code class="descname">LexiconGetSenseCustomFields</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetSenseCustomFields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of the custom fields defined at Sense level.
+Each item in the list is a tuple of (flid, label)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetSenseDefinition">
+<code class="descname">LexiconGetSenseDefinition</code><span class="sig-paren">(</span><em>sense</em>, <em>languageTagOrHandle=None</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetSenseDefinition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the definition for the sense in the Default Analysis WS or
+other WS as specified by languageTagOrHandle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetSenseGloss">
+<code class="descname">LexiconGetSenseGloss</code><span class="sig-paren">(</span><em>sense</em>, <em>languageTagOrHandle=None</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetSenseGloss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the gloss for the sense in the Default Analysis WS or
+other WS as specified by languageTagOrHandle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetSensePOS">
+<code class="descname">LexiconGetSensePOS</code><span class="sig-paren">(</span><em>sense</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetSensePOS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the part of speech abbreviation for the sense.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetSenseSemanticDomains">
+<code class="descname">LexiconGetSenseSemanticDomains</code><span class="sig-paren">(</span><em>sense</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetSenseSemanticDomains" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of Semantic Domain objects belonging to the sense.
+ToString() and Hvo are available.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.LexiconNumberOfEntries">
+<code class="descname">LexiconNumberOfEntries</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconNumberOfEntries" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.LexiconSetExample">
+<code class="descname">LexiconSetExample</code><span class="sig-paren">(</span><em>example</em>, <em>newString</em>, <em>languageTagOrHandle=None</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconSetExample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the Default Vernacular string for the given Example:</p>
+<blockquote>
+<div><ul class="simple">
+<li>newString must be unicode.</li>
+<li>languageTagOrHandle specifies a different writing system.</li>
+</ul>
+</div></blockquote>
+<p>NOTE: using this function will lose any formatting that might
+have been present in the example string.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.LexiconSetFieldInteger">
+<code class="descname">LexiconSetFieldInteger</code><span class="sig-paren">(</span><em>senseOrEntryOrHvo</em>, <em>fieldID</em>, <em>integer</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconSetFieldInteger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the integer value for the given entry/sense and field (ID).
+Provided for use with custom fields.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.LexiconSetFieldText">
+<code class="descname">LexiconSetFieldText</code><span class="sig-paren">(</span><em>senseOrEntryOrHvo</em>, <em>fieldID</em>, <em>text</em>, <em>languageTagOrHandle=None</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconSetFieldText" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the text value for the given entry/sense and field (ID).
+NOTE: writes the string in one writing system only (defaults
+to the default analysis WS.)
+Provided for use with custom fields.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.LexiconSetSenseGloss">
+<code class="descname">LexiconSetSenseGloss</code><span class="sig-paren">(</span><em>sense</em>, <em>gloss</em>, <em>languageTagOrHandle=None</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconSetSenseGloss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the Default Analysis gloss for the given sense:</p>
+<blockquote>
+<div><ul class="simple">
+<li>gloss must be unicode.</li>
+<li>languageTagOrHandle specifies a different writing system.</li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.ObjectCountFor">
+<code class="descname">ObjectCountFor</code><span class="sig-paren">(</span><em>repository</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.ObjectCountFor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of objects in the given repository.
+repository is specified by the interface class, such as:</p>
+<blockquote>
+<div><ul class="simple">
+<li>ITextRepository</li>
+<li>ILexEntryRepository</li>
+</ul>
+</div></blockquote>
+<p>(All repository names can be viewed by opening a project in
+FDOBrowser, which can be launched via the Help menu.)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.ObjectsIn">
+<code class="descname">ObjectsIn</code><span class="sig-paren">(</span><em>repository</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.ObjectsIn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an iterator over all the objects in the given repository.
+repository is specified by the interface class, such as:</p>
+<blockquote>
+<div><ul class="simple">
+<li>ITextRepository</li>
+<li>ILexEntryRepository</li>
+</ul>
+</div></blockquote>
+<p>(All repository names can be viewed by opening a project in
+FDOBrowser, which can be launched via the Help menu.)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.OpenDatabase">
+<code class="descname">OpenDatabase</code><span class="sig-paren">(</span><em>dbName</em>, <em>writeEnabled=False</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.OpenDatabase" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Open the database given by dbName:</dt>
+<dd><ul class="first last simple">
+<li>Either the full path including &#8221;.fwdata&#8221; suffix, or</li>
+<li>The name only, opened from the default project location.</li>
+</ul>
+</dd>
+</dl>
+<p>The verbose flag controls logging/debug messages to the console.
+The writeEnabled flag configures FW to accept database changes, and
+saves those when this object is deleted. It will also be used to
+open the FW database in read-only mode so that FW doesn&#8217;t have to
+be closed for read-only operations. (Awaiting support in a future
+release of FW)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.ReversalEntries">
+<code class="descname">ReversalEntries</code><span class="sig-paren">(</span><em>languageTag</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.ReversalEntries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an iterator for the reversal entries for the given language
+tag (eg &#8216;en&#8217;). Returns None if there is no reversal index for
+that writing system.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.ReversalGetForm">
+<code class="descname">ReversalGetForm</code><span class="sig-paren">(</span><em>entry</em>, <em>languageTagOrHandle=None</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.ReversalGetForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the citation form for the reversal entry in the Default
+Vernacular WS or other WS as specified by languageTagOrHandle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.ReversalIndex">
+<code class="descname">ReversalIndex</code><span class="sig-paren">(</span><em>languageTag</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.ReversalIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the ReversalIndex that matches the given languageTag string
+(eg &#8216;en&#8217;). Returns None if there is no reversal index for
+that writing system.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.ReversalSetForm">
+<code class="descname">ReversalSetForm</code><span class="sig-paren">(</span><em>entry</em>, <em>form</em>, <em>languageTagOrHandle=None</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.ReversalSetForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the Default Analysis reversal form for the given reversal entry:</p>
+<blockquote>
+<div><ul class="simple">
+<li>form must be unicode.</li>
+<li>languageTagOrHandle can be used to specify a different writing system.</li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.TextsGetAll">
+<code class="descname">TextsGetAll</code><span class="sig-paren">(</span><em>supplyName=True</em>, <em>supplyText=True</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.TextsGetAll" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Generator that returns tuples of (Name, Text) where:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Name is the best vernacular or analysis name.</li>
+<li>Text is a string with newlines separating paragraphs.</li>
+</ul>
+</div></blockquote>
+<p>Passing supplyName/Text=False returns only the texts or names.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.UnpackNestedPossibilityList">
+<code class="descname">UnpackNestedPossibilityList</code><span class="sig-paren">(</span><em>possibilityList</em>, <em>flat</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.UnpackNestedPossibilityList" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a nested or flat list of a Fieldworks Possibility List.</p>
+<dl class="docutils">
+<dt>Return items are objects with properties/methods:</dt>
+<dd><ul class="first last simple">
+<li>Hvo         - ID (value not the same across databases)</li>
+<li>Guid        - Global Unique ID (same across all databases)</li>
+<li>ToString()  - String representation.</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.WSHandle">
+<code class="descname">WSHandle</code><span class="sig-paren">(</span><em>languageTag</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.WSHandle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the Handle of the writing system for the given languageTag.
+Ignores case and &#8216;-&#8216;/&#8217;_&#8217; differences.
+Returns None if the language tag is not found.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="FLExLibs.FLExDBAccess.FLExDBAccess.WSUIName">
+<code class="descname">WSUIName</code><span class="sig-paren">(</span><em>languageTagOrHandle</em><span class="sig-paren">)</span><a class="headerlink" href="#FLExLibs.FLExDBAccess.FLExDBAccess.WSUIName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the UI name of the writing system for the given languageTag or Handle.
+Ignores case and &#8216;-&#8216;/&#8217;_&#8217; differences.
+Returns None if the language tag is not found.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">FLExLibs Package</a><ul>
+<li><a class="reference internal" href="#module-FLExLibs.FLExDBAccess"><code class="docutils literal"><span class="pre">FLExDBAccess</span></code> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to the FLExTools API documentation!</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to the FLExTools API documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">FLExLibs  documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2012.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,921 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>FLExLibs.FLExDBAccess &mdash; FLExLibs  documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="FLExLibs  documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="../../index.html">FLExLibs  documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for FLExLibs.FLExDBAccess</h1><div class="highlight"><pre>
+<span class="c">#</span>
+<span class="c">#   FLExDBAccess.py</span>
+<span class="c">#</span>
+<span class="c">#   Class: Fieldworks Language Explorer database access functions </span>
+<span class="c">#          via FDO (FieldWorks Data Objects) API.</span>
+<span class="c">#</span>
+<span class="c">#</span>
+<span class="c">#   Platform: Python.NET</span>
+<span class="c">#             (ITsString doesn&#39;t work in IRONPython)</span>
+<span class="c">#             FieldWorks Version 7</span>
+<span class="c">#</span>
+<span class="c">#   By: Craig Farrow</span>
+<span class="c">#       Aug 2008 - Nov 2011</span>
+<span class="c">#</span>
+<span class="c">#</span>
+
+<span class="kn">import</span> <span class="nn">codecs</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">codecs</span><span class="o">.</span><span class="n">getwriter</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">)(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">FLExRegUtil</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+
+<span class="kn">import</span> <span class="nn">clr</span>
+<span class="n">clr</span><span class="o">.</span><span class="n">AddReference</span><span class="p">(</span><span class="s">&quot;System&quot;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">System</span>
+
+<span class="n">clr</span><span class="o">.</span><span class="n">AddReference</span><span class="p">(</span><span class="s">&quot;FDO&quot;</span><span class="p">)</span>
+<span class="n">clr</span><span class="o">.</span><span class="n">AddReference</span><span class="p">(</span><span class="s">&quot;COMInterfaces&quot;</span><span class="p">)</span>
+<span class="n">clr</span><span class="o">.</span><span class="n">AddReference</span><span class="p">(</span><span class="s">&quot;FwUtils&quot;</span><span class="p">)</span>
+<span class="n">clr</span><span class="o">.</span><span class="n">AddReference</span><span class="p">(</span><span class="s">&quot;FDOBrowser&quot;</span><span class="p">)</span>
+
+
+<span class="c"># Classes needed for loading the FDO Cache</span>
+<span class="kn">from</span> <span class="nn">SIL.FieldWorks.FDO</span> <span class="kn">import</span> <span class="n">FdoCache</span>
+<span class="kn">from</span> <span class="nn">SIL.FieldWorks.Common.FwUtils</span> <span class="kn">import</span> <span class="n">FwStartupException</span> <span class="c"># FW 7.2</span>
+<span class="kn">from</span> <span class="nn">SIL.FieldWorks.Common.FwUtils</span> <span class="kn">import</span> <span class="n">FDOBackendProviderType</span> <span class="c"># FW 7.1.1</span>
+<span class="c">##from SIL.FieldWorks.FDO.Infrastructure import FDOBackendProviderType FW 7.0.6</span>
+<span class="kn">from</span> <span class="nn">FDOBrowser</span> <span class="kn">import</span> <span class="n">BrowserProjectId</span>
+<span class="kn">from</span> <span class="nn">SIL.Utils</span> <span class="kn">import</span> <span class="n">ThreadHelper</span>  <span class="c"># IronPython fails on this</span>
+<span class="kn">from</span> <span class="nn">SIL.FieldWorks.Common.Controls</span> <span class="kn">import</span> <span class="n">ProgressDialogWithTask</span>
+<span class="kn">from</span> <span class="nn">System.Windows.Forms</span> <span class="kn">import</span> <span class="n">Form</span>
+
+<span class="kn">from</span> <span class="nn">SIL.FieldWorks.FDO</span> <span class="kn">import</span> <span class="n">ILexEntryRepository</span>
+<span class="kn">from</span> <span class="nn">SIL.FieldWorks.FDO</span> <span class="kn">import</span> <span class="n">ILexEntry</span><span class="p">,</span> <span class="n">ILexSense</span>
+<span class="kn">from</span> <span class="nn">SIL.FieldWorks.FDO</span> <span class="kn">import</span> <span class="n">LexEntryTags</span><span class="p">,</span> <span class="n">LexSenseTags</span>
+<span class="kn">from</span> <span class="nn">SIL.FieldWorks.FDO</span> <span class="kn">import</span> <span class="n">IReversalIndex</span><span class="p">,</span> <span class="n">IReversalIndexEntry</span>
+<span class="kn">from</span> <span class="nn">SIL.FieldWorks.FDO</span> <span class="kn">import</span> <span class="n">ReversalIndexTags</span>
+<span class="kn">from</span> <span class="nn">SIL.FieldWorks.FDO</span> <span class="kn">import</span> <span class="n">IMoMorphType</span>
+<span class="kn">from</span> <span class="nn">SIL.FieldWorks.FDO</span> <span class="kn">import</span> <span class="n">SpecialWritingSystemCodes</span><span class="p">,</span> <span class="n">IMultiStringAccessor</span>
+
+<span class="kn">from</span> <span class="nn">SIL.FieldWorks.FDO</span> <span class="kn">import</span> <span class="n">FDOInvalidFieldException</span>
+<span class="kn">from</span> <span class="nn">SIL.FieldWorks.FDO</span> <span class="kn">import</span> <span class="n">IUndoStackManager</span>
+
+<span class="kn">from</span> <span class="nn">SIL.FieldWorks.Common.COMInterfaces</span> <span class="kn">import</span> <span class="n">IActionHandler</span>
+<span class="kn">from</span> <span class="nn">SIL.FieldWorks.FDO.Infrastructure</span> <span class="kn">import</span> <span class="n">NonUndoableUnitOfWorkHelper</span>
+
+<span class="kn">from</span> <span class="nn">SIL.CoreImpl</span> <span class="kn">import</span> <span class="n">CellarPropertyType</span>
+<span class="kn">from</span> <span class="nn">SIL.FieldWorks.Common.COMInterfaces</span> <span class="kn">import</span> <span class="n">ITsString</span><span class="p">,</span> <span class="n">ITsStrBldr</span>
+<span class="c">##from SIL.FieldWorks.Common.COMInterfaces import TsStrFactoryClass, ITsStrFactory</span>
+
+<span class="c">##from SIL.FieldWorks.Common.FwUtils import LanguageDefinitionFactory</span>
+<span class="c">##from SIL.FieldWorks.Common.FwUtils import LanguageDefinition</span>
+
+
+<span class="c">#-----------------------------------------------------------</span>
+
+<div class="viewcode-block" id="FDA_DatabaseError"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FDA_DatabaseError">[docs]</a><span class="k">class</span> <span class="nc">FDA_DatabaseError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Exception raised for any problems opening or using the database.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        - message -- explanation of the error</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">message</span>
+</div>
+<div class="viewcode-block" id="FDA_ReadOnlyError"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FDA_ReadOnlyError">[docs]</a><span class="k">class</span> <span class="nc">FDA_ReadOnlyError</span><span class="p">(</span><span class="n">FDA_DatabaseError</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">FDA_DatabaseError</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+            <span class="s">&quot;Module error: Trying to write to the database without database changes enabled.&quot;</span><span class="p">)</span>
+    </div>
+<div class="viewcode-block" id="FDA_WritingSystemError"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FDA_WritingSystemError">[docs]</a><span class="k">class</span> <span class="nc">FDA_WritingSystemError</span><span class="p">(</span><span class="n">FDA_DatabaseError</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">writingSystemName</span><span class="p">):</span>
+        <span class="n">FDA_DatabaseError</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+            <span class="s">&quot;Module error: Invalid Writing System for this database: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">writingSystemName</span><span class="p">)</span>
+    </div>
+<div class="viewcode-block" id="FDA_COMError"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FDA_COMError">[docs]</a><span class="k">class</span> <span class="nc">FDA_COMError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Exception raised for a COM error, which indicates that the</span>
+<span class="sd">       FwKernel and Language DLLs haven&#39;t been registered.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        - message -- explanation of the error</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">message</span>
+
+<span class="c">#-----------------------------------------------------------</span>
+   </div>
+<div class="viewcode-block" id="FLExDBAccess"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess">[docs]</a><span class="k">class</span> <span class="nc">FLExDBAccess</span> <span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class for accessing a FieldWorks database. The methods here</span>
+<span class="sd">    hide the gory details of FDO.</span>
+<span class="sd">    For quick testing, db and lp can be used directly; However, for</span>
+<span class="sd">    continued use new methods should be added to this class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    
+<div class="viewcode-block" id="FLExDBAccess.GetDatabaseNames"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.GetDatabaseNames">[docs]</a>    <span class="k">def</span> <span class="nf">GetDatabaseNames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a list of the FieldWorks databases available on this machine.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">return</span> <span class="n">FLExRegUtil</span><span class="o">.</span><span class="n">ListFw7Databases</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="FLExDBAccess.OpenDatabase"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.OpenDatabase">[docs]</a>    <span class="k">def</span> <span class="nf">OpenDatabase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dbName</span><span class="p">,</span> <span class="n">writeEnabled</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Open the database given by dbName:</span>
+<span class="sd">            - Either the full path including &quot;.fwdata&quot; suffix, or</span>
+<span class="sd">            - The name only, opened from the default project location.</span>
+<span class="sd">            </span>
+<span class="sd">        The verbose flag controls logging/debug messages to the console.</span>
+<span class="sd">        The writeEnabled flag configures FW to accept database changes, and</span>
+<span class="sd">        saves those when this object is deleted. It will also be used to</span>
+<span class="sd">        open the FW database in read-only mode so that FW doesn&#39;t have to</span>
+<span class="sd">        be closed for read-only operations. (Awaiting support in a future</span>
+<span class="sd">        release of FW - maybe 7.3?)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fwDbExt</span> <span class="o">=</span> <span class="s">&quot;.fwdata&quot;</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">dbName</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">fwDbExt</span><span class="p">:</span>
+            <span class="n">dbFileName</span> <span class="o">=</span> <span class="n">dbName</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">codePath</span><span class="p">,</span> <span class="n">dataPath</span> <span class="o">=</span> <span class="n">FLExRegUtil</span><span class="o">.</span><span class="n">GetFWDirs</span><span class="p">()</span>
+            <span class="n">dbFileName</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dataPath</span><span class="p">,</span> <span class="n">dbName</span><span class="p">),</span>
+                                      <span class="n">dbName</span><span class="o">+</span><span class="n">fwDbExt</span><span class="p">)</span>
+
+        <span class="c"># TODO: How to open a project on a server?</span>
+        <span class="n">projId</span> <span class="o">=</span> <span class="n">BrowserProjectId</span><span class="p">(</span><span class="n">FDOBackendProviderType</span><span class="o">.</span><span class="n">kXML</span><span class="p">,</span>
+                                  <span class="n">dbFileName</span><span class="p">)</span>
+        <span class="n">th</span> <span class="o">=</span> <span class="n">ThreadHelper</span><span class="p">()</span>
+        <span class="n">dlg</span> <span class="o">=</span> <span class="n">ProgressDialogWithTask</span><span class="p">(</span><span class="n">Form</span><span class="p">(),</span> <span class="n">th</span><span class="p">)</span>
+
+        <span class="kn">from</span> <span class="nn">System</span> <span class="kn">import</span> <span class="n">ArgumentException</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c"># FDO/fdoCache.cs/CreateCacheFromExistingData</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">FdoCache</span><span class="o">.</span><span class="n">CreateCacheFromExistingData</span><span class="p">(</span><span class="n">projId</span><span class="p">,</span>
+                                                           <span class="s">&quot;en&quot;</span><span class="p">,</span>
+                                                           <span class="n">dlg</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">FwStartupException</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">FDA_DatabaseError</span><span class="p">(</span><span class="s">&quot;FLEx Database is locked. Close FLEx and try again.&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">System</span><span class="o">.</span><span class="n">Runtime</span><span class="o">.</span><span class="n">InteropServices</span><span class="o">.</span><span class="n">COMException</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c"># Fieldworks DLLs need to be registered.</span>
+            <span class="k">raise</span> <span class="n">FDA_COMError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">Message</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="k">print</span>
+                <span class="k">print</span> <span class="s">&quot;</span><span class="se">\t</span><span class="s">FLEx Database:&quot;</span><span class="p">,</span>  <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">ProjectId</span><span class="o">.</span><span class="n">UiName</span>
+                <span class="k">print</span> 
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;OpenDatabase failed! Check database name: &#39;</span><span class="si">%s</span><span class="s">&#39;&quot;</span> <span class="o">%</span> <span class="n">dbName</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="k">print</span> <span class="n">msg</span>
+            <span class="k">raise</span> <span class="n">FDA_DatabaseError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+
+        <span class="c"># FW version 7 namespace</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lp</span>    <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">LangProject</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lexDB</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lp</span><span class="o">.</span><span class="n">LexDbOA</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;Unknown FDO Interface:</span><span class="se">\n\t</span><span class="s">Version 7.0 supported&quot;</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="k">print</span> <span class="n">msg</span>
+            <span class="k">raise</span> <span class="n">FDA_DatabaseError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+
+        <span class="c"># Set up FieldWorks for making changes to the database.</span>
+        <span class="c"># All changes will be automatically saved when this object is</span>
+        <span class="c"># deleted.</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">writeEnabled</span> <span class="o">=</span> <span class="n">writeEnabled</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">writeEnabled</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c"># This must be called before calling any methods that change</span>
+                <span class="c"># the database.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">MainCacheAccessor</span><span class="o">.</span><span class="n">BeginNonUndoableTask</span><span class="p">()</span>
+            <span class="k">except</span> <span class="n">System</span><span class="o">.</span><span class="n">InvalidOperationException</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">FDA_DatabaseError</span><span class="p">(</span><span class="s">&quot;BeginNonUndoableTask() failed.&quot;</span><span class="p">)</span>
+
+
+            </div>
+    <span class="k">def</span> <span class="nf">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&quot;db&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">writeEnabled</span><span class="p">:</span>
+                <span class="c"># This must be called to mirror the call to BeginNonUndoableTask().</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">MainCacheAccessor</span><span class="o">.</span><span class="n">EndNonUndoableTask</span><span class="p">()</span>
+                <span class="c"># Save all changes to disk. (EndNonUndoableTask)</span>
+                <span class="n">usm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">ServiceLocator</span><span class="o">.</span><span class="n">GetInstance</span><span class="p">(</span><span class="n">IUndoStackManager</span><span class="p">)</span>
+                <span class="n">usm</span><span class="o">.</span><span class="n">Save</span><span class="p">()</span>                
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c">#print &quot;Calling self.db.Dispose()&quot;</span>
+                <span class="c"># TODO: This is failing with a COM error (memory disposal problem)</span>
+                <span class="c"># with the Lela-Teli dbs only.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">Dispose</span><span class="p">()</span>
+                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span>
+                <span class="c">#print &quot;FLExDBAccess.__del__: success&quot;</span>
+                <span class="k">return</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="c">#print &quot;FLExDBAccess.__del__:\n %s\n&quot; % (traceback.format_exc())</span>
+                <span class="k">raise</span>
+                <span class="k">pass</span>
+            <span class="c">#print &quot;FLExDBAccess.__del__: failed&quot;</span>
+
+
+        
+    <span class="c"># --- FDO Utilities ---</span>
+    
+<div class="viewcode-block" id="FLExDBAccess.UnpackNestedPossibilityList"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.UnpackNestedPossibilityList">[docs]</a>    <span class="k">def</span> <span class="nf">UnpackNestedPossibilityList</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">possibilityList</span><span class="p">,</span> <span class="n">flat</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a nested or flat list of a Fieldworks Possibility List.</span>
+<span class="sd">        </span>
+<span class="sd">        Return items are objects with properties/methods:</span>
+<span class="sd">            - Hvo         - ID (value not the same across databases)</span>
+<span class="sd">            - Guid        - Global Unique ID (same across all databases)</span>
+<span class="sd">            - ToString()  - String representation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">possibilityList</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">i</span>
+            <span class="k">if</span> <span class="n">flat</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">UnpackNestedPossibilityList</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">SubPossibilitiesOS</span><span class="p">,</span> <span class="n">flat</span><span class="p">):</span>
+                    <span class="k">yield</span> <span class="n">j</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">l</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">UnpackNestedPossibilityList</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">SubPossibilitiesOS</span><span class="p">,</span> <span class="n">flat</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">l</span><span class="p">:</span> <span class="k">yield</span> <span class="n">l</span>
+    
+    <span class="c"># --- Global: Writing Systems ---</span>
+</div>
+<div class="viewcode-block" id="FLExDBAccess.GetAllVernacularWSs"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.GetAllVernacularWSs">[docs]</a>    <span class="k">def</span> <span class="nf">GetAllVernacularWSs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a set of language tags for all vernacular writing systems used</span>
+<span class="sd">        in this database.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lp</span><span class="o">.</span><span class="n">CurVernWss</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+            </div>
+<div class="viewcode-block" id="FLExDBAccess.GetAllAnalysisWSs"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.GetAllAnalysisWSs">[docs]</a>    <span class="k">def</span> <span class="nf">GetAllAnalysisWSs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a set of language tags for all analysis writing systems used</span>
+<span class="sd">        in this database.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lp</span><span class="o">.</span><span class="n">CurAnalysisWss</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+</div>
+<div class="viewcode-block" id="FLExDBAccess.GetWritingSystems"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.GetWritingSystems">[docs]</a>    <span class="k">def</span> <span class="nf">GetWritingSystems</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the Writing Systems that are active in this database as a</span>
+<span class="sd">        list of tuples: (Name, Language-tag, Handle, IsVernacular).</span>
+<span class="sd">        Use the Language-tag when specifying Writing System to other</span>
+<span class="sd">        functions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">VernWSSet</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetAllVernacularWSs</span><span class="p">()</span>
+        <span class="n">AnalWSSet</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetAllAnalysisWSs</span><span class="p">()</span>
+        
+        <span class="n">WSList</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c"># The names of WS associated with this DB.</span>
+        <span class="c"># Sorted and with no duplicates.</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">ServiceLocator</span><span class="o">.</span><span class="n">WritingSystems</span><span class="o">.</span><span class="n">AllWritingSystems</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">Id</span> <span class="ow">in</span> <span class="n">VernWSSet</span><span class="p">:</span>
+                <span class="n">isVern</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">elif</span> <span class="n">x</span><span class="o">.</span><span class="n">Id</span> <span class="ow">in</span> <span class="n">AnalWSSet</span><span class="p">:</span>
+                <span class="n">isVern</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">continue</span>        <span class="c"># Skip non-active WSs</span>
+            <span class="n">WSList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">DisplayLabel</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">Id</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">Handle</span><span class="p">,</span> <span class="n">isVern</span><span class="p">)</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="n">WSList</span>
+</div>
+<div class="viewcode-block" id="FLExDBAccess.WSUIName"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.WSUIName">[docs]</a>    <span class="k">def</span> <span class="nf">WSUIName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">languageTagOrHandle</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the UI name of the writing system from the languageTag or Handle.</span>
+<span class="sd">        Ignores case and &#39;-&#39;/&#39;_&#39; differences.</span>
+<span class="sd">        Returns None if the language tag is not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">languageTagOrHandle</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">unicode</span><span class="p">)):</span>
+            <span class="n">languageTagOrHandle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__NormaliseLangTag</span><span class="p">(</span><span class="n">languageTagOrHandle</span><span class="p">)</span>
+        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__WSNameCache</span><span class="p">[</span><span class="n">languageTagOrHandle</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="c"># Create a lookup table on-demand.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__WSNameCache</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">ServiceLocator</span><span class="o">.</span><span class="n">WritingSystems</span><span class="o">.</span><span class="n">AllWritingSystems</span><span class="p">:</span>
+                <span class="n">langTag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__NormaliseLangTag</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">Id</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__WSNameCache</span><span class="p">[</span><span class="n">langTag</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">DisplayLabel</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__WSNameCache</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">Handle</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">DisplayLabel</span>
+            <span class="c"># Recursive:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">WSUIName</span><span class="p">(</span><span class="n">languageTagOrHandle</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+</div>
+<div class="viewcode-block" id="FLExDBAccess.WSHandle"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.WSHandle">[docs]</a>    <span class="k">def</span> <span class="nf">WSHandle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">languageTag</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the Handle of the writing system from the languageTag.</span>
+<span class="sd">        Ignores case and &#39;-&#39;/&#39;_&#39; differences.</span>
+<span class="sd">        Returns None if the language tag is not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">languageTag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__NormaliseLangTag</span><span class="p">(</span><span class="n">languageTag</span><span class="p">)</span>
+        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__WSLCIDCache</span><span class="p">[</span><span class="n">languageTag</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="c"># Create a lookup table on-demand.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__WSLCIDCache</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">ServiceLocator</span><span class="o">.</span><span class="n">WritingSystems</span><span class="o">.</span><span class="n">AllWritingSystems</span><span class="p">:</span>
+                <span class="n">langTag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__NormaliseLangTag</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">Id</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__WSLCIDCache</span><span class="p">[</span><span class="n">langTag</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">Handle</span>
+            <span class="c"># Recursive:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">WSHandle</span><span class="p">(</span><span class="n">languageTag</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+                </div>
+<div class="viewcode-block" id="FLExDBAccess.GetDefaultVernacularWS"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.GetDefaultVernacularWS">[docs]</a>    <span class="k">def</span> <span class="nf">GetDefaultVernacularWS</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the Default Vernacular Writing System: (Language-tag, Name)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lp</span><span class="o">.</span><span class="n">DefaultVernacularWritingSystem</span><span class="o">.</span><span class="n">Id</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">lp</span><span class="o">.</span><span class="n">DefaultVernacularWritingSystem</span><span class="o">.</span><span class="n">DisplayLabel</span><span class="p">)</span>
+    </div>
+<div class="viewcode-block" id="FLExDBAccess.GetDefaultAnalysisWS"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.GetDefaultAnalysisWS">[docs]</a>    <span class="k">def</span> <span class="nf">GetDefaultAnalysisWS</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the Default Analysis Writing System: (Language-tag, Name)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lp</span><span class="o">.</span><span class="n">DefaultAnalysisWritingSystem</span><span class="o">.</span><span class="n">Id</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">lp</span><span class="o">.</span><span class="n">DefaultAnalysisWritingSystem</span><span class="o">.</span><span class="n">DisplayLabel</span><span class="p">)</span>
+
+    <span class="c"># --- Global: other information ---</span>
+    </div>
+<div class="viewcode-block" id="FLExDBAccess.GetDateLastModified"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.GetDateLastModified">[docs]</a>    <span class="k">def</span> <span class="nf">GetDateLastModified</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lp</span><span class="o">.</span><span class="n">DateModified</span>
+    </div>
+<div class="viewcode-block" id="FLExDBAccess.GetPartsOfSpeech"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.GetPartsOfSpeech">[docs]</a>    <span class="k">def</span> <span class="nf">GetPartsOfSpeech</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of the Parts of Speech defined in this</span>
+<span class="sd">        database.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lp</span><span class="o">.</span><span class="n">AllPartsOfSpeech</span>
+        
+        <span class="k">return</span> <span class="nb">map</span> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">ToString</span><span class="p">(),</span> <span class="n">pos</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="FLExDBAccess.GetAllSemanticDomains"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.GetAllSemanticDomains">[docs]</a>    <span class="k">def</span> <span class="nf">GetAllSemanticDomains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a nested or flat list of all Semantic Domains defined</span>
+<span class="sd">        in this database. The list is ordered.</span>
+<span class="sd">        </span>
+<span class="sd">        Return items are objects with properties/methods:</span>
+<span class="sd">            - Hvo         - ID (value not the same across databases)</span>
+<span class="sd">            - Guid        - Global Unique ID (same across all databases)</span>
+<span class="sd">            - ToString()  - String representation of the semantic domain.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c"># Recursively extract the semantic domains</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">UnpackNestedPossibilityList</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">lp</span><span class="o">.</span><span class="n">SemanticDomainListOA</span><span class="o">.</span><span class="n">PossibilitiesOS</span><span class="p">,</span>
+                        <span class="n">flat</span><span class="p">))</span>
+
+
+    <span class="c"># --- Global utility functions ---</span>
+    </div>
+<div class="viewcode-block" id="FLExDBAccess.BuildGotoURL"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.BuildGotoURL">[docs]</a>    <span class="k">def</span> <span class="nf">BuildGotoURL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entryOrID</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Builds a URL that can be used with os.startfile() to jump to the</span>
+<span class="sd">        entry in Lexicon Edit or or reversal entry in Reversal Edit.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c">## ClassIsOrInheritsFrom(classIDTest, classIDSig)</span>
+        
+        <span class="n">tool</span> <span class="o">=</span> <span class="s">&quot;lexiconEdit&quot;</span>                <span class="c"># Default tool</span>
+   
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">idString</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">entryOrID</span><span class="o">.</span><span class="n">Guid</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">idString</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">entryOrID</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">ClassIsOrInheritsFrom</span><span class="p">(</span><span class="n">entryOrID</span><span class="o">.</span><span class="n">ClassID</span><span class="p">,</span>
+                                         <span class="n">ReversalIndexTags</span><span class="o">.</span><span class="n">kClassId</span><span class="p">):</span>
+            <span class="n">tool</span> <span class="o">=</span> <span class="s">r&quot;reversalToolEditComplete&quot;</span>
+
+        <span class="k">return</span> <span class="s">r&quot;%26&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s">r&quot;silfw://localhost/link?app</span><span class="si">%3d</span><span class="s">flex&quot;</span><span class="p">,</span>
+                            <span class="s">r&quot;database</span><span class="si">%3d</span><span class="s">&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">ProjectId</span><span class="o">.</span><span class="n">UiName</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&quot; &quot;</span><span class="p">,</span> <span class="s">&quot;+&quot;</span><span class="p">),</span>
+                            <span class="s">r&quot;tool</span><span class="si">%3d</span><span class="s">&quot;</span> <span class="o">+</span> <span class="n">tool</span><span class="p">,</span>    <span class="c"># TODO: use escapes for &#39;%&#39; + % syntax</span>
+                            <span class="s">r&quot;guid</span><span class="si">%3d</span><span class="s">&quot;</span> <span class="o">+</span> <span class="n">idString</span><span class="p">,])</span>
+<span class="c">##                            r&quot;server%3d.%5cSILFW&quot;,</span>
+
+    <span class="c"># --- Lexicon ---</span>
+</div>
+<div class="viewcode-block" id="FLExDBAccess.LexiconNumberOfEntries"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconNumberOfEntries">[docs]</a>    <span class="k">def</span> <span class="nf">LexiconNumberOfEntries</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># TODO: is there a faster way of doing this? Count is gone in v7</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lexDB</span><span class="o">.</span><span class="n">Entries</span><span class="p">))</span>
+        </div>
+<div class="viewcode-block" id="FLExDBAccess.LexiconAllEntries"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconAllEntries">[docs]</a>    <span class="k">def</span> <span class="nf">LexiconAllEntries</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns an iterator over all entries in the lexicon.</span>
+<span class="sd">        </span>
+<span class="sd">        Each entry is of type:</span>
+<span class="sd">          SIL.FieldWorks.FDO.ILexEntry, which contains:</span>
+<span class="sd">              - HomographNumber :: integer</span>
+<span class="sd">              - HomographForm :: string</span>
+<span class="sd">              - LexemeFormOA ::  SIL.FieldWorks.FDO.Ling.MoForm</span>
+<span class="sd">                   - Form :: SIL.FieldWorks.FDO.MultiUnicodeAccessor</span>
+<span class="sd">                      - GetAlternative : Get String for given WS type</span>
+<span class="sd">                      - SetAlternative : Set string for given WS type</span>
+<span class="sd">              - SensesOS :: Ordered collection of SIL.FieldWorks.FDO.Ling.LexSense </span>
+<span class="sd">                  - Gloss :: SIL.FieldWorks.FDO.MultiStringAccessor</span>
+<span class="sd">                  - Definition :: SIL.FieldWorks.FDO.MultiStringAccessor</span>
+<span class="sd">                  - SenseNumber :: string</span>
+<span class="sd">                  - ExamplesOS :: Ordered collection of LexExampleSentence</span>
+<span class="sd">                      - Example :: MultiString</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lexDB</span><span class="o">.</span><span class="n">Entries</span><span class="p">)</span>
+
+    <span class="c">#  (Writing system utilities)</span>
+    </div>
+    <span class="k">def</span> <span class="nf">__WSHandle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">languageTagOrHandle</span><span class="p">,</span> <span class="n">defaultWS</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">languageTagOrHandle</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">handle</span> <span class="o">=</span> <span class="n">defaultWS</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c">#print &quot;Specified ws =&quot;, languageTagOrHandle</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">languageTagOrHandle</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">unicode</span><span class="p">)):</span>
+                <span class="n">handle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">WSHandle</span><span class="p">(</span><span class="n">languageTagOrHandle</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">handle</span> <span class="o">=</span> <span class="n">languageTagOrHandle</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">handle</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">FDA_WritingSystemError</span><span class="p">(</span><span class="n">languageTagOrHandle</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">handle</span>
+
+    <span class="k">def</span> <span class="nf">__WSHandleVernacular</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">languageTagOrHandle</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__WSHandle</span><span class="p">(</span><span class="n">languageTagOrHandle</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">DefaultVernWs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__WSHandleAnalysis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">languageTagOrHandle</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__WSHandle</span><span class="p">(</span><span class="n">languageTagOrHandle</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">DefaultAnalWs</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">__NormaliseLangTag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">languageTag</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">languageTag</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&quot;-&quot;</span><span class="p">,</span> <span class="s">&quot;_&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    
+    <span class="c">#  (Vernacular WS fields)</span>
+    
+<div class="viewcode-block" id="FLExDBAccess.LexiconGetLexemeForm"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetLexemeForm">[docs]</a>    <span class="k">def</span> <span class="nf">LexiconGetLexemeForm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">,</span> <span class="n">languageTagOrHandle</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the lexeme form for the entry in the Default Vernacular WS</span>
+<span class="sd">        or other WS as specified by languageTagOrHandle.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">WSHandle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__WSHandleVernacular</span><span class="p">(</span><span class="n">languageTagOrHandle</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">WSHandle</span><span class="p">:</span> <span class="k">return</span>
+
+        <span class="c"># MultiUnicodeAccessor</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">ITsString</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">LexemeFormOA</span><span class="o">.</span><span class="n">Form</span><span class="o">.</span><span class="n">get_String</span><span class="p">(</span><span class="n">WSHandle</span><span class="p">))</span><span class="o">.</span><span class="n">Text</span>
+        <span class="k">if</span> <span class="n">form</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span> <span class="k">return</span> <span class="s">u&quot;&quot;</span>
+        <span class="k">else</span><span class="p">:</span> <span class="k">return</span> <span class="n">form</span>            
+</div>
+<div class="viewcode-block" id="FLExDBAccess.LexiconGetCitationForm"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetCitationForm">[docs]</a>    <span class="k">def</span> <span class="nf">LexiconGetCitationForm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">,</span> <span class="n">languageTagOrHandle</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the citation form for the entry in the Default Vernacular WS</span>
+<span class="sd">        or other WS as specified by languageTagOrHandle.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">WSHandle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__WSHandleVernacular</span><span class="p">(</span><span class="n">languageTagOrHandle</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">WSHandle</span><span class="p">:</span> <span class="k">return</span>
+
+        <span class="c"># MultiUnicodeAccessor</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">ITsString</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">CitationForm</span><span class="o">.</span><span class="n">get_String</span><span class="p">(</span><span class="n">WSHandle</span><span class="p">))</span><span class="o">.</span><span class="n">Text</span>
+        <span class="k">if</span> <span class="n">form</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span> <span class="k">return</span> <span class="s">u&quot;&quot;</span>
+        <span class="k">else</span><span class="p">:</span> <span class="k">return</span> <span class="n">form</span>
+
+</div>
+<div class="viewcode-block" id="FLExDBAccess.LexiconGetExample"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetExample">[docs]</a>    <span class="k">def</span> <span class="nf">LexiconGetExample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">example</span><span class="p">,</span> <span class="n">languageTagOrHandle</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the example text in the Default Analysis WS or</span>
+<span class="sd">        other WS as specified by languageTagOrHandle.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">WSHandle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__WSHandleVernacular</span><span class="p">(</span><span class="n">languageTagOrHandle</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">WSHandle</span><span class="p">:</span> <span class="k">return</span>
+        
+        <span class="c"># Example is a MultiString</span>
+        <span class="n">ex</span> <span class="o">=</span> <span class="n">ITsString</span><span class="p">(</span><span class="n">example</span><span class="o">.</span><span class="n">Example</span><span class="o">.</span><span class="n">get_String</span><span class="p">(</span><span class="n">WSHandle</span><span class="p">))</span><span class="o">.</span><span class="n">Text</span>
+        <span class="k">if</span> <span class="n">ex</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span> <span class="k">return</span> <span class="s">u&quot;&quot;</span>
+        <span class="k">else</span><span class="p">:</span> <span class="k">return</span> <span class="n">ex</span>
+</div>
+<div class="viewcode-block" id="FLExDBAccess.LexiconSetExample"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconSetExample">[docs]</a>    <span class="k">def</span> <span class="nf">LexiconSetExample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">example</span><span class="p">,</span> <span class="n">newString</span><span class="p">,</span> <span class="n">languageTagOrHandle</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the Default Vernacular string for the given Example:</span>
+<span class="sd">        </span>
+<span class="sd">            - newString must be unicode.</span>
+<span class="sd">            - languageTagOrHandle specifies a different writing system.</span>
+
+<span class="sd">        NOTE: using this function will lose any formatting that might</span>
+<span class="sd">        have been present in the example string.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">example</span><span class="p">:</span> <span class="k">return</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">writeEnabled</span><span class="p">:</span> <span class="k">raise</span> <span class="n">FDA_ReadOnlyError</span>
+
+        <span class="n">WSHandle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__WSHandleVernacular</span><span class="p">(</span><span class="n">languageTagOrHandle</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">WSHandle</span><span class="p">:</span> <span class="k">return</span> 
+
+        <span class="c"># Gloss is a MultiUnicodeAccessor</span>
+        <span class="n">example</span><span class="o">.</span><span class="n">Example</span><span class="o">.</span><span class="n">set_String</span><span class="p">(</span><span class="n">WSHandle</span><span class="p">,</span> <span class="n">newString</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    
+    <span class="c">#  (Analysis WS fields)</span>
+</div>
+<div class="viewcode-block" id="FLExDBAccess.LexiconGetSenseGloss"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetSenseGloss">[docs]</a>    <span class="k">def</span> <span class="nf">LexiconGetSenseGloss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sense</span><span class="p">,</span> <span class="n">languageTagOrHandle</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the gloss for the sense in the Default Analysis WS or</span>
+<span class="sd">        other WS as specified by languageTagOrHandle.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">WSHandle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__WSHandleAnalysis</span><span class="p">(</span><span class="n">languageTagOrHandle</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">WSHandle</span><span class="p">:</span> <span class="k">return</span>
+        
+        <span class="c"># Gloss is a MultiUnicodeAccessor</span>
+        <span class="n">gloss</span> <span class="o">=</span> <span class="n">ITsString</span><span class="p">(</span><span class="n">sense</span><span class="o">.</span><span class="n">Gloss</span><span class="o">.</span><span class="n">get_String</span><span class="p">(</span><span class="n">WSHandle</span><span class="p">))</span><span class="o">.</span><span class="n">Text</span>
+        <span class="k">if</span> <span class="n">gloss</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span> <span class="k">return</span> <span class="s">u&quot;&quot;</span>
+        <span class="k">else</span><span class="p">:</span> <span class="k">return</span> <span class="n">gloss</span>
+
+        </div>
+<div class="viewcode-block" id="FLExDBAccess.LexiconSetSenseGloss"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconSetSenseGloss">[docs]</a>    <span class="k">def</span> <span class="nf">LexiconSetSenseGloss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sense</span><span class="p">,</span> <span class="n">gloss</span><span class="p">,</span> <span class="n">languageTagOrHandle</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the Default Analysis gloss for the given sense:</span>
+<span class="sd">        </span>
+<span class="sd">            - gloss must be unicode.</span>
+<span class="sd">            - languageTagOrHandle specifies a different writing system.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">writeEnabled</span><span class="p">:</span> <span class="k">raise</span> <span class="n">FDA_ReadOnlyError</span>
+
+        <span class="n">WSHandle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__WSHandleAnalysis</span><span class="p">(</span><span class="n">languageTagOrHandle</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">WSHandle</span><span class="p">:</span> <span class="k">return</span>             <span class="c"># Bad languageTagOrHandle</span>
+        
+        <span class="c"># Gloss is a MultiUnicodeAccessor</span>
+        <span class="c"># set_String handles building a tss for us.</span>
+        <span class="n">sense</span><span class="o">.</span><span class="n">Gloss</span><span class="o">.</span><span class="n">set_String</span><span class="p">(</span><span class="n">WSHandle</span><span class="p">,</span> <span class="n">gloss</span><span class="p">)</span>
+        <span class="k">return</span>
+    </div>
+<div class="viewcode-block" id="FLExDBAccess.LexiconGetSenseDefinition"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetSenseDefinition">[docs]</a>    <span class="k">def</span> <span class="nf">LexiconGetSenseDefinition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sense</span><span class="p">,</span> <span class="n">languageTagOrHandle</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the definition for the sense in the Default Analysis WS or</span>
+<span class="sd">        other WS as specified by languageTagOrHandle.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">WSHandle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__WSHandleAnalysis</span><span class="p">(</span><span class="n">languageTagOrHandle</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">WSHandle</span><span class="p">:</span> <span class="k">return</span>
+        
+        <span class="c"># Definition is a MultiString</span>
+        <span class="n">defn</span> <span class="o">=</span> <span class="n">ITsString</span><span class="p">(</span><span class="n">sense</span><span class="o">.</span><span class="n">Definition</span><span class="o">.</span><span class="n">get_String</span><span class="p">(</span><span class="n">WSHandle</span><span class="p">))</span><span class="o">.</span><span class="n">Text</span>
+        <span class="k">if</span> <span class="n">defn</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span> <span class="k">return</span> <span class="s">u&quot;&quot;</span>
+        <span class="k">else</span><span class="p">:</span> <span class="k">return</span> <span class="n">defn</span>
+
+    <span class="c">#  (Non-string types)</span>
+    </div>
+<div class="viewcode-block" id="FLExDBAccess.LexiconGetSensePOS"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetSensePOS">[docs]</a>    <span class="k">def</span> <span class="nf">LexiconGetSensePOS</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sense</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">sense</span><span class="o">.</span><span class="n">MorphoSyntaxAnalysisRA</span> <span class="o">&lt;&gt;</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">sense</span><span class="o">.</span><span class="n">MorphoSyntaxAnalysisRA</span><span class="o">.</span><span class="n">InterlinearAbbr</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">&quot;&quot;</span>
+</div>
+<div class="viewcode-block" id="FLExDBAccess.LexiconGetSenseSemanticDomains"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetSenseSemanticDomains">[docs]</a>    <span class="k">def</span> <span class="nf">LexiconGetSenseSemanticDomains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sense</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of Semantic Domain objects belonging to the sense.</span>
+<span class="sd">        ToString() and Hvo are available.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c">## SemanticDomainsRC::</span>
+        <span class="c">##      Count</span>
+        <span class="c">##      Add(Hvo)</span>
+        <span class="c">##      Contains(Hvo)</span>
+        <span class="c">##      Remove(Hvo)</span>
+        <span class="c">##      RemoveAll()</span>
+        
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">sense</span><span class="o">.</span><span class="n">SemanticDomainsRC</span><span class="p">)</span>
+
+    <span class="c"># --- Lexicon: field functions ---</span>
+</div>
+<div class="viewcode-block" id="FLExDBAccess.GetCustomFieldValue"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.GetCustomFieldValue">[docs]</a>    <span class="k">def</span> <span class="nf">GetCustomFieldValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hvo</span><span class="p">,</span> <span class="n">flid</span><span class="p">):</span>
+        <span class="c"># Adapted from XDumper.cs::GetCustomFieldValue</span>
+        <span class="n">mdc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">MetaDataCacheAccessor</span>
+        <span class="n">cellarPropertyType</span> <span class="o">=</span> <span class="n">mdc</span><span class="o">.</span><span class="n">GetFieldType</span><span class="p">(</span><span class="n">flid</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cellarPropertyType</span> <span class="ow">in</span> <span class="p">(</span><span class="n">CellarPropertyType</span><span class="o">.</span><span class="n">String</span><span class="p">,</span>
+                                  <span class="n">CellarPropertyType</span><span class="o">.</span><span class="n">BigString</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">ITsString</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">DomainDataByFlid</span><span class="o">.</span>\
+                             <span class="n">get_StringProp</span><span class="p">(</span><span class="n">hvo</span><span class="p">,</span> <span class="n">flid</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">cellarPropertyType</span> <span class="ow">in</span> <span class="p">(</span><span class="n">CellarPropertyType</span><span class="o">.</span><span class="n">MultiUnicode</span><span class="p">,</span>
+                                    <span class="n">CellarPropertyType</span><span class="o">.</span><span class="n">MultiBigUnicode</span><span class="p">,</span>
+                                    <span class="n">CellarPropertyType</span><span class="o">.</span><span class="n">MultiString</span><span class="p">,</span>
+                                    <span class="n">CellarPropertyType</span><span class="o">.</span><span class="n">MultiBigString</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">ITsString</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">DomainDataByFlid</span><span class="o">.</span>\
+                             <span class="n">get_MultiStringProp</span><span class="p">(</span><span class="n">hvo</span><span class="p">,</span> <span class="n">flid</span><span class="p">))</span>
+
+	<span class="k">return</span> <span class="bp">None</span>
+
+</div>
+<div class="viewcode-block" id="FLExDBAccess.LexiconGetFieldText"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetFieldText">[docs]</a>    <span class="k">def</span> <span class="nf">LexiconGetFieldText</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">senseOrEntryOrHvo</span><span class="p">,</span> <span class="n">fieldID</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the text value for the given entry/sense and field (ID).</span>
+<span class="sd">        Provided for use with custom fields.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">fieldID</span><span class="p">:</span> <span class="k">return</span> <span class="s">u&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">senseOrEntryOrHvo</span><span class="p">:</span> <span class="k">return</span> <span class="s">u&quot;&quot;</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">hvo</span> <span class="o">=</span> <span class="n">senseOrEntryOrHvo</span><span class="o">.</span><span class="n">Hvo</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="n">hvo</span> <span class="o">=</span> <span class="n">senseOrEntryOrHvo</span>
+
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetCustomFieldValue</span><span class="p">(</span><span class="n">hvo</span><span class="p">,</span> <span class="n">fieldID</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">Text</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">u&quot;&quot;</span>
+        </div>
+<div class="viewcode-block" id="FLExDBAccess.LexiconSetFieldText"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconSetFieldText">[docs]</a>    <span class="k">def</span> <span class="nf">LexiconSetFieldText</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">senseOrEntryOrHvo</span><span class="p">,</span> <span class="n">fieldID</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">languageTagOrHandle</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the text value for the given entry/sense and field (ID).</span>
+<span class="sd">        NOTE: writes the string in one writing system only (defaults</span>
+<span class="sd">        to the default analysis WS.)</span>
+<span class="sd">        Provided for use with custom fields.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">writeEnabled</span><span class="p">:</span> <span class="k">raise</span> <span class="n">FDA_ReadOnlyError</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">fieldID</span><span class="p">:</span> <span class="k">return</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">senseOrEntryOrHvo</span><span class="p">:</span> <span class="k">return</span>
+
+        <span class="n">WSHandle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__WSHandleAnalysis</span><span class="p">(</span><span class="n">languageTagOrHandle</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">WSHandle</span><span class="p">:</span> <span class="k">return</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">hvo</span> <span class="o">=</span> <span class="n">senseOrEntryOrHvo</span><span class="o">.</span><span class="n">Hvo</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="n">hvo</span> <span class="o">=</span> <span class="n">senseOrEntryOrHvo</span>
+
+        <span class="n">mdc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">MetaDataCacheAccessor</span>
+        <span class="k">if</span> <span class="n">mdc</span><span class="o">.</span><span class="n">GetFieldType</span><span class="p">(</span><span class="n">fieldID</span><span class="p">)</span> <span class="o">&lt;&gt;</span> <span class="n">CellarPropertyType</span><span class="o">.</span><span class="n">String</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">FDA_DatabaseError</span><span class="p">(</span><span class="s">&quot;LexiconSetFieldText: field is not String type&quot;</span><span class="p">)</span>
+
+        <span class="n">tss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">TsStrFactory</span><span class="o">.</span><span class="n">MakeString</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">WSHandle</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">DomainDataByFlid</span><span class="o">.</span><span class="n">SetString</span><span class="p">(</span><span class="n">hvo</span><span class="p">,</span> <span class="n">fieldID</span><span class="p">,</span> <span class="n">tss</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">FDOInvalidFieldException</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">FDA_DatabaseError</span><span class="p">(</span><span class="s">&quot;FDOInvalidFieldException: Trying to write in read-only mode?&quot;</span><span class="p">)</span>
+            
+</div>
+<div class="viewcode-block" id="FLExDBAccess.LexiconAddTagToField"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconAddTagToField">[docs]</a>    <span class="k">def</span> <span class="nf">LexiconAddTagToField</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">senseOrEntryOrHvo</span><span class="p">,</span> <span class="n">fieldID</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Appends the tag string to the end of the given field in the</span>
+<span class="sd">        sense or entry inserting a semicolon between tags.</span>
+<span class="sd">        If the tag is already in the field then it isn&#39;t added.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">fieldID</span><span class="p">:</span> <span class="k">return</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">senseOrEntryOrHvo</span><span class="p">:</span> <span class="k">return</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">hvo</span> <span class="o">=</span> <span class="n">senseOrEntryOrHvo</span><span class="o">.</span><span class="n">Hvo</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="n">hvo</span> <span class="o">=</span> <span class="n">senseOrEntryOrHvo</span>
+            
+        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetCustomFieldValue</span><span class="p">(</span><span class="n">hvo</span><span class="p">,</span> <span class="n">fieldID</span><span class="p">)</span>
+        <span class="c">#print &quot;Adding tag to&quot;, s.Text, s.Length, &quot;(&quot;, tag, &quot;)&quot;</span>
+        <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">Text</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">Text</span><span class="p">:</span> <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">LexiconSetFieldText</span><span class="p">(</span><span class="n">hvo</span><span class="p">,</span>
+                                 <span class="n">fieldID</span><span class="p">,</span>
+                                 <span class="s">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">s</span><span class="o">.</span><span class="n">Text</span><span class="p">,</span> <span class="n">tag</span><span class="p">)))</span>
+        <span class="k">return</span>
+    
+
+    <span class="c"># --- Lexicon: Custom fields ---</span>
+    </div>
+    <span class="k">def</span> <span class="nf">__GetCustomFieldsOfType</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">classID</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generator for finding all the custom fields at Sense or Entry level.</span>
+<span class="sd">        Returns tuples of (flid, label)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c"># The MetaDataCache defines the database structure: we can</span>
+        <span class="c"># find the custom fields in here.</span>
+        <span class="n">mdc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">MetaDataCacheAccessor</span>
+        <span class="k">for</span> <span class="n">flid</span> <span class="ow">in</span> <span class="n">mdc</span><span class="o">.</span><span class="n">GetFields</span><span class="p">(</span><span class="n">classID</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">GetIsCustomField</span><span class="p">(</span><span class="n">flid</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="p">((</span><span class="n">flid</span><span class="p">,</span> <span class="n">mdc</span><span class="o">.</span><span class="n">GetFieldLabel</span><span class="p">(</span><span class="n">flid</span><span class="p">)))</span>
+
+    <span class="k">def</span> <span class="nf">__FindCustomField</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">classID</span><span class="p">,</span> <span class="n">fieldName</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">flid</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__GetCustomFieldsOfType</span><span class="p">(</span><span class="n">classID</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="n">fieldName</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">flid</span>
+        <span class="k">return</span> <span class="bp">None</span>
+
+<div class="viewcode-block" id="FLExDBAccess.LexiconGetEntryCustomFields"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetEntryCustomFields">[docs]</a>    <span class="k">def</span> <span class="nf">LexiconGetEntryCustomFields</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of the custom fields defined at Entry level.</span>
+<span class="sd">        Each item in the list is a tuple of (flid, label)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__GetCustomFieldsOfType</span><span class="p">(</span><span class="n">LexEntryTags</span><span class="o">.</span><span class="n">kClassId</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="FLExDBAccess.LexiconGetSenseCustomFields"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetSenseCustomFields">[docs]</a>    <span class="k">def</span> <span class="nf">LexiconGetSenseCustomFields</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of the custom fields defined at Sense level.</span>
+<span class="sd">        Each item in the list is a tuple of (flid, label)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__GetCustomFieldsOfType</span><span class="p">(</span><span class="n">LexSenseTags</span><span class="o">.</span><span class="n">kClassId</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="FLExDBAccess.LexiconGetEntryCustomFieldNamed"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetEntryCustomFieldNamed">[docs]</a>    <span class="k">def</span> <span class="nf">LexiconGetEntryCustomFieldNamed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fieldName</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the entry-level field (its ID) given its name.</span>
+<span class="sd">        NOTE: fieldName is case-sensitive.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__FindCustomField</span><span class="p">(</span><span class="n">LexEntryTags</span><span class="o">.</span><span class="n">kClassId</span><span class="p">,</span> <span class="n">fieldName</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="FLExDBAccess.LexiconGetSenseCustomFieldNamed"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.LexiconGetSenseCustomFieldNamed">[docs]</a>    <span class="k">def</span> <span class="nf">LexiconGetSenseCustomFieldNamed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fieldName</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the sense-level field (its ID) given its name.</span>
+<span class="sd">        NOTE: fieldName is case-sensitive.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__FindCustomField</span><span class="p">(</span><span class="n">LexSenseTags</span><span class="o">.</span><span class="n">kClassId</span><span class="p">,</span> <span class="n">fieldName</span><span class="p">)</span>
+
+        
+    <span class="c"># --- Reversal Indices ---</span>
+</div>
+<div class="viewcode-block" id="FLExDBAccess.ReversalIndex"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.ReversalIndex">[docs]</a>    <span class="k">def</span> <span class="nf">ReversalIndex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">languageTag</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the ReversalIndex that matches the given languageTag string</span>
+<span class="sd">        (eg &#39;en&#39;). Returns None if there is no reversal index for</span>
+<span class="sd">        that writing system.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">languageTag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__NormaliseLangTag</span><span class="p">(</span><span class="n">languageTag</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">ri</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lexDB</span><span class="o">.</span><span class="n">ReversalIndexesOC</span><span class="p">:</span>
+            <span class="c">#print ri.WritingSystem</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__NormaliseLangTag</span><span class="p">(</span><span class="n">ri</span><span class="o">.</span><span class="n">WritingSystem</span><span class="p">)</span> <span class="o">==</span> <span class="n">languageTag</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ri</span>
+
+        <span class="k">return</span> <span class="bp">None</span>
+</div>
+<div class="viewcode-block" id="FLExDBAccess.ReversalEntries"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.ReversalEntries">[docs]</a>    <span class="k">def</span> <span class="nf">ReversalEntries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">languageTag</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns an iterator for the reversal entries for the given language</span>
+<span class="sd">        tag (eg &#39;en&#39;). Returns None if there is no reversal index for</span>
+<span class="sd">        that writing system.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ri</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ReversalIndex</span><span class="p">(</span><span class="n">languageTag</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ri</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="n">ri</span><span class="o">.</span><span class="n">EntriesOC</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+</div>
+<div class="viewcode-block" id="FLExDBAccess.ReversalGetForm"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.ReversalGetForm">[docs]</a>    <span class="k">def</span> <span class="nf">ReversalGetForm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">,</span> <span class="n">languageTagOrHandle</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the citation form for the reversal entry in the Default</span>
+<span class="sd">        Vernacular WS or other WS as specified by languageTagOrHandle.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">WSHandle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__WSHandleAnalysis</span><span class="p">(</span><span class="n">languageTagOrHandle</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">WSHandle</span><span class="p">:</span> <span class="k">return</span>
+        
+        <span class="n">form</span> <span class="o">=</span> <span class="n">ITsString</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">ReversalForm</span><span class="o">.</span><span class="n">get_String</span><span class="p">(</span><span class="n">WSHandle</span><span class="p">))</span><span class="o">.</span><span class="n">Text</span>
+        <span class="k">if</span> <span class="n">form</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span> <span class="k">return</span> <span class="s">u&quot;&quot;</span>
+        <span class="k">else</span><span class="p">:</span> <span class="k">return</span> <span class="n">form</span>
+</div>
+<div class="viewcode-block" id="FLExDBAccess.ReversalSetForm"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.ReversalSetForm">[docs]</a>    <span class="k">def</span> <span class="nf">ReversalSetForm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="n">languageTagOrHandle</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the Default Analysis reversal form for the given reversal entry:</span>
+<span class="sd">        </span>
+<span class="sd">            - form must be unicode.</span>
+<span class="sd">            - languageTagOrHandle can be used to specify a different writing system.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">writeEnabled</span><span class="p">:</span> <span class="k">raise</span> <span class="n">FDA_ReadOnlyError</span>
+
+        <span class="n">WSHandle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__WSHandleAnalysis</span><span class="p">(</span><span class="n">languageTagOrHandle</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">WSHandle</span><span class="p">:</span> <span class="k">return</span>
+        
+        <span class="c"># ReversalForm is a MultiUnicodeAccessor</span>
+        <span class="c"># set_String handles building a tss for us.</span>
+        <span class="n">entry</span><span class="o">.</span><span class="n">ReversalForm</span><span class="o">.</span><span class="n">set_String</span><span class="p">(</span><span class="n">WSHandle</span><span class="p">,</span> <span class="n">form</span><span class="p">)</span>
+        <span class="k">return</span>
+    
+    <span class="c"># --- Texts ---</span>
+</div>
+<div class="viewcode-block" id="FLExDBAccess.TextsGetAll"><a class="viewcode-back" href="../../FLExLibs.html#FLExLibs.FLExDBAccess.FLExDBAccess.TextsGetAll">[docs]</a>    <span class="k">def</span> <span class="nf">TextsGetAll</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">supplyName</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">supplyText</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A Generator that returns tuples of (Name, Text) where:</span>
+<span class="sd">        </span>
+<span class="sd">            - Name is the best vernacular or analysis name.</span>
+<span class="sd">            - Text is a string with newlines separating paragraphs.</span>
+<span class="sd">            </span>
+<span class="sd">        Passing supplyName/Text=False returns only the names or texts.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">supplyText</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lp</span><span class="o">.</span><span class="n">TextsOC</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">ITsString</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">Name</span><span class="o">.</span><span class="n">BestVernacularAnalysisAlternative</span><span class="p">)</span><span class="o">.</span><span class="n">Text</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lp</span><span class="o">.</span><span class="n">TextsOC</span><span class="p">:</span>
+                <span class="n">content</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">t</span><span class="o">.</span><span class="n">ContentsOA</span><span class="o">.</span><span class="n">ParagraphsOS</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">ITsString</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">Contents</span><span class="p">)</span><span class="o">.</span><span class="n">Text</span><span class="p">:</span>
+                        <span class="n">content</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ITsString</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">Contents</span><span class="p">)</span><span class="o">.</span><span class="n">Text</span><span class="p">)</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">ITsString</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">Name</span><span class="o">.</span><span class="n">BestVernacularAnalysisAlternative</span><span class="p">)</span><span class="o">.</span><span class="n">Text</span>
+                <span class="k">if</span> <span class="n">supplyName</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="n">name</span><span class="p">,</span> <span class="s">u&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>        
+                <span class="k">else</span><span class="p">:</span>                
+                    <span class="k">yield</span> <span class="s">u&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>        
+
+    <span class="c"># --- ---</span>
+</div></div>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="nb">reload</span><span class="p">(</span><span class="n">__builtins__</span><span class="p">)</span>
+    <span class="n">help</span> <span class="p">(</span><span class="n">FLExDBAccess</span><span class="p">)</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">FLExDBAccess</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">OpenDatabase</span><span class="p">(</span><span class="s">&quot;Sena 3&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">FDA_COMError</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s">&quot;You need to register Language.dll and FwKernel.dll&quot;</span>
+        <span class="k">print</span> <span class="s">&quot;Run these commands as administrator:&quot;</span>
+        <span class="k">print</span> <span class="s">&quot;</span><span class="se">\t</span><span class="s">regsvr32 Language.dll&quot;</span>
+        <span class="k">print</span> <span class="s">&quot;</span><span class="se">\t</span><span class="s">regsvr32 FwKernel.dll&quot;</span>
+        
+    <span class="k">del</span> <span class="n">db</span>
+    
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="../../index.html">FLExLibs  documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>
