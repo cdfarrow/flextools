@@ -182,7 +182,7 @@ class ModuleManager (object):
                                                reporter,
                                                modify=modifyDB)
             except Exception, e:
-                moduleError = traceback.format_exc().split("File ")[-1]
+                moduleError = traceback.format_exc()
                 msg = e.message if hasattr(e, "message") else ""
                 reporter.Error("Module failed with %s exception!"
                                % sys.exc_info()[0].__name__,
