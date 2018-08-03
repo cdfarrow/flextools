@@ -113,8 +113,17 @@ class ChineseParser(object):
                         return u'[Expected "%s"]' % newTonenum
             else:
                 # Ambiguous parse
-                tonenum1 = join_segments(self.segmenter, hanzi, l).strip()
-                tonenum2 = join_segments(self.segmenter, hanzi, r).strip()
+                try:
+                    tonenum1 = join_segments(self.segmenter, hanzi, l).strip()
+                    tonenum2 = join_segments(self.segmenter, hanzi, r).strip()
+                except KeyError, msg:
+                    ch = str(msg)
+                    if ch =="u'.'" and "..." in hanzi:
+                        return u"[Use Ellipsis (U+2026): %s]" % msg
+                    elif ch in ["u'('", "u')'", "u'['", "u']'", "u';'", "u'.'", "u' '", "u'-'"]:
+                        return u"[Use Chinese (wide) punctuation: %s]" % msg
+                    return u"[Unknown/unsupported Chinese : %s]" % msg
+                    
                 newTonenum = u" | ".join((tonenum1, tonenum2))
                 if not tonenum:
                     return newTonenum
