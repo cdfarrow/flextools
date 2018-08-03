@@ -20,9 +20,9 @@ FLExApps History
 + Bug fixes to Chinese Modules
 + Various UI enhancements
 + New Modules:
-    Reports/Dump_Texts_To_File
-    Reports/Dump_All_Headwords_To_File
-    Reports/Dump_Published_Headwords_To_File
+    Export/Dump_Texts_To_File
+    Export/Dump_All_Headwords_To_File
+    Export/Dump_Published_Headwords_To_File
     Utilities/Approve_Spelling_of_Numbers
     Chinese/Generate_Reversal_Sort_Field_Only
 
@@ -169,7 +169,8 @@ Note: API Help is broken in this version
 1.0.3 - 27 June 2011
 --------------------
 
-+ py_net.bat - correction so that Python 2.5 will work.
++ Bug fixes:
+    - correction to py_net.bat so that Python 2.5 will work.
 
 + FLExTools:
 	- Loads *.pth files from Modules directory.
