@@ -5,13 +5,9 @@
 #
 #   A custom list for selecting the modules in the main FLexTools UI.
 #
-#   TODO:
 #
-#   Craig Farrow
-#   July 2010
-#   v0.0.0
+#   Copyright Craig Farrow, 2010 - 2018
 #
-
 
 
 import UIGlobal
@@ -28,7 +24,7 @@ from System.Windows.Forms import (
     DockStyle, Orientation, View, SortOrder,
     HorizontalAlignment, ImageList,
     DrawItemState, DrawItemEventArgs,
-    KeyEventArgs, KeyPressEventArgs, Keys, 
+    KeyEventArgs, KeyPressEventArgs, Keys,
     TextRenderer)
 
 # ------------------------------------------------------------------
@@ -37,7 +33,7 @@ from System.Windows.Forms import (
 class ModulesList(ListBox):
     SPACING = 1
     ICON_SPACE = 34
-    
+
     def __init__(self, moduleManager, contents):
         ListBox.__init__(self)
 
@@ -61,7 +57,7 @@ class ModulesList(ListBox):
         self.MeasureItem += self.OnMeasureItem
 
         self.UpdateAllItems(contents)
-        
+
     # ---- Custom drawing methods ----
 
     def __countLines(self, s):
@@ -77,9 +73,9 @@ class ModulesList(ListBox):
         if e.Index < 0: return
 
         g = e.Graphics
-       
+
         ## Custom draw... an icon and multi-line text
-   
+
         # Use our own size to preserve the border line
         myBounds = e.Bounds
         myBounds.Height -= self.SPACING
@@ -121,7 +117,7 @@ class ModulesList(ListBox):
     def UpdateAllItems(self, contents, keepSelection=False):
         if keepSelection:
             currentSelection = self.SelectedIndex
-            
+
         formattedItems = []
         self.DataSource = None
 
@@ -140,11 +136,11 @@ class ModulesList(ListBox):
                                   % moduleFullName
             formattedItems.append(composedString)
         self.DataSource = formattedItems
-        
+
         if keepSelection:
             self.SelectedIndex = currentSelection
-        
-    
+
+
     def SetSelectedHandler(self, handler):
         self.__SelectedHandler = handler
         self.ItemSelectionChanged += self.__ItemSelectedHandler
@@ -168,4 +164,3 @@ class ModulesList(ListBox):
                 activate = (event.KeyCode == Keys.Return)
             if activate:
                 self.__ActivatedHandler()
-
