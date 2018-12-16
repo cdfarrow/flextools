@@ -94,11 +94,13 @@ class ReportWindow(ListView):
                     return Environment.NewLine.join((item.Text, item.ToolTipText))
             else:
                 return item.Text
-            
+
         data = [__getData(i) for i in self.Items]
 
         if data:
             Clipboard.SetText(Environment.NewLine.join(data))
+        else:
+            Clipboard.Clear()
 
     def Clear(self):
         self.Reporter.Reset()
