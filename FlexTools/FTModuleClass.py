@@ -2,7 +2,7 @@
 #   Project: FlexTools
 #   Module:  FTModuleClass
 #
-#   FlexToolsModuleClass: The class used for an installable Module.
+#   FlexToolsModuleClass: The class used for an installable module.
 #                         See the class definition for documentation.
 #
 #   Craig Farrow
@@ -11,7 +11,7 @@
 
 import exceptions
 
-# FlexTools Module documentation keys. These keys must be defined in the
+# FlexTools module documentation keys. These keys must be defined in the
 # docs dictionary passed to the FlexToolsModuleClass initialisation.
 FTM_Name        = 'moduleName'
 FTM_Version     = 'moduleVersion'
@@ -20,13 +20,13 @@ FTM_Synopsis    = 'moduleSynopsis'
 FTM_Help        = 'moduleHelp'
 FTM_Description = 'moduleDescription'
 
-# Private - don't define these in the Module
+# Private - don't define these in the module
 FTM_Path        = 'modulePath'
 FTM_HasConfig   = 'moduleHasConfiguration'  # Note: configuration not implemented yet.
 
 
 class FTM_ModuleError(Exception):
-    """Exception raised for any detectable errors in a Module.
+    """Exception raised for any detectable errors in a module.
 
     Attributes:
         message -- explanation of the error
@@ -38,7 +38,7 @@ class FTM_ModuleError(Exception):
 
 class FlexToolsModuleClass (object):
     """
-   A FlexTools Module (located in the Modules directory) should define:
+   A FlexTools module (located in the Modules directory) should define:
        FlexToolsModule = FlexToolsModuleClass(_processing_function_,
                                               _user_documentation_)
 
@@ -62,16 +62,16 @@ class FlexToolsModuleClass (object):
              module.
 
     - _user_documentation_ is a dictionary with the following keys defined:
-        FTM_Name           : A short name for the Module.
-        FTM_Version        : The Module version as a string or anything that 
+        FTM_Name           : A short name for the module.
+        FTM_Version        : The module version as a string or anything that 
                              can be converted with str().
                              e.g. an integer, "1.3", "Beta release 5", etc.
-        FTM_ModifiesDB     : True/False indicating whether this Module
+        FTM_ModifiesDB     : True/False indicating whether this module
                              makes changes to the database (when the user
                              permits it.) 
         FTM_Synopsis       : A description of the module's function or purpose.
-        FTM_Help           : A link to a help file for this Module.
-        FTM_Description    : A multi-line description of the Module's
+        FTM_Help           : A link to a help file for this module.
+        FTM_Description    : A multi-line description of the module's
                              function. Please explain the behaviour and
                              purpose clearly.
                              If relevant, include specific information about
@@ -110,7 +110,7 @@ class FlexToolsModuleClass (object):
             self.runFunction(DB, report, modify)
 
     def Help(self):
-        "Prints information on this FT Module to the console."
+        "Prints information on this FT module to the console."
         if self.runFunction:
             help(self.runFunction)
         for key, value in self.docs.items():
