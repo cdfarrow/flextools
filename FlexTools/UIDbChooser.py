@@ -1,23 +1,17 @@
 #
 #   Project: FlexTools
 #   Module:  UIDbChooser
-#   Platform: .NET v2 Windows.Forms
+#   Platform: .NET v2 Windows.Forms (Python.NET 2.5)
 #
-#   Dialog for selecting a Fieldworks database.
-#   
+#   Dialog for selecting a Fieldworks project.
 #
-#   TODO:
 #
-#   Craig Farrow
-#   Nov 2010
-#   v0.0.0
+#   Copyright Craig Farrow, 2010 - 2018
 #
-
-
 
 import UIGlobal
-import FLExDBAccess
-
+from flexlibs import FLExInit
+from flexlibs.FLExDBAccess import FLExProject
 
 from System.Drawing import (Color, SystemColors, Point, Rectangle, Size, Bitmap,
                             Image, Icon,
@@ -25,7 +19,7 @@ from System.Drawing import (Color, SystemColors, Point, Rectangle, Size, Bitmap,
 from System.Windows.Forms import (Application, BorderStyle, Button,
     Form, FormBorderStyle, Label,
     Panel, Screen, FixedPanel, Padding,
-    KeyEventArgs, KeyPressEventArgs, Keys, 
+    KeyEventArgs, KeyPressEventArgs, Keys,
     MessageBox, MessageBoxButtons, DialogResult,
     DockStyle, Orientation, View, SortOrder,
     ListView, ListViewItem, ColumnHeaderStyle,
@@ -38,8 +32,8 @@ from System import ArgumentOutOfRangeException
 
 # ------------------------------------------------------------------
 
-class DatabaseList(ListView):
-    def __init__(self, currentDatabase):
+class ProjectList(ListView):
+    def __init__(self, currentProject):
         ListView.__init__(self)
         self.Dock = DockStyle.Fill
 
@@ -59,10 +53,10 @@ class DatabaseList(ListView):
         # initialise the list
         self.itemToSetAsSelected = None
 
-        self.flexDB = FLExDBAccess.FLExDBAccess()
-        for name in self.flexDB.GetDatabaseNames():
+        self.flexProject = FLExProject()
+        for name in self.flexProject.GetProjectNames():
             item = self.Items.Add(name)
-            if name == currentDatabase:
+            if name == currentProject:
                 self.itemToSetAsSelected = item
 
     def SetActivatedHandler(self, handler):
@@ -83,7 +77,7 @@ class DatabaseList(ListView):
                 try:
                     self.__ActivatedHandler(sender.SelectedItems[0].Text)
                 except ArgumentOutOfRangeException:
-                    print "ArgumentOutOfRangeException!"
+                    print "UIDbChooser.__ItemActivatedHandler: ArgumentOutOfRangeException!"
                     pass # No item selected
 
     def SetFocusOnCurrent(self):
@@ -93,43 +87,45 @@ class DatabaseList(ListView):
             self.itemToSetAsSelected.Focused = True
             self.itemToSetAsSelected.Selected = True
             self.itemToSetAsSelected.EnsureVisible()
-            
+
 # ------------------------------------------------------------------
 
-class DatabaseChooser(Form):
-    
-    def __init__(self, currentDatabase=None):
+class ProjectChooser(Form):
+
+    def __init__(self, currentProject=None):
         Form.__init__(self)
-        
-        self.ClientSize = Size(300, 250)
-        self.Text = "Choose Database"
+
+        self.ClientSize = Size(350, 250)
+        self.Text = "Choose Project"
         self.Icon = Icon(UIGlobal.ApplicationIcon)
 
-        self.databaseName = currentDatabase
-        
-        self.databaseList = DatabaseList(currentDatabase)
-        self.databaseList.SetActivatedHandler(self.__OnDatabaseActivated)
-        
+        self.projectName = currentProject
+
+        self.projectList = ProjectList(currentProject)
+        self.projectList.SetActivatedHandler(self.__OnProjectActivated)
+
         self.Load += self.__OnLoad
-        
-        self.Controls.Add(self.databaseList)
+
+        self.Controls.Add(self.projectList)
 
     def __OnLoad(self, sender, event):
-        self.databaseList.SetFocusOnCurrent()
+        self.projectList.SetFocusOnCurrent()
 
-    def __OnDatabaseActivated(self, databaseName):
-        #print "__OnDatabaseActivated()"
+    def __OnProjectActivated(self, projectName):
+        #print "__OnProjectActivated()"
         # make selection available to caller
-        self.databaseName = databaseName
+        self.projectName = projectName
         self.Close()
-    
+
 
 # ------------------------------------------------------------------
 if __name__ == "__main__":
+    FLExInit.Initialize()
 
     # Demonstration:
-    dlg = DatabaseChooser()
+    dlg = ProjectChooser()
     dlg.ShowDialog()
-    if dlg.databaseName:
-         MessageBox.Show (dlg.databaseName, "Database selected")
-         
+    if dlg.projectName:
+         MessageBox.Show (dlg.projectName, "Project selected")
+
+    FLExInit.Cleanup()

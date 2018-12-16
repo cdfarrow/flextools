@@ -11,10 +11,10 @@
 
 import UIGlobal
 import Version
-import os, sys
+import os
+import sys
 
-import FLExFDO
-from FLExBaseInit import FWAppVersion, FWCodeDir
+from flexlibs import FLExGlobals
 
 from FTModules import ModuleManager
 
@@ -48,7 +48,7 @@ class AboutInfo(RichTextBox):
         self.SelectionFont  = UIGlobal.headingFont
         self.SelectionColor = Color.Black
         self.AppendText("\nFLExTools\n")
-    
+
         self.SelectionColor = Color.DarkSlateBlue
         self.SelectionFont  = UIGlobal.smallFont
         self.AppendText("%s\n\n" % Version.number)
@@ -61,7 +61,7 @@ class AboutInfo(RichTextBox):
         self.SelectionFont = UIGlobal.smallFont
         self.SelectionColor = Color.Black
         self.AppendText("\n")
-        
+
         mm = ModuleManager()
         mm.LoadAll()
         self.SelectionFont = UIGlobal.normalFont
@@ -69,12 +69,13 @@ class AboutInfo(RichTextBox):
         self.SelectionFont = UIGlobal.normalFont
         self.AppendText("Python version: %s\n" % sys.version.split()[0])
         self.SelectionFont = UIGlobal.normalFont
-        self.AppendText("Fieldworks version: %s\n\n" % FWAppVersion)
+        self.AppendText("Fieldworks version: %s\n\n" %
+                            FLExGlobals.FWShortVersion)
 
         self.SelectionFont = UIGlobal.normalFont
-        self.AppendText("Fieldworks: \thttp://fieldworks.sil.org\n")
+        self.AppendText("FLExTools: \thttps://github.com/cdfarrow/flextools/wiki\n")
         self.SelectionFont = UIGlobal.normalFont
-        self.AppendText("FLExTools: \thttp://craigstips.wikispaces.com/flexapps\n")
+        self.AppendText("Fieldworks: \thttps://software.sil.org/fieldworks/\n")
         self.SelectionFont = UIGlobal.normalFont
         self.AppendText("E-mail: \tmailto:flextoolshelp")
         self.SelectionFont = UIGlobal.normalFont
@@ -104,13 +105,13 @@ class AboutBox (Form):
         self.Text = "About FLExTools"
         self.FormBorderStyle  = FormBorderStyle .Fixed3D
         self.Icon = Icon(UIGlobal.ApplicationIcon)
-        
+
         pb = PictureBox()
         pb.Image = Image.FromFile(UIGlobal.ApplicationIcon)
         pb.BackColor = UIGlobal.helpDialogColor
         pb.SizeMode = PictureBoxSizeMode.CenterImage
 
-        self.Controls.Add(pb)    
+        self.Controls.Add(pb)
         self.Controls.Add(AboutInfo())
 
 
@@ -144,11 +145,11 @@ def ProgrammingHelp(sender=None, event=None):
 def APIHelp(sender=None, event=None):
     Help(APIHelpFile)
 
-def LaunchFDOBrowser(sender=None, event=None):
-    os.startfile(os.sep.join((FWCodeDir, "FDOBrowser.exe")))
+def LaunchLCMBrowser(sender=None, event=None):
+    os.startfile(os.sep.join((FLExGlobals.FWCodeDir, "LCMBrowser.exe")))
 
-    
+
 # ------------------------------------------------------------------
-        
+
 if __name__ == "__main__":
     About()

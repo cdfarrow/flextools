@@ -23,7 +23,7 @@ import traceback
 
 import Version
 import FTReport
-from FLExDBAccess  import FLExDBAccess, FDA_DatabaseError, FDA_DLLError
+from flexlibs.FLExDBAccess import *
 from FTModuleClass import *
 
 # Loads .pth files from Modules\
@@ -59,20 +59,22 @@ class ModuleManager (object):
             if fp:
                 fp.close()
 
-    def __openDatabase(self, dbName, modifyDB):
-        #print "__openDatabase", dbName
-        self.db = FLExDBAccess()
+    def __openProject(self, dbName, modifyDB):
+        #print "__openProject", dbName
+        self.db = FLExProject()
 
         try:
-            self.db.OpenDatabase(dbName, writeEnabled = modifyDB)
+            self.db.OpenProject(dbName,
+                                writeEnabled = modifyDB,
+                                allowMigration = True)
         except:
             #print ">>Failed"
             del self.db
             raise
         #print ">>Success"
-        
-    def __closeDatabase(self):
-        #print "__closeDatabase", self.db
+
+    def __closeProject(self):
+        #print "__closeProject", self.db
         if self.db:
             del self.db     # Free the FDO Cache to get fresh data next time
 
@@ -98,7 +100,7 @@ class ModuleManager (object):
                 # Don't try to directly import python files starting with double underscore.
                 if moduleFileName.startswith("__"):
                     continue
-                
+
                 # Import named Python module from libPath
                 module = self.__always_import(moduleFileName, libPath)
 
@@ -110,7 +112,7 @@ class ModuleManager (object):
                 except AttributeError:
                     print "Warning: FlexToolsModule not found in %s." % moduleFileName
                     continue
-                
+
                 if library:
                     moduleFullName = ".".join([library, ftm.GetDocs()[FTM_Name]])
                     modulePath = os.path.join(MODULES_PATH, library, moduleFileName)
@@ -124,13 +126,13 @@ class ModuleManager (object):
                                 "\t%s \n\t%s" % (otherModule, modulePath)
                     self.__errors.append(errString)
                     continue
-                    
+
                 ftm.docs[FTM_Path] = modulePath
                 self.__modules[moduleFullName] = ftm
 
         return self.__errors
 
-    
+
     def ListOfNames(self):
         return sorted(self.__modules.keys())
 
@@ -149,23 +151,20 @@ class ModuleManager (object):
     def RunModules(self, dbName, moduleList, reporter, modifyDB = False):
         if not dbName:
             return False
-        
-        reporter.Info(u"Opening database %s..." % dbName)
+
+        reporter.Info(u"Opening project %s..." % dbName)
         try:
-            self.__openDatabase(dbName, modifyDB)
-        except FDA_DatabaseError, e:
-            reporter.Error(u"Failed to open Fieldworks database '%s'. See tool-tip for more information."
-                           % dbName, e.message)
-            return False
-        except FDA_DLLError, e:
-            reporter.Error(u"Error accessing Fieldworks DLLs. See tool-tip for more information.", e.message)
+            self.__openProject(dbName, modifyDB)
+        except FDA_ProjectError, e:
+            reporter.Error(u"Error opening project: %s"
+                           % e.message, e.message)
             return False
         except Exception, e:
-            moduleError = traceback.format_exc().split("File ")[-1]
+            stackTrace = traceback.format_exc().split("File ")[-1]
             msg = e.message if hasattr(e, "message") else ""
-            reporter.Error("OpenDatabase failed with a %s exception! FLExTools supports up to FieldWorks %s."
+            reporter.Error("OpenProject failed with a %s exception! FLExTools may need to be updated: it has been tested with FieldWorks %s."
                            % (sys.exc_info()[0].__name__, Version.MaxFWVersion),
-                           "\n".join((msg, moduleError)))
+                           "\n".join((msg, stackTrace)))
             return False
         for moduleName in moduleList:
             if not self.GetDocs(moduleName):
@@ -174,30 +173,35 @@ class ModuleManager (object):
 
             reporter.Blank()
             reporter.Info(u"Running %s (version %s)..." %
-                          (moduleName, 
+                          (moduleName,
                            str(self.__modules[moduleName].docs[FTM_Version])))
-                
+
             try:
                 self.__modules[moduleName].Run(self.db,
                                                reporter,
                                                modify=modifyDB)
+            except FDA_RuntimeError, e:
+                stackTrace = traceback.format_exc()
+                msg = e.message if hasattr(e, "message") else ""
+                reporter.Error("Module failed with a programming error! See tool-tip or copy (Ctrl-C) this report to the clipboard to see more information.",
+                               "\n".join((msg, stackTrace)))
             except Exception, e:
-                moduleError = traceback.format_exc()
+                stackTrace = traceback.format_exc()
                 msg = e.message if hasattr(e, "message") else ""
                 reporter.Error("Module failed with %s exception!"
                                % sys.exc_info()[0].__name__,
-                               "\n".join((msg, moduleError)))
-                               
+                               "\n".join((msg, stackTrace)))
+
         numErrors   = reporter.messageCounts[reporter.ERROR]
         numWarnings = reporter.messageCounts[reporter.WARNING]
         reporter.Info("Processing completed with %d error%s and %d warning%s" \
                       % (numErrors,   "" if numErrors==1 else "s",
                          numWarnings, "" if numWarnings==1 else "s"))
-        self.__closeDatabase()
+        self.__closeProject()
 
         return True
-        
-        
+
+
 # ------------------------------------------------------------------
 
 if __name__ == '__main__':
@@ -206,11 +210,10 @@ if __name__ == '__main__':
     if errList:
         print ">>>> Errors <<<<"
         print "\n".join(errList)
-        
+
     names =  mm.ListOfNames()
     for n in names:
         print ">>>> %s <<<<" % n
         print mm.GetDocs(n)
         print mm.GetConfigurables(n)
         print
-        
