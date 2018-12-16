@@ -16,7 +16,7 @@ clr.AddReference("System.Windows.Forms")
 
 import os
 import System
-from System.Drawing import (Color, 
+from System.Drawing import (Color,
                             Font, FontStyle, FontFamily)
 
 # Icon path details
@@ -37,9 +37,9 @@ ReportIconParams  = (ICON_PATH2, ICON_SUFFIX2)
 SPLITTER_WIDTH = 4
 
 # Font styles
-smallFont   = Font(FontFamily.GenericSansSerif, 8)
-normalFont  = Font(FontFamily.GenericSansSerif, 10)
-headingFont = Font(FontFamily.GenericSansSerif, 11)
+smallFont   = Font(FontFamily.GenericSansSerif, 8.0)
+normalFont  = Font(FontFamily.GenericSansSerif, 10.0)
+headingFont = Font(FontFamily.GenericSansSerif, 11.0)
 
 # Colours
 rightPanelColor = Color.LightYellow
