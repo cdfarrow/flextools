@@ -3,21 +3,21 @@
 #   Module:  UICollections
 #   Platform: .NET v2 Windows.Forms
 #
-#   UI for browsing, creating and editing Collections ofModules:
-#   Top half of split container is the Collections: List of collections
-#      on left with list of modules in the selected collection on the right.
-#   Bottom half is the list of installed Modules (with info panel)
-#      (UI supplied by UIModuleBrowser)
+#   UI for browsing, creating and editing collections of modules:
+#   A split container:
+#       - The top half shows the collections:
+#           - A list of collections on the left
+#           - A list of modules in the selected collection on the right.
+#       - The bottom half is the list of installed modules, with an
+#         information panel to the right (UI supplied by UIModuleBrowser)
 #
 #   TODO:
-#    -  4 Nov 09: Get the Collection list to sort after renaming an item
+#    -  4 Nov 09: Get the collection list to sort after renaming an item
 #    -  5 Nov 09: Highlight the whole row in both lists
 #
 #   Craig Farrow
 #   Oct 2009
 #
-
-
 
 import UIGlobal
 from UIModuleBrowser import ModuleBrowser
@@ -31,7 +31,7 @@ from System.Drawing import (Color, SystemColors, Point, Rectangle, Size, Bitmap,
 from System.Windows.Forms import (Application, BorderStyle, Button,
     Form, FormBorderStyle, Label,
     Panel, Screen, FixedPanel, Padding,
-    KeyEventArgs, KeyPressEventArgs, Keys, 
+    KeyEventArgs, KeyPressEventArgs, Keys,
     MessageBox, MessageBoxButtons, MessageBoxIcon, DialogResult,
     DockStyle, Orientation, View, SortOrder,
     TreeView, TreeViewAction,
@@ -62,7 +62,7 @@ Toolbar has New, Rename, Delete | MoveUp, MoveDown | Add Module
     __BUTTON_Text = 0
     __BUTTON_Image = 4
     __BUTTON_Tooltip = 5
-    
+
     # [Text,
     #  EnabledInCollections, EnabledInModules, EnabledInModuleLibrary,
     #  Image name, Tool tip]
@@ -78,7 +78,7 @@ Toolbar has New, Rename, Delete | MoveUp, MoveDown | Add Module
                   None, # Separator
                   ["Add Module",
                    False, True, False,
-                   "add", "Add a Module to the current module collection"],
+                   "add", "Add a module to the current module collection"],
                   None, # Separator
                   ["Move Up",
                    False, False, True,
@@ -88,16 +88,16 @@ Toolbar has New, Rename, Delete | MoveUp, MoveDown | Add Module
                    "arrow-down", "Move the selected module down"],
                   ["Remove",
                    False, False, True,
-                   "delete", "Remove the selected module"], 
+                   "delete", "Remove the selected module"],
                    ]
-    
+
     def __init__(self):
         ToolBar.__init__(self)
         self.Appearance = ToolBarAppearance.Flat
         self.Dock = DockStyle.Top
 
         self.ImageList = ImageList()
-        
+
         for b in self.ButtonList:
             self.__buttonBuilder(b)
 
@@ -124,7 +124,7 @@ Toolbar has New, Rename, Delete | MoveUp, MoveDown | Add Module
             for b in self.Buttons:
                 if b.Tag:
                     b.Enabled = b.Tag[inFocus] # Values 1,2,3
-            
+
 
 # ------------------------------------------------------------------
 
@@ -133,22 +133,22 @@ class CollectionsList(ListView):
         ListView.__init__(self)
 
         self.Dock = DockStyle.Fill
-        
+
         # behaviour
         self.LabelEdit = True # allow renaming
         self.Sorting = SortOrder.Ascending
         self.MultiSelect = False
-        
+
         # appearance
         self.View = View.SmallIcon
         self.ShowLines = True
         self.TabIndex = 0
         self.BackColor = UIGlobal.leftPanelColor
         self.HideSelection = False    # Keep selected item grey when lost focus
-        
+
         tooltip = ToolTip()
         tooltip.IsBalloon = True
-        tooltip.SetToolTip(self, "Double-click a collection to select it.") 
+        tooltip.SetToolTip(self, "Double-click a collection to select it.")
 
 
     def SetSelectedHandler(self, handler):
@@ -160,7 +160,7 @@ class CollectionsList(ListView):
             if self.__SelectedHandler:
                 self.__SelectedHandler(event.Item.Text)
 
-        
+
     def SetActivatedHandler(self, handler):
         if handler:
             self.__ActivatedHandler = handler
@@ -177,7 +177,7 @@ class CollectionsList(ListView):
                     self.__ActivatedHandler(sender.SelectedItems[0].Text)
                 except ArgumentOutOfRangeException:
                     pass # No item selected; ignore
-   
+
     def AddCollection(self, collectionName):
         item = self.Items.Add(collectionName)
         item.Name = collectionName  # Add key for using Find()
@@ -196,7 +196,7 @@ class CollectionsModuleList(ListView):
         self.Sorting = SortOrder.None
         self.View = View.List
         self.MultiSelect = False
-        
+
     def UpdateList(self, moduleList):
         self.Clear()
         for m in moduleList:
@@ -213,22 +213,22 @@ class CollectionsManagerUI(Panel):
         self.Dock = DockStyle.Fill
         self.Font = UIGlobal.normalFont
 
-        # -- Collections and Module lists
+        # -- Collections and module lists
         self.collectionsList = CollectionsList()
         self.modulesList = CollectionsModuleList()
         self.currentCollection = currentCollection
 
-        # -- Load the Collections list
+        # -- Load the collections list
         self.itemToSetAsSelected = None
         for c in self.collections.Names():
             item = self.collectionsList.AddCollection(c)
             if c == currentCollection:
                 self.itemToSetAsSelected = item
-        
+
         # -- Handlers
         self.collectionsList.SetSelectedHandler(self.__OnCollectionSelected)
         self.collectionsList.AfterLabelEdit += self.__OnCollectionRenamed
-        
+
         # -- Modules list and info
         self.moduleBrowser = ModuleBrowser(moduleManager)
         self.moduleBrowser.SetActivatedHandler(self.__OnModuleActivated)
@@ -286,7 +286,7 @@ class CollectionsManagerUI(Panel):
         self.Controls.Add(self.toolbar) # Last in takes space priority
 
     # -- Exported methods
-    
+
     def SetFocusOnCurrentCollection(self):
         ## Setting the focus during initialisation doesn't work
         ## - it needs to be set during the Form Load handler.
@@ -294,7 +294,7 @@ class CollectionsManagerUI(Panel):
             self.itemToSetAsSelected.Focused = True
             self.itemToSetAsSelected.Selected = True
             self.itemToSetAsSelected.EnsureVisible()
-    
+
     def SaveAll(self):
         self.collections.WriteAll()
 
@@ -302,7 +302,7 @@ class CollectionsManagerUI(Panel):
         self.collectionsList.SetActivatedHandler(activatedHandler)
 
     # -- Private handlers
-    
+
     def __OnModuleActivated(self, moduleName):
         if self.currentCollection:
             try:
@@ -315,7 +315,7 @@ class CollectionsManagerUI(Panel):
                                 MessageBoxIcon.Information)
             else:
                 self.modulesList.Items.Add(moduleName)
-                
+
     def __OnCollectionSelected(self, itemName):
         self.currentCollection = itemName
         self.modulesList.UpdateList(self.collections.ListOfModules(itemName))
@@ -336,7 +336,7 @@ class CollectionsManagerUI(Panel):
                 MessageBox.Show (e.message, "Renaming error",
                                  MessageBoxButtons.OK,
                                  MessageBoxIcon.Error)
-            else: 
+            else:
                 self.currentCollection = event.Label
                 event.Name = event.Label # Update for Find() function
         return
@@ -355,7 +355,7 @@ class CollectionsManagerUI(Panel):
                 self.collections.Add(name)
                 c = self.collectionsList.AddCollection(name)
             c.BeginEdit()
-            
+
         elif event.Button.Text == "Delete":
             selection = self.collectionsList.SelectedItems
             if selection.Count > 0:
@@ -370,15 +370,15 @@ class CollectionsManagerUI(Panel):
                     self.collections.Delete(selection[0].Text)
                     selection[0].Remove()
                     # No collection is selected at this point, so just
-                    # clear the Modules List.
+                    # clear the modules List.
                     self.currentCollection = None
                     self.modulesList.Clear()
-                
+
         elif event.Button.Text == "Rename":
             selection = self.collectionsList.SelectedItems
             if selection.Count > 0:
                 selection[0].BeginEdit()
-                
+
         elif event.Button.Text == "Move Up":
             selection = self.modulesList.SelectedItems
             if selection.Count > 0:
@@ -390,7 +390,7 @@ class CollectionsManagerUI(Panel):
                 items = self.modulesList.Items.Find(moduleName, False)
                 if len(items) > 0:
                     items[0].Selected = True
-                    
+
         elif event.Button.Text == "Move Down":
             selection = self.modulesList.SelectedItems
             if selection.Count > 0:
@@ -402,14 +402,14 @@ class CollectionsManagerUI(Panel):
                 items = self.modulesList.Items.Find(moduleName, False)
                 if len(items) > 0:
                     items[0].Selected = True
-                    
+
         elif event.Button.Text == "Remove":
             selection = self.modulesList.SelectedItems
             if selection.Count > 0:
                 self.collections.RemoveModule(self.currentCollection,
                                               selection[0].Text)
-                selection[0].Remove()           
-                        
+                selection[0].Remove()
+
         elif event.Button.Text == "Add Module":
             if self.moduleBrowser.selectedNode:
                 self.__OnModuleActivated(self.moduleBrowser.selectedNode)
@@ -438,15 +438,15 @@ class CollectionsDialog(Form):
 
 
         self.activatedCollection = None
-        
+
         self.cmPanel = CollectionsManagerUI(cm, mm, currentCollection)
         self.cmPanel.SetActivatedHandler(self.__OnCollectionActivated)
-        
+
         self.Load += self.__OnLoad
-        
+
         self.Controls.Add(self.cmPanel)
         self.FormClosing += self.__OnFormClosing
-        
+
 
     def __OnLoad(self, sender, event):
         self.cmPanel.SetFocusOnCurrentCollection()
@@ -459,7 +459,7 @@ class CollectionsDialog(Form):
     def __OnFormClosing(self, sender, event):
         self.activatedCollection = self.cmPanel.currentCollection
         self.cmPanel.SaveAll()
-    
+
 
 # ------------------------------------------------------------------
 if __name__ == "__main__":
@@ -468,7 +468,7 @@ if __name__ == "__main__":
     mm.LoadAll()
 
     cmPanel = CollectionsManagerUI(collections, mm, None)
-    
+
     form = Form()
     form.ClientSize = Size(600, 550)
     form.Text = "Test of Collections Manager"

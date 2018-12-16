@@ -3,9 +3,9 @@
 #   Project: FlexTools
 #   Module:  FTCollections
 #
-#   Manages user-defined Collections of Modules.
-#    - Loads and Saves configuration from disk.
-#    - Provides interface for UI manipulation of Collections.
+#   Manages user-defined collections of modules.
+#    - Loads and saves configuration from disk.
+#    - Provides interface for UI manipulation of collections.
 #
 #   Craig Farrow
 #   Oct 2009
@@ -26,7 +26,7 @@ class Error(Exception):
 
 class FTC_NameError(Error):
     """
-    Exception raised for looking up a Collection name that doesn't exist.
+    Exception raised for looking up a collection name that doesn't exist.
 
     Attributes:
         message -- explanation of the error
@@ -37,7 +37,7 @@ class FTC_NameError(Error):
 
 class FTC_ExistsError(Error):
     """
-    Exception raised for adding or renaming to a Collection name
+    Exception raised for adding or renaming to a collection name
     that is already in use.
 
     Attributes:
@@ -59,11 +59,11 @@ class FTC_BadNameError(Error):
         self.message = message
 # ---------------------------------------------------------------------
 class CollectionsManager(object):
-    
+
     ORDER_OPTION = "_Order"
     COLLECTIONS_SUFFIX = ".ini"
     assert(len(COLLECTIONS_SUFFIX) == 4)
-    
+
     def __init__(self):
         # Load all the collection info
 
@@ -71,7 +71,7 @@ class CollectionsManager(object):
         # be correctly decoded and returned as unicode.
         collectionNames = [f for f in os.listdir(COLLECTIONS_PATH)
                                     if f.endswith(self.COLLECTIONS_SUFFIX)]
-        
+
         self.collectionsConfig = {}
 
         for collectionName in collectionNames:
@@ -82,7 +82,7 @@ class CollectionsManager(object):
                 print "Failed to read", collectionName
 
     # ---- Access ----
-    
+
     def Names(self):
         return (self.collectionsConfig.keys())
 
@@ -127,7 +127,7 @@ class CollectionsManager(object):
         if newName in self.collectionsConfig:
             raise FTC_ExistsError("'" + newName + "' already exists.")
 
-        try:        
+        try:
             os.rename(os.path.join(COLLECTIONS_PATH,
                                    collectionName + self.COLLECTIONS_SUFFIX),
                       os.path.join(COLLECTIONS_PATH,
@@ -147,7 +147,7 @@ class CollectionsManager(object):
         for configItem in configuration:
             cp.set(moduleName, configItem.Name, configItem.Default)
         return
-            
+
     def RemoveModule(self, collectionName, moduleName):
         cp = self.collectionsConfig[collectionName]
         order = cp.getint(moduleName, self.ORDER_OPTION)
@@ -156,7 +156,7 @@ class CollectionsManager(object):
             this_order = cp.getint(m, self.ORDER_OPTION)
             if  this_order > order:
                 cp.set(m, self.ORDER_OPTION, this_order - 1)
-            
+
     def MoveModuleUp(self, collectionName, moduleName):
         cp = self.collectionsConfig[collectionName]
         order = cp.getint(moduleName, self.ORDER_OPTION)
@@ -164,8 +164,8 @@ class CollectionsManager(object):
             for m in cp.sections():
                 this_order = cp.getint(m, self.ORDER_OPTION)
                 if this_order == order - 1:
-                    cp.set(m, self.ORDER_OPTION, order)            
-            cp.set(moduleName, self.ORDER_OPTION, order - 1)            
+                    cp.set(m, self.ORDER_OPTION, order)
+            cp.set(moduleName, self.ORDER_OPTION, order - 1)
 
     def MoveModuleDown(self, collectionName, moduleName):
         cp = self.collectionsConfig[collectionName]
@@ -174,11 +174,11 @@ class CollectionsManager(object):
             for m in cp.sections():
                 this_order = cp.getint(m, self.ORDER_OPTION)
                 if this_order == order + 1:
-                    cp.set(m, self.ORDER_OPTION, order)            
-            cp.set(moduleName, self.ORDER_OPTION, order + 1)            
-        
+                    cp.set(m, self.ORDER_OPTION, order)
+            cp.set(moduleName, self.ORDER_OPTION, order + 1)
+
     # ---------
-    
+
     def WriteAll(self):
         for name, cp in self.collectionsConfig.items():
             self.WriteOne(name, cp)
@@ -189,6 +189,3 @@ class CollectionsManager(object):
                               name + self.COLLECTIONS_SUFFIX), "w")
         cp.write(f)
         f.close()
-        
-            
-    
