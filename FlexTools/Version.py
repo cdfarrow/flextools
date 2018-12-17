@@ -4,10 +4,9 @@
 #   Current version number for FLExTools
 #
 
-number = "1.2.5"
+number = "2.0.0 Beta3"
 
 # Minimum and maximum supported versions of Fieldworks
 # (Later versions should work if the FDO interface hasn't changed.)
-MinFWVersion = "7.2.0"
-MaxFWVersion = "8.3.0"
-
+MinFWVersion = "9.0.4"
+MaxFWVersion = "9.0.4"
