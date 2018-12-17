@@ -45,6 +45,8 @@ from System.Windows.Forms import (Application, BorderStyle, Button,
     Keys, Control,
     TextRenderer)
 
+from System.Threading import Thread, ThreadStart, ApartmentState
+
 import FTPaths
 import Version
 
@@ -526,12 +528,20 @@ class FTMainForm (Form):
         self.UIPanel.RunAllModify()
 
 # ------------------------------------------------------------------
-
-if __name__ == "__main__":
-
-    FLExInit.Initialize()
-
+def main_thread():
     form = FTMainForm()
     Application.Run(form)
 
+def main():
+    FLExInit.Initialize()
+
+    # Using the clipboard (COM) requires Single-Threaded Apartment
+    thread = Thread(ThreadStart(main_thread))
+    thread.SetApartmentState(ApartmentState.STA)
+    thread.Start()
+    thread.Join()
+
     FLExInit.Cleanup()
+
+if __name__ == '__main__':
+    main()
