@@ -17,6 +17,11 @@ sys.stdout = codecs.getwriter("utf-8")(sys.stdout)
 import os
 import traceback
 
+# This call is required to initialise the threading mode for COM calls
+# (e.g. using the clipboard) It must be made before clr is imported.
+import ctypes
+ctypes.windll.ole32.CoInitialize(None)
+
 import clr
 import System
 
@@ -200,7 +205,6 @@ class FTPanel(Panel):
         if self.startupTip:
             self.startupTip.RemoveAll()
 
-        print "__ChooseProject:", repr(self.__ChooseProjectHandler)
         if self.__ChooseProjectHandler:
             self.__ChooseProjectHandler()
 
@@ -485,7 +489,6 @@ class FTMainForm (Form):
                                       listOfModules)
 
     def ChooseProject(self, sender=None, event=None):
-        print "Entered ChooseProject", self.configuration.currentProject
         dlg = UIDbChooser.ProjectChooser(self.configuration.currentProject)
         dlg.ShowDialog()
         if dlg.projectName <> self.configuration.currentProject:
@@ -528,18 +531,11 @@ class FTMainForm (Form):
         self.UIPanel.RunAllModify()
 
 # ------------------------------------------------------------------
-def main_thread():
-    form = FTMainForm()
-    Application.Run(form)
-
 def main():
     FLExInit.Initialize()
 
-    # Using the clipboard (COM) requires Single-Threaded Apartment
-    thread = Thread(ThreadStart(main_thread))
-    thread.SetApartmentState(ApartmentState.STA)
-    thread.Start()
-    thread.Join()
+    form = FTMainForm()
+    Application.Run(form)
 
     FLExInit.Cleanup()
 
