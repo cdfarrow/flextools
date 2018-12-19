@@ -78,6 +78,22 @@ class ModuleManager (object):
         if self.db:
             del self.db     # Free the FDO Cache to get fresh data next time
 
+    def __buildExceptionMessages(self, e, msg):
+        __copyMessage = u"Use Ctrl-C to copy this report to the clipboard to see more information."
+        eName = details = ""
+        # Test for .NET Exception first, since they are also Python Exceptions.
+        if isinstance(e, System.Exception): #.NET
+            eName = e.GetType().FullName
+            details = e.ToString()          # The full stack trace
+        elif isinstance(e, exceptions.Exception): #Python
+            eName = sys.exc_info()[0].__name__
+            eMsg = e.message if hasattr(e, "message") else ""
+            eStack = traceback.format_exc()
+            details = "{}: {}\n{}".format(eName, eMsg, eStack)
+
+        return " ".join((msg.format(eName), __copyMessage)),\
+               details
+
     # --- Public methods ---
 
     def LoadAll(self):
@@ -160,12 +176,10 @@ class ModuleManager (object):
                            % e.message, e.message)
             return False
         except Exception, e:
-            stackTrace = traceback.format_exc().split("File ")[-1]
-            msg = e.message if hasattr(e, "message") else ""
-            reporter.Error("OpenProject failed with a %s exception! FLExTools may need to be updated: it has been tested with FieldWorks %s."
-                           % (sys.exc_info()[0].__name__, Version.MaxFWVersion),
-                           "\n".join((msg, stackTrace)))
+            msg, details = self.__buildExceptionMessages(e, "OpenProject failed with exception {}!")
+            reporter.Error(msg, details)
             return False
+
         for moduleName in moduleList:
             if not self.GetDocs(moduleName):
                 reporter.Warning("Module %s missing or failed to import." % moduleName)
@@ -181,17 +195,12 @@ class ModuleManager (object):
                                                reporter,
                                                modify=modifyDB)
             except FDA_RuntimeError, e:
-                stackTrace = traceback.format_exc()
-                msg = e.message if hasattr(e, "message") else ""
-                reporter.Error("Module failed with a programming error! See tool-tip or copy (Ctrl-C) this report to the clipboard to see more information.",
-                               "\n".join((msg, stackTrace)))
+                msg, details = self.__buildExceptionMessages(e, "Module failed with a programming error!")
+                reporter.Error(msg, details)
             except Exception, e:
-                stackTrace = traceback.format_exc()
-                msg = e.message if hasattr(e, "message") else ""
-                reporter.Error("Module failed with %s exception!"
-                               % sys.exc_info()[0].__name__,
-                               "\n".join((msg, stackTrace)))
-
+                msg, details = self.__buildExceptionMessages(e, "Module failed with exception {}!")
+                reporter.Error(msg, details)
+                
         numErrors   = reporter.messageCounts[reporter.ERROR]
         numWarnings = reporter.messageCounts[reporter.WARNING]
         reporter.Info("Processing completed with %d error%s and %d warning%s" \
