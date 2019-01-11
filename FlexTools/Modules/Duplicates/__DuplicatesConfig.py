@@ -2,7 +2,7 @@
 #
 #   Duplicates.__DuplicatesConfig
 #
-#   Constants and configuration for the merging duplicates Modules
+#   Constants and configuration for the merging duplicates modules
 #
 #   C D Farrow
 #   May 2014
