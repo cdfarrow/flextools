@@ -3,12 +3,14 @@
 #   Example.Check_Punctuation
 #    - A FlexTools Module
 #
-#   Scans a Fieldworks database checking for good punctuation in the examples fields.
+#   Scans a Fieldworks database checking for good punctuation in the 
+#   examples fields.
 #   In particular it checks for:
 #        - a single '?', '!', or '.' at the end.
 #
 #   An error message is added to the FTFlags (sense-level) field if database
-#   changes are enabled. This allows easy filtering in FLEx to correct the errors.
+#   changes are enabled. This allows easy filtering in FLEx to correct 
+#   the errors.
 #
 # C D Farrow
 # July 2008

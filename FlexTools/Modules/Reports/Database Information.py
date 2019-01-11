@@ -18,10 +18,10 @@ from FTModuleClass import *
 docs = {FTM_Name        : "Database Information",
         FTM_Version     : 1,
         FTM_ModifiesDB  : False,
-        FTM_Synopsis    : "Reports detailed information about the database.",
+        FTM_Synopsis    : "Report detailed information about the database.",
         FTM_Description :
 u"""
-This Module reports information about writing systems, custom fields, and
+This module reports information about writing systems, custom fields, and
 parts of speech.
 """ }
 

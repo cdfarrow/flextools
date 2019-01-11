@@ -20,14 +20,14 @@
 #
 
 from FTModuleClass import *
+from SIL.LCModel import *
+from SIL.LCModel.Core.KernelInterfaces import ITsString, ITsStrBldr   
 
 from __DuplicatesConfig import *
 
 from collections import defaultdict
 from types import *
 
-from SIL.Utils import StringUtils
-from SIL.FieldWorks.Common.COMInterfaces import ITsString, ITsStrBldr
 
 #----------------------------------------------------------------
 # Documentation that the user sees:
@@ -39,7 +39,7 @@ docs = {FTM_Name       : "Merge Entries",
         FTM_Help       : "Merging Duplicates Help.htm",
         FTM_Description:
 u"""
-This Module is designed to be used in conjunction with "Find Duplicate Entries",
+This module is designed to be used in conjunction with "Find Duplicate Entries",
 however it can be used independently by manually configuring the merge tags in FTFlags.
 
 Homographs are merged according to the following tags in FTFlags (entry level):

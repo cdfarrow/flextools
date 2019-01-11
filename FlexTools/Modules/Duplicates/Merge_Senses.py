@@ -12,14 +12,14 @@
 #
 
 from FTModuleClass import *
+from SIL.LCModel import *
+from SIL.LCModel.Core.KernelInterfaces import ITsString, ITsStrBldr   
 
 from __DuplicatesConfig import *
 
 from collections import defaultdict
 from types import *
 
-from SIL.Utils import StringUtils
-from SIL.FieldWorks.Common.COMInterfaces import ITsString, ITsStrBldr
 
 #----------------------------------------------------------------
 # Documentation that the user sees:
@@ -31,10 +31,11 @@ docs = {FTM_Name       : "Merge Senses",
         FTM_Help       : "Merging Duplicates Help.htm",
         FTM_Description:
 u"""
-Scans all lexical entries and merges all top-level senses that have the same
-grammatical category and the same gloss (or definition if the gloss field is empty).
-Later senses are merged into earlier matching ones. Glosses, definitions, semantic domains,
-etc. are appended if they are different.
+This module scans all lexical entries and merges all top-level senses 
+that have the same grammatical category and the same gloss (or definition 
+if the gloss field is empty). Later senses are merged into earlier 
+matching ones. Glosses, definitions, semantic domains, etc. are appended 
+if they are different.
 
 If database modification is permitted, then the commands are actioned, otherwise
 this module just reports duplicate senses.

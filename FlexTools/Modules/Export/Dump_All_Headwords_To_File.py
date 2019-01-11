@@ -23,7 +23,7 @@ docs = {FTM_Name        : "Dump All Headwords To File",
         FTM_Synopsis    : "Dump all Headwords to file.",
         FTM_Description :
 u"""
-Dump all Headwords to file.
+Dump all Headwords to a file.
 """ }
                  
 #----------------------------------------------------------------

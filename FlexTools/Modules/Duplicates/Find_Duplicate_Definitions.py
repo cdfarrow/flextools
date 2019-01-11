@@ -34,6 +34,9 @@ docs = {FTM_Name        : "Find Duplicate Definitions",
         FTM_Synopsis    : "Finds entries with duplicate definitions.",
         FTM_Description :
 u"""
+This module scans each lexical entry and reports if there are any duplicate
+definitions in the entry.
+
 If database modification is permitted, then a warning value will be appended
 to the entry-level custom field called FTFlags. This field must already exist
 and should be created as a 'Single-line text' field using the 'First Analysis
@@ -70,7 +73,7 @@ def MainFunction(DB, report, modifyAllowed):
 
     flagsField = DB.LexiconGetEntryCustomFieldNamed("FTFlags")
     if AddReportToField and not flagsField:
-        report.Error("FTFlags custom field doesn't exist at Entry level")
+        report.Warning("FTFlags custom field doesn't exist at entry level")
         AddReportToField = False
     
     for e in DB.LexiconAllEntries():

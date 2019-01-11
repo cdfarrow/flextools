@@ -23,7 +23,8 @@ docs = {FTM_Name        : "Dump Published Headwords To File",
         FTM_Synopsis    : "Dump published Headwords to file.",
         FTM_Description :
 u"""
-Dump all Headwords to file.
+Dump all headwords to a file if they are marked to be published (PublishIn field has at least
+one value.)
 """ }
                  
 #----------------------------------------------------------------
