@@ -65,8 +65,7 @@ class ModuleManager (object):
 
         try:
             self.db.OpenProject(dbName,
-                                writeEnabled = modifyDB,
-                                allowMigration = True)
+                                writeEnabled = modifyDB)
         except:
             #print ">>Failed"
             del self.db
