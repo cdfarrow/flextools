@@ -1,3 +1,11 @@
+FlexTools/Modules-User
+FlexTools/Modules-Dev
+
+# Temp files
+*.tmp
+*.~*
+*.ini
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -103,3 +111,6 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+#VS
+.vs
