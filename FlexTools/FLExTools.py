@@ -389,6 +389,8 @@ class FTMainForm (Form):
 
         ## Get configurables - current DB, current collection
         self.configuration = ConfigStore(FTPaths.CONFIG_PATH)
+        if not self.configuration.currentCollection:
+            self.configuration.currentCollection = u"Examples"
 
         self.collectionsManager = FTCollections.CollectionsManager()
 
