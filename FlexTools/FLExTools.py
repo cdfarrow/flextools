@@ -55,26 +55,25 @@ from System.Threading import Thread, ThreadStart, ApartmentState
 import FTPaths
 import Version
 
-from flexlibs import FLExInit
-
 try:
-    import UIGlobal
-    import UICollections, FTCollections
-    import UIModulesList, UIReport, UIModuleBrowser
-    import UIDbChooser
-    import FTModules
-    import Help
+    from flexlibs import FLExInit
 
-# FW9 TODO - test this error handling still works/applies
-except Exception, e:
+except Exception as e:
     MessageBox.Show("Error interfacing with Fieldworks:\n%s\n(This version of FLExTools has been tested with Fieldworks versions %s - %s.)\nSee error.log for more details."
                     % (e.message, Version.MinFWVersion, Version.MaxFWVersion),
                     "FLExTools: Fatal Error",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation)
-    print "Fatal exception during imports:\n%s" % traceback.format_exc()
-    print "FLExTools %s" % Version.number
+    print("Fatal exception importing flexlibs:\n%s" % traceback.format_exc())
+    print("FLExTools %s" % Version.number)
     sys.exit(1)
+
+import UIGlobal
+import UICollections, FTCollections
+import UIModulesList, UIReport, UIModuleBrowser
+import UIDbChooser
+import FTModules
+import Help
 
 from cdfutils.DotNet import CustomMainMenu, CustomToolBar
 from cdfutils.Config import ConfigStore
