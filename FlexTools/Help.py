@@ -115,13 +115,16 @@ class AboutBox (Form):
         self.Controls.Add(AboutInfo())
 
 
-GeneralHelpFile     = "FLExTools Help.pdf"
-ProgrammingHelpFile = "FLExTools Programming.pdf"
-APIHelpFile         = "FLExTools API\\index.html"
+HELP_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "docs")
+
+GeneralHelpFile     = os.path.join(HELP_PATH, "FLExTools Help.pdf")
+ProgrammingHelpFile = os.path.join(HELP_PATH, "FLExTools Programming.pdf")
+APIHelpFile         = FLExGlobals.APIHelpFile
+
 
 def Help(helpfile):
     try:
-        os.startfile(os.sep.join(("Help", helpfile)))
+        os.startfile(helpfile)
     except WindowsError:
         MessageBox.Show("Couldn't open help file '%s'" % helpfile,
                         "Error",
