@@ -11,7 +11,7 @@
 
 import UIGlobal
 from flexlibs import FLExInit
-from flexlibs.FLExDBAccess import FLExProject
+from flexlibs.FLExProject import FLExProject
 
 from System.Drawing import (Color, SystemColors, Point, Rectangle, Size, Bitmap,
                             Image, Icon,

@@ -23,7 +23,7 @@ import traceback
 
 import Version
 import FTReport
-from flexlibs.FLExDBAccess import *
+from flexlibs.FLExProject import *
 from FTModuleClass import *
 
 # Loads .pth files from Modules\
@@ -170,7 +170,7 @@ class ModuleManager (object):
         reporter.Info(u"Opening project %s..." % dbName)
         try:
             self.__openProject(dbName, modifyDB)
-        except FDA_ProjectError, e:
+        except FP_ProjectError, e:
             reporter.Error(u"Error opening project: %s"
                            % e.message, e.message)
             return False
@@ -193,7 +193,7 @@ class ModuleManager (object):
                 self.__modules[moduleName].Run(self.db,
                                                reporter,
                                                modify=modifyDB)
-            except FDA_RuntimeError, e:
+            except FP_RuntimeError, e:
                 msg, details = self.__buildExceptionMessages(e, "Module failed with a programming error!")
                 reporter.Error(msg, details)
             except Exception, e:
