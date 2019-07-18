@@ -311,7 +311,7 @@ class FTMainForm (Form):
                           "Re-load Modules",
                           Shortcut.F5,
                           "Re-import all modules"),
-                         ## (None, "Preferences", Shortcut.CtrlP, None),
+                         ## (TODO, "Preferences", Shortcut.CtrlP, None),
                          (self.Exit,  "Exit", Shortcut.CtrlQ, None)]
 
         RunMenu =       [(self.RunOne,
@@ -331,11 +331,15 @@ class FTMainForm (Form):
                           Shortcut.CtrlShiftA,
                           "Run all modules allowing database changes"),]
 
-        ReportMenu =    [(self.CopyToClipboard, "Copy to Clipboard", Shortcut.CtrlC,
+        ReportMenu =    [(self.CopyToClipboard, 
+                          "Copy to Clipboard", 
+                          Shortcut.CtrlC,
                           "Copy the report contents to the clipboard"),
-                         #(None, "Save...", Shortcut.CtrlS,
+                         #(TODO, "Save...", Shortcut.CtrlS,
                          # "Save the current report to a file"),
-                         (self.ClearReport, "Clear", Shortcut.CtrlX,
+                         (self.ClearReport, 
+                          "Clear", 
+                          Shortcut.CtrlX,
                           "Clear the current report")]
 
         HelpMenu =      [(Help.GeneralHelp,
