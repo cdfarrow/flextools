@@ -36,11 +36,11 @@ site.addsitedir(MODULES_PATH)
 
 class ModuleManager (object):
 
-    def __always_import(self, name, path):
-        # From Python 2.5 Help section 29.1.1,
-        # but skipping the check for the module already being in sys.modules
+    def __always_import(self, path, name):
+        # This code is from Python 2.5 Help section 29.1.1, but skipping 
+        # the check for the module already being in sys.modules.
         # This allows us to have more than one .py Module file with the same
-        # name (but in different directories).
+        # name, but in different directories.
 
         fp, pathname, description = imp.find_module(name, [path])
 
@@ -112,12 +112,13 @@ class ModuleManager (object):
             #print "From library", library, ":", modNames
 
             for moduleFileName in modNames:
-                # Don't try to directly import python files starting with double underscore.
+                # Don't try to directly import python files starting with 
+                # double underscore.
                 if moduleFileName.startswith("__"):
                     continue
 
                 # Import named Python module from libPath
-                module = self.__always_import(moduleFileName, libPath)
+                module = self.__always_import(libPath, moduleFileName)
 
                 if not module:
                     print "Warning: FlexToolsModule import failure %s." % moduleFileName

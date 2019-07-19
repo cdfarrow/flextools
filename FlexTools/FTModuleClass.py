@@ -45,9 +45,10 @@ class FlexToolsModuleClass (object):
      - _processing_function_ is a function of the form:
          def _processing_function_(DB, report, modificationAllowed):
 
-           - DB is a FLExDBAccess instance:
-                   See FlexLibs\FLExDBAccess.py for the available interface.
-           - report is for reporting status messages:
+           - DB is a FLExProject instance:
+                   See flexlibs\FLExProject.py for the methods that are
+                   provided.
+           - report is a class instance that reports status messages:
                    report.Info(msg)
                    report.Warning(msg, reference)
                    report.Error(msg, reference)
@@ -55,11 +56,10 @@ class FlexToolsModuleClass (object):
                          entry in FLEx.
                          It is built with DB.BuildGotoURL(entry)
            - modificationAllowed is True if the user has permitted any kind
-             of database modification. If this is False then the module
+             of modification to the project. If this is False then the module
              should ensure that no data is modified.
-             Users should be warned to back up their database before
-             attempting any modifications to the database via a FlexTools
-             module.
+             Users should be warned to back up their projects before
+             attempting any modifications via a FlexTools module.
 
     - _user_documentation_ is a dictionary with the following keys defined:
         FTM_Name           : A short name for the module.
@@ -67,7 +67,7 @@ class FlexToolsModuleClass (object):
                              can be converted with str().
                              e.g. an integer, "1.3", "Beta release 5", etc.
         FTM_ModifiesDB     : True/False indicating whether this module
-                             makes changes to the database (when the user
+                             makes changes to the project (when the user
                              permits it.) 
         FTM_Synopsis       : A description of the module's function or purpose.
         FTM_Help           : A link to a help file for this module.
@@ -75,7 +75,7 @@ class FlexToolsModuleClass (object):
                              function. Please explain the behaviour and
                              purpose clearly.
                              If relevant, include specific information about
-                             how the database is modified.
+                             how the project is modified.
     Exceptions:
         KeyError - raised if there are missing documentation keys.
     """
@@ -110,12 +110,15 @@ class FlexToolsModuleClass (object):
             self.runFunction(DB, report, modify)
 
     def Help(self):
-        "Prints information on this FT module to the console."
-        if self.runFunction:
-            help(self.runFunction)
-        for key, value in self.docs.items():
-            print key, ":", value
-        print
-        if self.docs[FTM_HasConfig]:
-            print "Configuration:"
-            print self.configurationItems
+        #
+        # Returns information on this module formatted as a multi-line 
+        # string.
+        #
+
+        result = []
+        for item in self.docs.items():
+            result.append(u"%s : %s" % item)
+
+        #if self.docs[FTM_HasConfig]:...
+
+        return u"\n".join(result)
