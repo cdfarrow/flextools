@@ -32,6 +32,9 @@ import site
 site.addsitedir(MODULES_PATH)
 
 
+import logging
+logger = logging.getLogger(__name__)
+
 # ------------------------------------------------------------------
 
 class ModuleManager (object):
@@ -60,20 +63,20 @@ class ModuleManager (object):
                 fp.close()
 
     def __openProject(self, dbName, modifyDB):
-        #print "__openProject", dbName
+        #logger.debug("__openProject %s" % dbName)
         self.db = FLExProject()
 
         try:
             self.db.OpenProject(dbName,
                                 writeEnabled = modifyDB)
         except:
-            #print ">>Failed"
+            logger.error("Project failed to open: %s" % dbName)
             del self.db
             raise
-        #print ">>Success"
+        logger.info("Project opened: %s" % dbName)
 
     def __closeProject(self):
-        #print "__closeProject", self.db
+        #logger.debug("__closeProject %s" % repr(self.db))
         if self.db:
             del self.db     # Free the FDO Cache to get fresh data next time
 
@@ -101,7 +104,7 @@ class ModuleManager (object):
         self.__errors = []
 
         libNames = [l for l in os.listdir(MODULES_PATH) \
-                       if os.path.isdir(MODULES_PATH + os.sep + l)] \
+                       if os.path.isdir(os.path.join(MODULES_PATH,l))] \
                    + [""]
 
         for library in libNames:
@@ -109,7 +112,7 @@ class ModuleManager (object):
 
             modNames = [m[:-3] for m in os.listdir(libPath)
                                         if m.endswith(".py")]
-            #print "From library", library, ":", modNames
+            logger.info("From library %s: %s" % (library, repr(modNames)))
 
             for moduleFileName in modNames:
                 # Don't try to directly import python files starting with 
@@ -121,12 +124,12 @@ class ModuleManager (object):
                 module = self.__always_import(libPath, moduleFileName)
 
                 if not module:
-                    print "Warning: FlexToolsModule import failure %s." % moduleFileName
+                    logger.warning("Warning: FlexToolsModule import failure %s." % moduleFileName)
                     continue
                 try:
                     ftm = module.FlexToolsModule
                 except AttributeError:
-                    print "Warning: FlexToolsModule not found in %s." % moduleFileName
+                    logger.warning("Warning: FlexToolsModule not found in %s." % moduleFileName)
                     continue
 
                 if library:

@@ -8,7 +8,7 @@
 #    - A split panel with Collections list above and Report results below.
 #
 #
-#   Copyright Craig Farrow, 2010 - 2018
+#   Copyright Craig Farrow, 2010 - 2019
 #
 
 import codecs
@@ -16,6 +16,13 @@ import sys
 sys.stdout = codecs.getwriter("utf-8")(sys.stdout)
 import os
 import traceback
+
+
+# -----------------------------------------------------------
+import logging
+logging.basicConfig(filename='flextools.log', filemode='w', level=logging.DEBUG)
+# -----------------------------------------------------------
+
 
 # This call is required to initialise the threading mode for COM calls
 # (e.g. using the clipboard) It must be made before clr is imported.
