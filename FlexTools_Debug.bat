@@ -2,4 +2,4 @@
 
 call FlexTools.bat
 
-notepad error.log
+notepad flextools.log
