@@ -7,7 +7,9 @@
 
 import os
 import sys
-import importlib
+import imp
+import traceback
+# import importlib
 
 import logging
 logging.basicConfig(
@@ -21,6 +23,7 @@ from flexlibs import FLExInit
 from flexlibs.FLExProject import (FLExProject, 
     FP_ProjectError, FP_FileNotFoundError)
 
+from FTModuleClass import FTM_ModuleError
 import FTReport
 import FTPaths
 
@@ -33,20 +36,37 @@ def importModule(moduleFolderAndName):
     #
 
     path, moduleName = os.path.split(moduleFolderAndName)
+    moduleName, ext = os.path.splitext(moduleName)
     libPath = os.path.join(FTPaths.MODULES_PATH, path)
+    absPath = os.path.abspath(os.path.join(FTPaths.MODULES_PATH,        
+                                            moduleFolderAndName))
+    logger.debug(absPath)
+
+    # Append the local path in case there are local dependencies
     sys.path.append(libPath)
 
     logger.info("Importing %s::%s" % (libPath, moduleName))
 
     try:
-        module = importlib.import_module(moduleName)
-
+        fp, pathname, description = imp.find_module(moduleName, [libPath])
     except ImportError as e:
-        logger.error("Can't find module!")
+        logger.error("Can't find module '%s!'" % moduleFolderAndName)
+        return None
+
+    try:
+        module = imp.load_module(moduleName, fp, pathname, description)
+    except FTM_ModuleError as e:
+        msg = "%s\\%s:\n%s" % (path, moduleName, e.message)
+        logger.error(msg)
         return None
     except:
-        logger.exception("Module error: %s" % moduleName)
+        msg = "Module error: %s\n %s" % (pathname, traceback.format_exc())
+        logger.error(msg)
         return None
+    finally:
+        # Since we may exit via an exception, close fp explicitly.
+        if fp:
+            fp.close()
 
     try:
         ftm = module.FlexToolsModule
@@ -59,31 +79,30 @@ def importModule(moduleFolderAndName):
 
 #----------------------------------------------------------------
 def usage():
-    print ("USAGE: _TestAModule <Module> <Project>")
-    sys.exit(1)
+    print ("USAGE: _TestAModule <Project> <Module> ")
+
 
 #----------------------------------------------------------------
 
-def main():
+def main(project, module):
 
     # --- Import the module ---
-
-    ftm = importModule(ModuleToTest)
+    ftm = importModule(module)
     if not ftm:
         usage()
+        return
 
     logger.info ("Module info:\n%s", ftm.Help())
 
     # --- Open the project ---
-    
-    logger.info("Opening project '%s'" % ProjectName)
+    logger.info("Opening project '%s'" % project)
     FlexDB = FLExProject()
 
     try:
-        FlexDB.OpenProject(projectName = ProjectName)
+        FlexDB.OpenProject(projectName = project)
         logger.info("OK")
     except FP_FileNotFoundError as e:
-        logger.error("Project not found! Check the name.")
+        logger.error("Project '%s' not found!" % project)
         return
     except FP_ProjectError as e:
         logger.error("Error opening project!")
@@ -94,23 +113,29 @@ def main():
     try:
         ftm.Run(FlexDB, reporter)
     except:
-        logger.exception("Run() failed:")
+        logger.exception("Runtime error:")
         return
-    logger.info (repr(reporter.messageCounts))
+    
+    rLOOKUP = ["INFO", "WARN", "ERR ", "    "]
     for m in reporter.messages:
-        logger.info (m)
+        t, msg, extra = m
+        logger.info ("%s: %s" % (rLOOKUP[t], msg))
+        if extra:
+            logger.info (">>>>  %s" % extra)
+    
         
 
 if __name__ == "__main__":
 
     if len(sys.argv) != 3:
         usage()
+        sys.exit(1)
 
-    ModuleToTest = sys.argv[1] 
-    ProjectName  = sys.argv[2] 
+    ProjectName  = sys.argv[1] 
+    ModuleToTest = sys.argv[2] 
 
     FLExInit.Initialize()
 
-    main()
+    main(ProjectName, ModuleToTest)
 
     FLExInit.Cleanup()
