@@ -2,11 +2,10 @@
 #   Project: FlexTools
 #   Module:  UIGlobal
 #
-#   Global settings etc for UI
+#   Global settings, etc., for the FLExTools UI
 #
 #   Craig Farrow
-#   Oct 2009
-#   v0.00
+#   Oct 2009-2019
 #
 
 import clr
@@ -21,7 +20,7 @@ from System.Drawing import (Color,
 
 # Icon path details
 
-ICON_PATH0      = os.path.join(os.path.dirname(__file__), u"__icons\\")
+ICON_PATH0      = os.path.join(os.path.dirname(__file__), "__icons\\")
 ICON_PATH1      = os.path.join(ICON_PATH0, "IconBuffet Redmond Studio\\")
 ICON_SUFFIX1    = "_16.gif"
 ICON_PATH2      = os.path.join(ICON_PATH0, "Fugue\\")
@@ -42,6 +41,6 @@ normalFont  = Font(FontFamily.GenericSansSerif, 10.0)
 headingFont = Font(FontFamily.GenericSansSerif, 11.0)
 
 # Colours
-rightPanelColor = Color.LightYellow
-leftPanelColor = Color.AliceBlue
+leftPanelColor  = Color.FromArgb(0xFA, 0xF8, 0xF0) # Light wheat
+rightPanelColor = Color.FromArgb(0xFF, 0xFA, 0xE0) # Medium wheat
 helpDialogColor = Color.White

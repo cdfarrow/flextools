@@ -14,7 +14,7 @@
 
 import os
 
-from configparser import RawConfigParser as ConfigParser
+from configparser import ConfigParser
 
 from FTPaths import COLLECTIONS_PATH
 
@@ -75,7 +75,7 @@ class CollectionsManager(object):
         self.collectionsConfig = {}
 
         for collectionName in collectionNames:
-            cp = ConfigParser()
+            cp = ConfigParser(interpolation=None)
             if cp.read(os.path.join(COLLECTIONS_PATH, collectionName)):
                 self.collectionsConfig[collectionName[:-4]] = cp # Strip '.ini'
             else:
@@ -109,7 +109,7 @@ class CollectionsManager(object):
     def Add(self, collectionName):
         if collectionName in self.collectionsConfig:
             raise FTC_ExistsError(collectionName + " already exists.")
-        cp = ConfigParser()
+        cp = ConfigParser(interpolation=None)
         self.collectionsConfig[collectionName] = cp
         self.WriteOne(collectionName, cp)
         return
