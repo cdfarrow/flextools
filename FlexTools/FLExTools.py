@@ -400,7 +400,7 @@ class FTMainForm (Form):
         ## Get configurables - current DB, current collection
         self.configuration = ConfigStore(FTPaths.CONFIG_PATH)
         if not self.configuration.currentCollection:
-            self.configuration.currentCollection = u"Examples"
+            self.configuration.currentCollection = "Examples"
 
         self.collectionsManager = FTCollections.CollectionsManager()
 
@@ -456,16 +456,16 @@ class FTMainForm (Form):
 
     def __ProgressBar(self, val, max, msg=None):
         if max == 0: # Clear progress bar
-            if self.progressPercent <> -1:
+            if self.progressPercent != -1:
                 self.progressPercent = -1
                 self.__UpdateStatusBar()
             return
 
         newPercent = (val * 100) / max          # val = [0...max]
         refresh = False
-        if msg <> self.progressMessage:
+        if msg != self.progressMessage:
             refresh = True
-        elif newPercent <> self.progressPercent:
+        elif newPercent != self.progressPercent:
             refresh = True
         if refresh:
             self.progressPercent = newPercent
@@ -503,7 +503,7 @@ class FTMainForm (Form):
     def ChooseProject(self, sender=None, event=None):
         dlg = UIDbChooser.ProjectChooser(self.configuration.currentProject)
         dlg.ShowDialog()
-        if dlg.projectName <> self.configuration.currentProject:
+        if dlg.projectName != self.configuration.currentProject:
             self.configuration.currentProject = dlg.projectName
             self.UIPanel.UpdateProjectName(dlg.projectName)
             self.__UpdateStatusBar()

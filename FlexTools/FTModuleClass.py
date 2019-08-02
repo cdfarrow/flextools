@@ -87,8 +87,8 @@ class FlexToolsModuleClass (object):
     
     def __init__(self, runFunction, docs, configuration=[]):
         if any([x not in docs for x in self.__validDocKeys]):
-            raise FTM_ModuleError, "Module documentation is missing required key.\n"\
-                                   "Required keys:\n\t" + "\n\t".join(self.__validDocKeys)
+            raise FTM_ModuleError("Module documentation is missing required key.\n"\
+                                   "Required keys:\n\t" + "\n\t".join(self.__validDocKeys))
         
         self.docs = docs
         self.configurationItems = configuration
@@ -116,9 +116,9 @@ class FlexToolsModuleClass (object):
         #
 
         result = []
-        for item in self.docs.items():
-            result.append(u"%s : %s" % item)
+        for item in list(self.docs.items()):
+            result.append("%s : %s" % item)
 
         #if self.docs[FTM_HasConfig]:...
 
-        return u"\n".join(result)
+        return "\n".join(result)

@@ -107,7 +107,7 @@ class ModuleInfoPane(RichTextBox):
         # Module Name
         self.SelectionFont = UIGlobal.headingFont
         self.SelectionAlignment = HorizontalAlignment.Center
-        self.AppendText(moduleDocs[FTM_Name]+u"\n")
+        self.AppendText(moduleDocs[FTM_Name]+"\n")
 
         self.SelectionIndent = 8
 
@@ -116,13 +116,13 @@ class ModuleInfoPane(RichTextBox):
         # Module Version
         self.SelectionFont = UIGlobal.normalFont
         self.SelectionColor = Color.Blue
-        self.AppendText(u"\nVersion: %s\n" % str(moduleDocs[FTM_Version]))
+        self.AppendText("\nVersion: %s\n" % str(moduleDocs[FTM_Version]))
 
         # Modification warning
         if moduleDocs[FTM_ModifiesDB]:
              self.SelectionFont = UIGlobal.normalFont
              self.SelectionColor = Color.Red
-             self.AppendText(u"Modifies the database!\n")
+             self.AppendText("Modifies the database!\n")
 
         # Module Synopsis
         self.SelectionColor = Color.DarkSlateBlue
@@ -130,13 +130,13 @@ class ModuleInfoPane(RichTextBox):
         self.AppendText(moduleDocs[FTM_Synopsis]+"\n")
 
         # Module Help
-        if moduleDocs.has_key(FTM_Help) and moduleDocs[FTM_Help]:
+        if FTM_Help in moduleDocs and moduleDocs[FTM_Help]:
             self.SelectionFont = UIGlobal.normalFont
             self.AppendText("Help: ")
             self.HelpLink = moduleDocs[FTM_Help]
             
             s = self.SelectionStart
-            link = u"file:%s\n" % moduleDocs[FTM_Help]
+            link = "file:%s\n" % moduleDocs[FTM_Help]
             # Change spaces to underscores so the whole path is treated as a hyperlink
             self.AppendText(link.replace(" ", "_"))
             # Build the actual hyperlink with full path
@@ -144,21 +144,21 @@ class ModuleInfoPane(RichTextBox):
                                               moduleDocs[FTM_Help]))
 
         self.SelectionFont = UIGlobal.smallFont
-        self.AppendText(u"\n")        
+        self.AppendText("\n")        
 
         # Module Description
         self.SelectionColor = Color.Black
 
         start = self.SelectionStart
         # convert all single newlines to spaces
-        md = moduleDocs[FTM_Description].replace(u"\n\n", u"<break>").split()
-        md = " ".join(md).replace(u"<break>", u"\n\n")
+        md = moduleDocs[FTM_Description].replace("\n\n", "<break>").split()
+        md = " ".join(md).replace("<break>", "\n\n")
         self.AppendText(md)
         
         # Chinese text messes up the font: setting the font after Append fixes it. 
         self.Select(start,self.TextLength)      # Start, Length
         self.SelectionFont = UIGlobal.normalFont
-        self.AppendText(u"\n")                  # NL, and puts insertion point at end.
+        self.AppendText("\n")                  # NL, and puts insertion point at end.
 
         # Module filename
         self.SelectionIndent = 0
@@ -166,7 +166,7 @@ class ModuleInfoPane(RichTextBox):
         self.SelectionRightIndent = 0
         self.SelectionColor = Color.Black
         self.SelectionFont = UIGlobal.smallFont
-        self.AppendText(u"\nSource file: " + moduleDocs[FTM_Path] + u".py\n")
+        self.AppendText("\nSource file: " + moduleDocs[FTM_Path] + ".py\n")
 
         # Make it non-editable
         self.SelectAll()
@@ -176,7 +176,7 @@ class ModuleInfoPane(RichTextBox):
     def __OnLinkClicked(self, sender, event):
         try:
             os.startfile(self.HelpLink)
-        except WindowsError, e:
+        except WindowsError as e:
             MessageBox.Show("Error opening link: %s" % self.HelpLink,
                             "Error!" ,
                             MessageBoxButtons.OK,
@@ -215,7 +215,7 @@ class ModuleBrowser(Panel):
 
     def TreeNodeSelected(self, sender, event):
         ##print "Got TreeNodeSelected"
-        if sender.SelectedNode.Nodes.Count <> 0:
+        if sender.SelectedNode.Nodes.Count != 0:
             ##print "This is a Library node"
             self.infoPane.Text = "Library: "+sender.SelectedNode.Text
             self.selectedNode = ""

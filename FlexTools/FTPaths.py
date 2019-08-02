@@ -11,6 +11,6 @@
 import os
 
 # Create absolute paths relative to this directory
-MODULES_PATH = os.path.join(os.path.dirname(__file__), u"Modules")
-COLLECTIONS_PATH = os.path.join(os.path.dirname(__file__), u"Collections")
+MODULES_PATH = os.path.join(os.path.dirname(__file__), "Modules")
+COLLECTIONS_PATH = os.path.join(os.path.dirname(__file__), "Collections")
 CONFIG_PATH = os.path.join(os.path.dirname(__file__), "flextools.ini")

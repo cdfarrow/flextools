@@ -14,7 +14,7 @@
 
 import os
 
-from ConfigParser import RawConfigParser as ConfigParser
+from configparser import RawConfigParser as ConfigParser
 
 from FTPaths import COLLECTIONS_PATH
 
@@ -79,21 +79,25 @@ class CollectionsManager(object):
             if cp.read(os.path.join(COLLECTIONS_PATH, collectionName)):
                 self.collectionsConfig[collectionName[:-4]] = cp # Strip '.ini'
             else:
-                print "Failed to read", collectionName
+                print("Failed to read", collectionName)
 
     # ---- Access ----
 
     def Names(self):
-        return (self.collectionsConfig.keys())
+        return (list(self.collectionsConfig.keys()))
 
     def ListOfModules(self, collectionName):
-        if collectionName not in self.collectionsConfig.keys():
+        if collectionName not in self.collectionsConfig:
             raise FTC_NameError("Bad collection name '%s'" % collectionName)
         cp = self.collectionsConfig[collectionName]
         modules = cp.sections()
         sortedModules = [0] * len(modules)
         for moduleName in modules:
-            order = cp.getint(moduleName, self.ORDER_OPTION)
+            try:
+                order = cp.getint(moduleName, self.ORDER_OPTION)
+            except:
+                # Error in collections file; skip this entry
+                continue
             sortedModules[order-1] = moduleName
         return (sortedModules)
 
@@ -180,7 +184,7 @@ class CollectionsManager(object):
     # ---------
 
     def WriteAll(self):
-        for name, cp in self.collectionsConfig.items():
+        for (name, cp) in self.collectionsConfig.items():
             self.WriteOne(name, cp)
 
     def WriteOne(self, name, cp):

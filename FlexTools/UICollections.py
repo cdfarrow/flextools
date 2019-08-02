@@ -325,12 +325,12 @@ class CollectionsManagerUI(Panel):
         if not event.Label:
             return
         # Don't bother if user didn't acutally change the name.
-        if self.currentCollection <> event.Label:
+        if self.currentCollection != event.Label:
             try:
                 self.collections.Rename(self.currentCollection, event.Label)
             except (FTCollections.FTC_NameError,
                     FTCollections.FTC_ExistsError,
-                    FTCollections.FTC_BadNameError), e:
+                    FTCollections.FTC_BadNameError) as e:
                 # Cancel the event and return the label to its original state.
                 event.CancelEdit = True
                 MessageBox.Show (e.message, "Renaming error",
@@ -350,7 +350,7 @@ class CollectionsManagerUI(Panel):
                 items = self.collectionsList.Items.Find(name, False)
                 if len(items) > 0:
                     c = items[0]
-                print "Find returned:", c
+                #print("Find returned:", c)
             else:
                 self.collections.Add(name)
                 c = self.collectionsList.AddCollection(name)

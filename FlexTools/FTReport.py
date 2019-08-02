@@ -87,6 +87,6 @@ if __name__ == '__main__':
     f.Blank()
     f.Warning("Cows crossing")
     f.Error("Bad bad news!")
-    print f.messageCounts
-    print f.messages
+    print(f.messageCounts)
+    print(f.messages)
     

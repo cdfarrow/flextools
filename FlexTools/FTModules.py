@@ -49,7 +49,7 @@ class ModuleManager (object):
 
         try:
             return imp.load_module(name, fp, pathname, description)
-        except FTM_ModuleError, e:
+        except FTM_ModuleError as e:
             msg = "%s\\%s:\n%s" % (path, name, e.message)
             self.__errors.append(msg)
             return None
@@ -81,7 +81,7 @@ class ModuleManager (object):
             del self.db     # Free the FDO Cache to get fresh data next time
 
     def __buildExceptionMessages(self, e, msg):
-        __copyMessage = u"Use Ctrl-C to copy this report to the clipboard to see more information."
+        __copyMessage = "Use Ctrl-C to copy this report to the clipboard to see more information."
         eName = details = ""
         # Test for .NET Exception first, since they are also Python Exceptions.
         if isinstance(e, System.Exception): #.NET
@@ -171,14 +171,14 @@ class ModuleManager (object):
         if not dbName:
             return False
 
-        reporter.Info(u"Opening project %s..." % dbName)
+        reporter.Info("Opening project %s..." % dbName)
         try:
             self.__openProject(dbName, modifyDB)
-        except FP_ProjectError, e:
-            reporter.Error(u"Error opening project: %s"
+        except FP_ProjectError as e:
+            reporter.Error("Error opening project: %s"
                            % e.message, e.message)
             return False
-        except Exception, e:
+        except Exception as e:
             msg, details = self.__buildExceptionMessages(e, "OpenProject failed with exception {}!")
             reporter.Error(msg, details)
             return False
@@ -189,7 +189,7 @@ class ModuleManager (object):
                 continue
 
             reporter.Blank()
-            reporter.Info(u"Running %s (version %s)..." %
+            reporter.Info("Running %s (version %s)..." %
                           (moduleName,
                            str(self.__modules[moduleName].docs[FTM_Version])))
 
@@ -197,10 +197,10 @@ class ModuleManager (object):
                 self.__modules[moduleName].Run(self.db,
                                                reporter,
                                                modify=modifyDB)
-            except FP_RuntimeError, e:
+            except FP_RuntimeError as e:
                 msg, details = self.__buildExceptionMessages(e, "Module failed with a programming error!")
                 reporter.Error(msg, details)
-            except Exception, e:
+            except Exception as e:
                 msg, details = self.__buildExceptionMessages(e, "Module failed with exception {}!")
                 reporter.Error(msg, details)
                 
@@ -220,12 +220,12 @@ if __name__ == '__main__':
     mm = ModuleManager()
     errList = mm.LoadAll()
     if errList:
-        print ">>>> Errors <<<<"
-        print "\n".join(errList)
+        print(">>>> Errors <<<<")
+        print("\n".join(errList))
 
     names =  mm.ListOfNames()
     for n in names:
-        print ">>>> %s <<<<" % n
-        print mm.GetDocs(n)
-        print mm.GetConfigurables(n)
-        print
+        print(">>>> %s <<<<" % n)
+        print(mm.GetDocs(n))
+        print(mm.GetConfigurables(n))
+        print()

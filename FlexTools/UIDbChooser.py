@@ -77,7 +77,7 @@ class ProjectList(ListView):
                 try:
                     self.__ActivatedHandler(sender.SelectedItems[0].Text)
                 except ArgumentOutOfRangeException:
-                    print "UIDbChooser.__ItemActivatedHandler: ArgumentOutOfRangeException!"
+                    #print("UIDbChooser.__ItemActivatedHandler: ArgumentOutOfRangeException!")
                     pass # No item selected
 
     def SetFocusOnCurrent(self):
