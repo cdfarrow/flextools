@@ -147,7 +147,7 @@ class CollectionsManager(object):
         if cp.has_section(moduleName):
             raise FTC_ExistsError(moduleName + " already exists.")
         cp.add_section(moduleName)
-        cp.set(moduleName, self.ORDER_OPTION, len(cp.sections()))
+        cp.set(moduleName, self.ORDER_OPTION, str(len(cp.sections())))
         for configItem in configuration:
             cp.set(moduleName, configItem.Name, configItem.Default)
         return
@@ -159,7 +159,7 @@ class CollectionsManager(object):
         for m in cp.sections():
             this_order = cp.getint(m, self.ORDER_OPTION)
             if  this_order > order:
-                cp.set(m, self.ORDER_OPTION, this_order - 1)
+                cp.set(m, self.ORDER_OPTION, str(this_order - 1))
 
     def MoveModuleUp(self, collectionName, moduleName):
         cp = self.collectionsConfig[collectionName]
@@ -168,8 +168,8 @@ class CollectionsManager(object):
             for m in cp.sections():
                 this_order = cp.getint(m, self.ORDER_OPTION)
                 if this_order == order - 1:
-                    cp.set(m, self.ORDER_OPTION, order)
-            cp.set(moduleName, self.ORDER_OPTION, order - 1)
+                    cp.set(m, self.ORDER_OPTION, str(order))
+            cp.set(moduleName, self.ORDER_OPTION, str(order - 1))
 
     def MoveModuleDown(self, collectionName, moduleName):
         cp = self.collectionsConfig[collectionName]
@@ -178,8 +178,8 @@ class CollectionsManager(object):
             for m in cp.sections():
                 this_order = cp.getint(m, self.ORDER_OPTION)
                 if this_order == order + 1:
-                    cp.set(m, self.ORDER_OPTION, order)
-            cp.set(moduleName, self.ORDER_OPTION, order + 1)
+                    cp.set(m, self.ORDER_OPTION, str(order))
+            cp.set(moduleName, self.ORDER_OPTION, str(order + 1))
 
     # ---------
 
