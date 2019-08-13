@@ -64,21 +64,22 @@ class ModuleManager (object):
 
     def __openProject(self, dbName, modifyDB):
         #logger.debug("__openProject %s" % dbName)
-        self.db = FLExProject()
+        self.project = FLExProject()
 
         try:
-            self.db.OpenProject(dbName,
+            self.project.OpenProject(dbName,
                                 writeEnabled = modifyDB)
         except:
             logger.error("Project failed to open: %s" % dbName)
-            del self.db
+            del self.project
             raise
         logger.info("Project opened: %s" % dbName)
 
     def __closeProject(self):
-        #logger.debug("__closeProject %s" % repr(self.db))
-        if self.db:
-            del self.db     # Free the FDO Cache to get fresh data next time
+        #logger.debug("__closeProject %s" % repr(self.project))
+        if self.project:
+            # Free the LCM Cache to get fresh data next time
+            del self.project  
 
     def __buildExceptionMessages(self, e, msg):
         __copyMessage = "Use Ctrl-C to copy this report to the clipboard to see more information."
@@ -99,7 +100,7 @@ class ModuleManager (object):
     # --- Public methods ---
 
     def LoadAll(self):
-        self.db = None
+        self.project = None
         self.__modules = {}
         self.__errors = []
 
@@ -194,7 +195,7 @@ class ModuleManager (object):
                            str(self.__modules[moduleName].docs[FTM_Version])))
 
             try:
-                self.__modules[moduleName].Run(self.db,
+                self.__modules[moduleName].Run(self.project,
                                                reporter,
                                                modify=modifyDB)
             except FP_RuntimeError as e:
