@@ -5,6 +5,7 @@ FlexTools/Modules-Dev
 *.tmp
 *.~*
 *.ini
+*.bak
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
