@@ -104,8 +104,7 @@ class FTPanel(Panel):
                        "Collections",
                        "copy",
                        "Manage and select a collection of modules"),
-                      None, # Separator
-                      (self.__ShowInfo,
+                      (self.ModuleInfo,
                        "Module Info",
                        "documents",
                        "Show the full module documentation"),
@@ -157,6 +156,8 @@ class FTPanel(Panel):
 
         self.reportWindow = UIReport.ReportWindow()
 
+        self.startupToolTip = None
+
         startupTips = []
         if projectName:
             self.UpdateProjectName(projectName)
@@ -165,7 +166,7 @@ class FTPanel(Panel):
             startupTips.append(msg)
 
         if not self.listOfModules:
-            msg = "Choose or create a collection by clicking the  collections button in the toolbar."
+            msg = "Choose or create a collection by clicking the Collections button in the toolbar."
             startupTips.append(msg)
 
         for msg in startupTips:
@@ -174,14 +175,12 @@ class FTPanel(Panel):
         self.reportWindow.Report("Use the Run buttons to run modules.")
 
         if startupTips:
-            self.startupTip = ToolTip()
-            self.startupTip.IsBalloon = True
-            self.startupTip.ToolTipTitle = "Getting started"
-            self.startupTip.InitialDelay = 0
-            self.startupTip.AutoPopDelay = 20000
-            self.startupTip.SetToolTip(self.modulesList, "\n".join(startupTips))
-        else:
-            self.startupTip = None
+            self.startupToolTip = ToolTip()
+            self.startupToolTip.IsBalloon = True
+            self.startupToolTip.ToolTipTitle = "Getting started"
+            self.startupToolTip.InitialDelay = 0
+            self.startupToolTip.AutoPopDelay = 20000
+            self.startupToolTip.SetToolTip(self.modulesList, "\n".join(startupTips))
 
 
         self.reportWindow.Reporter.RegisterProgressHandler(progressFunction)
@@ -205,27 +204,12 @@ class FTPanel(Panel):
     # ---- Toolbar button handlers ----
 
     def __EditCollections(self):
-        if self.startupTip:
-            self.startupTip.RemoveAll()
-
         if self.__EditCollectionsHandler:
             self.__EditCollectionsHandler()
 
     def __ChooseProject(self):
-        if self.startupTip:
-            self.startupTip.RemoveAll()
-
         if self.__ChooseProjectHandler:
             self.__ChooseProjectHandler()
-
-    def __ShowInfo(self):
-        if self.modulesList.SelectedIndex >= 0:
-            module = self.listOfModules[self.modulesList.SelectedIndex]
-            moduleDocs = self.moduleManager.GetDocs(module)
-            if moduleDocs:
-                infoDialog = UIModuleBrowser.ModuleInfoDialog(moduleDocs)
-                infoDialog.ShowDialog()
-
 
     def __Run(self, message, modules, modifyDB = False):
         # Reload the modules to make sure we're using the latest code.
@@ -242,7 +226,7 @@ class FTPanel(Panel):
 
         if modifyDB:
             dlgmsg = "Are you sure you want to make changes to the '%s' project? "\
-                      "(Please back up the project first.)"
+                      "Please back up the project first."
             title = "Confirm allow changes"
             result = MessageBox.Show(dlgmsg % self.projectName, title,
                                      MessageBoxButtons.YesNo,
@@ -288,14 +272,33 @@ class FTPanel(Panel):
         self.__EditCollectionsHandler = handler
 
     def UpdateModuleList(self, collectionName, listOfModules):
+        if self.startupToolTip:
+            self.startupToolTip.RemoveAll()
         self.listOfModules = listOfModules
         self.modulesList.UpdateAllItems(self.listOfModules)
         self.reportWindow.Report("Collection '%s' selected." % collectionName)
 
     def UpdateProjectName(self, newProjectName):
+        if self.startupToolTip:
+            self.startupToolTip.RemoveAll()
         self.projectName = newProjectName
         self.reportWindow.Report("Project '%s' selected." % self.projectName)
         self.toolbar.UpdateButtonText(0, self.projectName)
+
+    def ModuleInfo(self):
+        if self.modulesList.SelectedIndex >= 0:
+            module = self.listOfModules[self.modulesList.SelectedIndex]
+            moduleDocs = self.moduleManager.GetDocs(module)
+            if moduleDocs:
+                infoDialog = UIModuleBrowser.ModuleInfoDialog(moduleDocs)
+                infoDialog.ShowDialog()
+
+
+    def CopyReportToClipboard(self):
+        self.reportWindow.CopyToClipboard()
+
+    def ClearReport(self):
+        self.reportWindow.Clear()
 
     def RefreshModules(self):
         self.modulesList.UpdateAllItems(self.listOfModules,
@@ -318,6 +321,10 @@ class FTMainForm (Form):
                           "Collections...",
                           Shortcut.CtrlL,
                           "Manage and select a collection of modules"),
+                         (self.ModuleInfo,
+                          "Module Information",
+                          Shortcut.CtrlI,
+                          "Show help information on the selected module"),
                          (self.ReloadModules,
                           "Re-load Modules",
                           Shortcut.F5,
@@ -529,10 +536,13 @@ class FTMainForm (Form):
 ##            self.__UpdateStatusBar()
 
     def CopyToClipboard(self, sender, event):
-        self.UIPanel.reportWindow.CopyToClipboard()
+        self.UIPanel.CopyReportToClipboard()
 
     def ClearReport(self, sender, event):
-        self.UIPanel.reportWindow.Clear()
+        self.UIPanel.ClearReport()
+
+    def ModuleInfo(self, sender, event):
+        self.UIPanel.ModuleInfo()
 
     def ReloadModules(self, sender, event):
         self.__LoadModules()
