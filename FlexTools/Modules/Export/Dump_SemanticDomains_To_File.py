@@ -14,7 +14,7 @@
 from __future__ import unicode_literals
 
 from FTModuleClass import *
-import codecs
+import io
 
 #----------------------------------------------------------------
 # Documentation that the user sees:
@@ -33,19 +33,19 @@ Dump the Semantic Domain list to a file.
 
 def MainFunction(DB, report, modifyAllowed):
 
-    outputFile = "SemanticDomains_{0}.txt".format(DB.db.ProjectId.UiName)
-    output = codecs.open(outputFile, mode="w", encoding="utf8")
+    outputFile = "SemanticDomains_{0}.txt".format(DB.ProjectName())
+    output = io.open(outputFile, mode="w", encoding="utf-8")
 
     count = 0
     for sd in DB.GetAllSemanticDomains(True):
-        #output.write(sd.Hvo + '\r\n')
-        output.write(sd.ToString())
-        output.write('\r\n')
+        #output.write(sd.Hvo + '\n')
+        output.write(sd.ToString() + '\n')
         report.Info("Semantic Domain: %s" % sd)
         count      += 1
-    report.Info("Dumped {0} Semantic Domains to file {1}".format(count, outputFile))
+    report.Info("Dumped {0} Semantic Domains to file {1}".format(
+                count, outputFile))
     output.close()
-         
+
 #----------------------------------------------------------------
 # The name 'FlexToolsModule' must be defined like this:
 

@@ -14,7 +14,7 @@
 from __future__ import unicode_literals
 
 from FTModuleClass import *
-import codecs
+import io
 
 #----------------------------------------------------------------
 # Documentation that the user sees:
@@ -33,19 +33,22 @@ Dump all Headwords to a file.
 
 def MainFunction(DB, report, modifyAllowed):
 
-    headwordsFile = "Headwords_All_{0}.txt".format(DB.db.ProjectId.UiName)
-    output = codecs.open(headwordsFile, mode="w", encoding="utf8")
+    headwordsFile = "Headwords_All_{0}.txt".format(DB.ProjectName())
+    output = io.open(headwordsFile, mode="w", encoding="utf-8")
     headwords = []
     for e in DB.LexiconAllEntries():
         headwords.append(DB.LexiconGetHeadword(e))
     
     numHeadwords = 0
     for headword in sorted(headwords, key=lambda s: s.lower()):
-        output.write(headword + '\r\n')
+        output.write(headword + '\n')
         numHeadwords += 1
-    report.Info("Dumped {0} headwords to file {1}".format(numHeadwords, headwordsFile))
-    report.Info("DB.LexiconNumberOfEntries = " + str(DB.LexiconNumberOfEntries()))
+    report.Info("Dumped {0} headwords to file {1}".format(
+                numHeadwords, headwordsFile))
+    report.Info("Total Lexical Entries in Database = {}".format(
+                DB.LexiconNumberOfEntries()))
     output.close()		
+
 #----------------------------------------------------------------
 # The name 'FlexToolsModule' must be defined like this:
 

@@ -14,7 +14,7 @@
 from __future__ import unicode_literals
 
 from FTModuleClass import *
-import codecs
+import io
 
 #----------------------------------------------------------------
 # Documentation that the user sees:
@@ -33,19 +33,19 @@ Dump all texts to file.
 
 def MainFunction(DB, report, modifyAllowed):
 
-    textsFile = "Texts_{0}.txt".format(DB.db.ProjectId.UiName)
-    output = codecs.open(textsFile, mode="w", encoding="utf8")
+    textsFile = "Texts_{0}.txt".format(DB.ProjectName())
+    output = io.open(textsFile, mode="w", encoding="utf-8")
 
     numTexts = 0
     for name, text in sorted(DB.TextsGetAll()):
-        output.write(name + '\r\n')
-        output.write(text.replace('\n', '\r\n') + '\r\n')
-        output.write('\r\n')
+        output.write(name + '\n')
+        output.write(text)
+        output.write('\n\n')
         report.Info("Text: %s" % name)
         numTexts      += 1
     report.Info("Dumped {0} texts to file {1}".format(numTexts, textsFile))
     output.close()
-         
+
 #----------------------------------------------------------------
 # The name 'FlexToolsModule' must be defined like this:
 
