@@ -17,6 +17,8 @@
 #   Platforms: Python.NET
 #
 
+from __future__ import unicode_literals
+
 from FTModuleClass import *
 from SIL.LCModel import *
 from SIL.LCModel.Core.KernelInterfaces import ITsString, ITsStrBldr   
@@ -38,7 +40,7 @@ docs = {FTM_Name       : "Lexeme Usage in Corpus",
         FTM_Synopsis   : "Count usage of lexemes in the text corpus.",
         FTM_Help       : None,
         FTM_Description:
-u"""
+"""
 This module counts how many times lexical entries and senses have been
 assigned to wordforms in the text corpus. This is the total usage:
 that is, counting every occurance even in the same wordform.

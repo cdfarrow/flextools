@@ -11,6 +11,8 @@
 #   Platforms: Python.NET
 #
 
+from __future__ import unicode_literals
+
 from FTModuleClass import *
 from SIL.LCModel import *
 from SIL.LCModel.Core.KernelInterfaces import ITsString, ITsStrBldr   
@@ -30,7 +32,7 @@ docs = {FTM_Name       : "Merge Senses",
         FTM_Synopsis   : "Merges senses with matching gloss/definition and grammatical category.",
         FTM_Help       : "Merging Duplicates Help.htm",
         FTM_Description:
-u"""
+"""
 This module scans all lexical entries and merges all top-level senses 
 that have the same grammatical category and the same gloss (or definition 
 if the gloss field is empty). Later senses are merged into earlier 
@@ -50,19 +52,19 @@ to be sure there were no mistakes or unintended effects.
 def MergeSenses(DB, report, modifyAllowed):
 
     numEntries = DB.LexiconNumberOfEntries()
-    report.Info(u"Scanning %s entries for duplicate senses..." % numEntries)
+    report.Info("Scanning %s entries for duplicate senses..." % numEntries)
     report.ProgressStart(numEntries)
 
     DoMerge = AddTagToField = modifyAllowed
 
-    tagsField = DB.LexiconGetEntryCustomFieldNamed(u"FTFlags")
+    tagsField = DB.LexiconGetEntryCustomFieldNamed("FTFlags")
     if not tagsField:
-        report.Warning(u"FTFlags custom field doesn't exist at entry level")
+        report.Warning("FTFlags custom field doesn't exist at entry level")
     elif not DB.LexiconFieldIsStringType(tagsField):
-        report.Warning(u"FTFlags custom field is not of type Single-line Text")
+        report.Warning("FTFlags custom field is not of type Single-line Text")
         tagsField = None
     if AddTagToField and not tagsField:
-        report.Warning(u"Continuing without writing to FTFlags")
+        report.Warning("Continuing without writing to FTFlags")
         AddTagToField = False
 
 
@@ -82,20 +84,20 @@ def MergeSenses(DB, report, modifyAllowed):
             # Match on gloss/definition and POS
             #   sense.ShortName defaults to best gloss and falls back to best definition.
             #   MSA.InterlinearName is concise and more specific than MSA.LongName
-            key = u"{} [{}]".format(sense.ShortName,
+            key = "{} [{}]".format(sense.ShortName,
                                     sense.MorphoSyntaxAnalysisRA.InterlinearName)
             mergeList[key].append(sense)
 
         # Merge the duplicates
         merged = False
-        for key, senses in mergeList.items():
+        for key, senses in list(mergeList.items()):
             if len(senses) > 1:
                 if not DoMerge:
-                    msg = u"   %s [%s]: senses %s to be merged"
+                    msg = "   %s [%s]: senses %s to be merged"
                 else:
-                    msg = u"   Merging %s [%s]: senses %s"
+                    msg = "   Merging %s [%s]: senses %s"
 
-                senseNumbers = u" & ".join([u", ".join([s.SenseNumber for s in senses[:-1]]),
+                senseNumbers = " & ".join([", ".join([s.SenseNumber for s in senses[:-1]]),
                                             senses[-1].SenseNumber])
                 report.Info(msg % (entry.HomographForm,
                                    senses[0].ShortName,
@@ -111,8 +113,8 @@ def MergeSenses(DB, report, modifyAllowed):
                         totalMerged += 1
 
                     # A simple check in case we hit a corner case where something goes wrong.
-                    if originalNumSenses - (len(senses)-1) <> entry.SensesOS.Count:
-                        report.Warning(u"%s: Error merging senses--%i senses -%i senses <> %i" %
+                    if originalNumSenses - (len(senses)-1) != entry.SensesOS.Count:
+                        report.Warning("%s: Error merging senses--%i senses -%i senses <> %i" %
                                        entry.HomographForm,
                                        originalNumSenses,
                                        len(senses)-1,
@@ -125,9 +127,9 @@ def MergeSenses(DB, report, modifyAllowed):
                 DB.LexiconAddTagToField(entry, tagsField, TAG_MergedSenses) 
             
     if DoMerge:
-        report.Info(u"%i %s merged (in %i %s)" %
-                    (totalMerged, u"sense" if totalMerged == 1 else u"senses",
-                     totalEntries, u"entry" if totalEntries == 1 else u"entries"))
+        report.Info("%i %s merged (in %i %s)" %
+                    (totalMerged, "sense" if totalMerged == 1 else "senses",
+                     totalEntries, "entry" if totalEntries == 1 else "entries"))
 
         
 #----------------------------------------------------------------

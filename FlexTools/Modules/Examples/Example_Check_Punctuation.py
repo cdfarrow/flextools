@@ -18,6 +18,8 @@
 # Platforms: Python .NET and IronPython
 #
 
+from __future__ import unicode_literals
+
 from FTModuleClass import *
 
 import re
@@ -43,7 +45,7 @@ docs = {FTM_Name       : "Example - Check Punctuation",
         FTM_Synopsis   : "Check sentence ending punctuation in example sentences.",
         FTM_Help       : None,
         FTM_Description:
-u"""
+"""
 This module checks for missing or too many of the characters '?', '!' and '.'
 
 If database modification is permitted, then a warning value will be appended
@@ -99,7 +101,7 @@ def MainFunction(DB, report, modifyAllowed):
                 for test in TestSuite:
                     funcOrRegex, result, message = test
                     if type (funcOrRegex) is not FunctionType:
-                        if (funcOrRegex.search(DB.LexiconGetExample(example)) <> None) \
+                        if (funcOrRegex.search(DB.LexiconGetExample(example)) != None) \
                           == result:
                            report.Warning(lexeme + ": " + message, DB.BuildGotoURL(entry))
                            if AddReportToField:

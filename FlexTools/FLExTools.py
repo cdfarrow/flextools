@@ -11,9 +11,13 @@
 #   Copyright Craig Farrow, 2010 - 2019
 #
 
+from __future__ import unicode_literals
+from builtins import str
+
 import codecs
 import sys
 sys.stdout = codecs.getwriter("utf-8")(sys.stdout)
+
 import os
 import traceback
 

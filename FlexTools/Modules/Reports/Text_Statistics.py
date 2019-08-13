@@ -14,6 +14,8 @@
 #   Platforms: Python .NET and IronPython
 #
 
+from __future__ import unicode_literals
+
 from FTModuleClass import *
 
 #----------------------------------------------------------------
@@ -24,7 +26,7 @@ docs = {FTM_Name        : "Text Statistics",
         FTM_ModifiesDB  : False,
         FTM_Synopsis    : "Give a summary report of all the texts.",
         FTM_Description :
-u"""
+"""
 Produces a word-count report of each individual text,
 plus average numbers of words, sentences and paragraphs.
 """ }

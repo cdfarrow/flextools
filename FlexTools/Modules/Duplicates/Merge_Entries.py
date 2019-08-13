@@ -9,7 +9,8 @@
 #   in FTFlags (entry level custom Single-line Text field):
 #
 #       ‘del’:  delete the entry
-#   	‘mt’:   the merge target--all other homographs will will be merged into this entry.
+#   	‘mt’:   the merge target--all other homographs will will be merged 
+#               into this entry.
 #       ‘m’:    merge into the merge target with all string conflicts appended.
 #       ‘md’:   merge into the merge target with all string conflicts discarded.
 #
@@ -18,6 +19,8 @@
 #
 #   Platforms: Python.NET
 #
+
+from __future__ import unicode_literals
 
 from FTModuleClass import *
 from SIL.LCModel import *
@@ -38,7 +41,7 @@ docs = {FTM_Name       : "Merge Entries",
         FTM_Synopsis   : "Merges homographs and deletes entries according to merge commands in FTFlags.",
         FTM_Help       : "Merging Duplicates Help.htm",
         FTM_Description:
-u"""
+"""
 This module is designed to be used in conjunction with "Find Duplicate Entries",
 however it can be used independently by manually configuring the merge tags in FTFlags.
 
@@ -73,8 +76,8 @@ def MergeEntries(DB, report, modifyAllowed):
 
     # --------------------------------------------------------------------
     def __EntryMessage(entry, message, reportFunc=report.Info):
-        POSList = u"; ".join(set([x.ShortName for x in entry.MorphoSyntaxAnalysesOC]))
-        reportFunc(u"   %s [%s][%s] %s" % (entry.HomographForm,
+        POSList = "; ".join(set([x.ShortName for x in entry.MorphoSyntaxAnalysesOC]))
+        reportFunc("   %s [%s][%s] %s" % (entry.HomographForm,
                                            DB.BestStr(MorphType.Name),
                                            POSList,
                                            message),
@@ -87,17 +90,17 @@ def MergeEntries(DB, report, modifyAllowed):
    
     # --------------------------------------------------------------------
     numEntries = DB.LexiconNumberOfEntries()
-    report.Info(u"Scanning %s entries for merge commands..." % numEntries)
+    report.Info("Scanning %s entries for merge commands..." % numEntries)
     report.ProgressStart(numEntries)
 
-    tagsField = DB.LexiconGetEntryCustomFieldNamed(u"FTFlags")
+    tagsField = DB.LexiconGetEntryCustomFieldNamed("FTFlags")
     if not tagsField:
-        report.Error(u"FTFlags custom field doesn't exist at entry level")
+        report.Error("FTFlags custom field doesn't exist at entry level")
     elif not DB.LexiconFieldIsStringType(tagsField):
-        report.Error(u"FTFlags custom field is not of type Single-line Text")
+        report.Error("FTFlags custom field is not of type Single-line Text")
         tagsField = None
     if not tagsField:
-        report.Warning(u"Please read the instructions")
+        report.Warning("Please read the instructions")
         return
 
     DoCommands = modifyAllowed
@@ -126,11 +129,11 @@ def MergeEntries(DB, report, modifyAllowed):
             # the deletion warning message.
             usageCount = DB.LexiconEntryAnalysesCount(entry)
 
-            __EntryMessage(entry, u"to be deleted (used %i time%s in text corpus)" %
-                                  (usageCount, u"" if usageCount == 1 else u"s"))
+            __EntryMessage(entry, "to be deleted (used %i time%s in text corpus)" %
+                                  (usageCount, "" if usageCount == 1 else "s"))
             
             deleteWarningMessage = ITsString(entry.DeletionTextTSS).Text
-            cut = deleteWarningMessage.find(u"1.")
+            cut = deleteWarningMessage.find("1.")
             if cut >= 0:
                 deleteWarningMessage = deleteWarningMessage[cut:]\
                                        .replace(StringUtils.kChHardLB, "\n")
@@ -146,42 +149,42 @@ def MergeEntries(DB, report, modifyAllowed):
 
             # Handle Grammatical Categories as sets: so senses of (Noun, Verb) will match (Verb, Noun)
             POS = set([x.ShortName for x in entry.MorphoSyntaxAnalysesOC])
-            POSList = u"; ".join(POS)
+            POSList = "; ".join(POS)
             
             # Record this entry for merging
-            key = u"{} [{}][{}]".format(entry.HomographForm,
+            key = "{} [{}][{}]".format(entry.HomographForm,
                                         DB.BestStr(MorphType.Name),
                                         POSList)
             mergeList[key][tag].append(entry)
 
 
     if DoCommands:
-        report.Info(u"Actioning merge commands...")
+        report.Info("Actioning merge commands...")
     else:
-        report.Info(u"Run again with 'Modify enabled' to carry out these actions:")
+        report.Info("Run again with 'Modify enabled' to carry out these actions:")
 
 
     # MERGE
     totalMerged = 0
     totalTarget = 0
 
-    report.ProgressStart(len(mergeList.items()) + len(deleteList))
+    report.ProgressStart(len(list(mergeList.items())) + len(deleteList))
     progressCount = 0
     
-    for key, mergeData in mergeList.items():
+    for key, mergeData in list(mergeList.items()):
         progressCount += 1
         report.ProgressUpdate(progressCount)
 
         # Validity checks
         if len(mergeData[TAG_MergeTarget]) > 1:
             __WarningMessage(mergeData[TAG_MergeTarget][0],
-                             u"Multiple merge targets: ignoring")
+                             "Multiple merge targets: ignoring")
             continue
 
         if len(mergeData[TAG_MergeTarget]) == 0:
             if len(mergeData[TAG_Merge]) == 0:
                 __WarningMessage(mergeData[TAG_MergeDiscard][0],
-                                 u"No merge target specified: ignoring")
+                                 "No merge target specified: ignoring")
                 continue
             
             targetEntry = mergeData[TAG_Merge].pop()
@@ -210,12 +213,12 @@ def MergeEntries(DB, report, modifyAllowed):
                 __EntryMessage(targetEntry, "to be merged")
             totalTarget += 1
         else:
-            __WarningMessage(targetEntry, u"Only one entry tagged for merging: ignoring")
+            __WarningMessage(targetEntry, "Only one entry tagged for merging: ignoring")
             
     if DoCommands:
-        report.Info(u"%i %s merged into %i merge target%s" %
-                    (totalMerged, u"entry" if totalMerged == 1 else u"entries",
-                     totalTarget, u"" if totalTarget == 1 else u"s"))
+        report.Info("%i %s merged into %i merge target%s" %
+                    (totalMerged, "entry" if totalMerged == 1 else "entries",
+                     totalTarget, "" if totalTarget == 1 else "s"))
 
 
     # DELETE

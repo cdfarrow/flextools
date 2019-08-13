@@ -14,6 +14,8 @@
 # Platforms: Python .NET and IronPython
 #
 
+from __future__ import unicode_literals
+
 from FTModuleClass import *
 
 import re
@@ -33,7 +35,7 @@ docs = {FTM_Name        : "Find Duplicate Definitions",
         FTM_ModifiesDB  : True,
         FTM_Synopsis    : "Finds entries with duplicate definitions.",
         FTM_Description :
-u"""
+"""
 This module scans each lexical entry and reports if there are any duplicate
 definitions in the entry.
 

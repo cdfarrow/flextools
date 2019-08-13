@@ -15,6 +15,8 @@
 #   Platforms: Python .NET and IronPython
 #
 
+from __future__ import unicode_literals
+
 from FTModuleClass import *
 
 #----------------------------------------------------------------
@@ -26,7 +28,7 @@ docs = {FTM_Name       : "Lexicon Statistics",
         FTM_Synopsis   : "Give a summary report of the lexicon.",
         FTM_Help       : None,
         FTM_Description:
-u"""
+"""
 Reports the number of lexemes and senses, plus
 number of senses with definitions and examples.
 """ }

@@ -16,6 +16,8 @@
 #   Platforms: Python .NET and IronPython
 #
 
+from __future__ import unicode_literals
+
 from FTModuleClass import *
 from SIL.LCModel import *
 from SIL.LCModel import MoMorphTypeTags
@@ -38,7 +40,7 @@ docs = {FTM_Name       : "Find Duplicate Entries",
         FTM_Synopsis   : "Finds potential duplicate entries and tags them ready for merging.",
         FTM_Help       : "Merging Duplicates Help.htm",
         FTM_Description:
-u"""
+"""
 This module scans all lexical entries that have homographs, and reports on any
 entries that have the same morpheme type and same grammatical info (i.e. part-of-speech).
 
@@ -63,7 +65,7 @@ up homograph numbers and duplicate grammatical info details.
 def MainFunction(DB, report, modifyAllowed):
 
     def __EntryMessage(DB, entry, message):
-        report.Info(u"   %s(%i) [%s][%s] %s" % (entry.HomographForm,
+        report.Info("   %s(%i) [%s][%s] %s" % (entry.HomographForm,
                                                 entry.HomographNumber,
                                                 DB.BestStr(MorphType.Name),
                                                 POSList,
@@ -71,19 +73,19 @@ def MainFunction(DB, report, modifyAllowed):
                     DB.BuildGotoURL(entry))
 
     numEntries = DB.LexiconNumberOfEntries()
-    report.Info(u"Scanning %s entries for homographs..." % numEntries)
+    report.Info("Scanning %s entries for homographs..." % numEntries)
     report.ProgressStart(numEntries)
 
     AddTagToField = modifyAllowed
 
-    tagsField = DB.LexiconGetEntryCustomFieldNamed(u"FTFlags")
+    tagsField = DB.LexiconGetEntryCustomFieldNamed("FTFlags")
     if not tagsField:
-        report.Warning(u"FTFlags custom field doesn't exist at entry level")
+        report.Warning("FTFlags custom field doesn't exist at entry level")
     elif not DB.LexiconFieldIsStringType(tagsField):
-        report.Error(u"FTFlags custom field is not of type Single-line Text")
+        report.Error("FTFlags custom field is not of type Single-line Text")
         tagsField = None
     if AddTagToField and not tagsField:
-        report.Warning (u"Continuing in read-only mode")
+        report.Warning ("Continuing in read-only mode")
         AddTagToField = False
    
     homographs = defaultdict(list)
@@ -94,7 +96,7 @@ def MainFunction(DB, report, modifyAllowed):
 
         report.ProgressUpdate(entryNumber)
         
-        POSList = u""
+        POSList = ""
         MorphType = entry.LexemeFormOA.MorphTypeRA
 
         # Ignore affixes
@@ -103,45 +105,45 @@ def MainFunction(DB, report, modifyAllowed):
 
         # Ignore variants and complex forms (except phrases)
         if entry.EntryRefsOS.Count > 0:
-            if ((MorphType.Guid <> MoMorphTypeTags.kguidMorphPhrase) and
-                (MorphType.Guid <> MoMorphTypeTags.kguidMorphDiscontiguousPhrase)):
-                __EntryMessage(DB, entry, u"skipped because it is a variant or complex form")
+            if ((MorphType.Guid != MoMorphTypeTags.kguidMorphPhrase) and
+                (MorphType.Guid != MoMorphTypeTags.kguidMorphDiscontiguousPhrase)):
+                __EntryMessage(DB, entry, "skipped because it is a variant or complex form")
                 continue
 
         # Handle Grammatical Categories as sets: so senses of (Noun, Verb) will match (Verb, Noun)
         POS = set([x.ShortName for x in entry.MorphoSyntaxAnalysesOC])
-        POSList = u"; ".join(POS)
+        POSList = "; ".join(POS)
 
         # Skip entries with contents in FTFlags
         if tagsField:
             tag = DB.LexiconGetFieldText(entry, tagsField)
             if tag:
                 if tag in ALL_MERGE_TAGS:
-                    __EntryMessage(DB, entry, u"ready for merge (FTFlags = '%s')" % tag)
+                    __EntryMessage(DB, entry, "ready for merge (FTFlags = '%s')" % tag)
                 else:
-                    __EntryMessage(DB, entry, u"skipped because FTFlags contains data ('%s')" % tag)
+                    __EntryMessage(DB, entry, "skipped because FTFlags contains data ('%s')" % tag)
                 continue
 
         # Keep track of this entry
-        key = u"{} [{}][{}]".format(entry.HomographForm,
+        key = "{} [{}][{}]".format(entry.HomographForm,
                                    DB.BestStr(MorphType.Name),
                                    POSList)
 
         homographs[key].append(entry)
-        __EntryMessage(DB, entry, u"")
+        __EntryMessage(DB, entry, "")
 
 
     if AddTagToField:
-        s = u"Writing tag '%s' to FTFlags" % TAG_Merge
+        s = "Writing tag '%s' to FTFlags" % TAG_Merge
     else:
-        s = u"Run again with Modify to write '%s' to FTFlags" % TAG_Merge
-    report.Info(u"Homographs to consider for merging: (%s)" % s)
+        s = "Run again with Modify to write '%s' to FTFlags" % TAG_Merge
+    report.Info("Homographs to consider for merging: (%s)" % s)
 
     homographItems = sorted(homographs.items())
     for key, data in homographItems:
         if len(data) < 2:
             continue
-        report.Info(u"   {}: {} homographs".format(key, len(data)),
+        report.Info("   {}: {} homographs".format(key, len(data)),
                     DB.BuildGotoURL(data[0]))
         if AddTagToField:
             for e in data:
@@ -150,13 +152,13 @@ def MainFunction(DB, report, modifyAllowed):
     # Mark entries with only one homograph with "review"
     
     if AddTagToField:
-        s = u"Writing tag '%s' to FTFlags" % TAG_MergeReview
+        s = "Writing tag '%s' to FTFlags" % TAG_MergeReview
     else:
-        s = u"Run again with 'Modify enabled' to write '%s' to FTFlags" % TAG_MergeReview
-    report.Info(u"Homographs with no matching entry: (%s)" % s)
+        s = "Run again with 'Modify enabled' to write '%s' to FTFlags" % TAG_MergeReview
+    report.Info("Homographs with no matching entry: (%s)" % s)
     for key, data in homographItems:
         if len(data) == 1:
-            report.Info(u"   {}".format(key),
+            report.Info("   {}".format(key),
                         DB.BuildGotoURL(data[0]))
             if AddTagToField:
                 e = data[0]

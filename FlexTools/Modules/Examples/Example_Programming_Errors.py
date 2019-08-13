@@ -11,6 +11,8 @@
 #   Platforms: Python .NET
 #
 
+from __future__ import unicode_literals
+
 from FTModuleClass import *
 
 #----------------------------------------------------------------
@@ -25,7 +27,7 @@ docs = {FTM_Name            : "Example - Programming Errors",
         FTM_Synopsis        : "Illustrates some programming errors.",
         FTM_Help            : None,
         FTM_Description     :
-u"""
+"""
 Run this Module to generate a run-time error. Comment out or fix the
 error lines to reach the next error.
 """ }

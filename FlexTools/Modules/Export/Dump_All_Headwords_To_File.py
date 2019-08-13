@@ -11,6 +11,8 @@
 #   Platforms: Python .NET and IronPython
 #
 
+from __future__ import unicode_literals
+
 from FTModuleClass import *
 import codecs
 
@@ -22,7 +24,7 @@ docs = {FTM_Name        : "Dump All Headwords To File",
         FTM_ModifiesDB  : False,
         FTM_Synopsis    : "Dump all Headwords to file.",
         FTM_Description :
-u"""
+"""
 Dump all Headwords to a file.
 """ }
                  

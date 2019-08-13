@@ -11,6 +11,8 @@
 #   Platforms: Python .NET and IronPython
 #
 
+from __future__ import unicode_literals
+
 from FTModuleClass import *
 import codecs
 
@@ -22,7 +24,7 @@ docs = {FTM_Name        : "Dump Published Headwords To File",
         FTM_ModifiesDB  : False,
         FTM_Synopsis    : "Dump published Headwords to file.",
         FTM_Description :
-u"""
+"""
 Dump all headwords to a file if they are marked to be published (PublishIn field has at least
 one value.)
 """ }
