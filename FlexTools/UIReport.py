@@ -9,6 +9,9 @@
 #   September 2010
 #
 
+from __future__ import unicode_literals
+from builtins import str
+
 import os
 
 import UIGlobal
@@ -75,11 +78,14 @@ class ReportWindow(ListView):
             if msg == None: msg = ""            # If None then no icon shows
             item = ListViewItem([msg], msgType) # 2nd = image index; 3 => no icon
             if extra:
-                item.Tag = unicode(extra)
-                if item.Tag.startswith("silfw:"):
-                    item.ToolTipText = "Double-click to jump to Fieldworks"
-                else:
-                    item.ToolTipText = item.Tag
+                try:
+                    if extra.startswith("silfw:"):
+                        item.ToolTipText = "Double-click to jump to Fieldworks"
+                    else:
+                        item.ToolTipText = extra
+                    item.Tag = extra
+                except AttributeError:      # Not a string
+                    item.Tag = item.ToolTipText = repr(extra)
             addedItem = self.Items.Add(item)
         else:
             addedItem = self.Items.Add(reportItem)
@@ -91,7 +97,8 @@ class ReportWindow(ListView):
                 if item.Tag.startswith("silfw:"):
                     return item.Text
                 else:
-                    return Environment.NewLine.join((item.Text, item.ToolTipText))
+                    return Environment.NewLine.join((item.Text, 
+                                                     item.ToolTipText))
             else:
                 return item.Text
 
