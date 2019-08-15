@@ -12,6 +12,9 @@
 #   v0.01
 #
 
+from __future__ import unicode_literals
+from builtins import str
+
 import os
 
 from configparser import ConfigParser
