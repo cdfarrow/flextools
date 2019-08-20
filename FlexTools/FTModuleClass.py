@@ -79,16 +79,16 @@ class FlexToolsModuleClass (object):
     Exceptions:
         KeyError - raised if there are missing documentation keys.
     """
-    __validDocKeys = [FTM_Name,
+    __requiredDocKeys = [FTM_Name,
                       FTM_Version,
                       FTM_ModifiesDB,
                       FTM_Synopsis,
                       FTM_Description]
     
     def __init__(self, runFunction, docs, configuration=[]):
-        if any([x not in docs for x in self.__validDocKeys]):
+        if any([x not in docs for x in self.__requiredDocKeys]):
             raise FTM_ModuleError("Module documentation is missing required key.\n"\
-                                   "Required keys:\n\t" + "\n\t".join(self.__validDocKeys))
+                                   "Required keys:\n\t" + "\n\t".join(self.__requiredDocKeys))
         
         self.docs = docs
         self.configurationItems = configuration
@@ -105,7 +105,8 @@ class FlexToolsModuleClass (object):
     def Run(self, DB, report, modify = False):
         if self.runFunction:
             # Prevent writes if not documented
-            if not self.docs[FTM_ModifiesDB]:       
+            if not self.docs[FTM_ModifiesDB]:
+                report.Warning("Changes are enabled, but this module doesn't allow it: Disabling changes.")
                 modify = False
             self.runFunction(DB, report, modify)
 

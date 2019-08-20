@@ -130,7 +130,7 @@ class ModulesList(ListBox):
                                                        str(itemInfo[FTM_Version]),
                                                        itemInfo[FTM_Synopsis])
                 if itemInfo[FTM_ModifiesDB]:
-                    composedString += "\nNote: Modifies the project. (Use the 'Run (Modify)' buttons to allow database changes.) "
+                    composedString += "\nNote: Can modify the project. (Use the 'Run (Modify)' buttons to make changes.) "
                 if itemInfo[FTM_HasConfig]:
                     composedString += "\nNote: This module has configurable parameters"
             else:
