@@ -82,7 +82,7 @@ except Exception as e:
 import UIGlobal
 import UICollections, FTCollections
 import UIModulesList, UIReport, UIModuleBrowser
-import UIDbChooser
+from UIProjectChooser import ProjectChooser
 import FTModules
 import Help
 
@@ -512,7 +512,7 @@ class FTMainForm (Form):
                                       listOfModules)
 
     def ChooseProject(self, sender=None, event=None):
-        dlg = UIDbChooser.ProjectChooser(self.configuration.currentProject)
+        dlg = ProjectChooser(self.configuration.currentProject)
         dlg.ShowDialog()
         if dlg.projectName != self.configuration.currentProject:
             self.configuration.currentProject = dlg.projectName
