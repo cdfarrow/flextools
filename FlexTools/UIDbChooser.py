@@ -1,6 +1,6 @@
 #
 #   Project: FlexTools
-#   Module:  UIDbChooser
+#   Module:  UIProjectChooser
 #   Platform: .NET v2 Windows.Forms (Python.NET 2.5)
 #
 #   Dialog for selecting a Fieldworks project.
@@ -11,7 +11,7 @@
 
 import UIGlobal
 from flexlibs import FLExInit
-from flexlibs.FLExProject import FLExProject
+from flexlibs.FLExProject import GetProjectNames
 
 from System.Drawing import (Color, SystemColors, Point, Rectangle, Size, Bitmap,
                             Image, Icon,
@@ -53,8 +53,7 @@ class ProjectList(ListView):
         # initialise the list
         self.itemToSetAsSelected = None
 
-        self.flexProject = FLExProject()
-        for name in self.flexProject.GetProjectNames():
+        for name in GetProjectNames():
             item = self.Items.Add(name)
             if name == currentProject:
                 self.itemToSetAsSelected = item
@@ -77,7 +76,7 @@ class ProjectList(ListView):
                 try:
                     self.__ActivatedHandler(sender.SelectedItems[0].Text)
                 except ArgumentOutOfRangeException:
-                    #print("UIDbChooser.__ItemActivatedHandler: ArgumentOutOfRangeException!")
+                    #print("UIProjectChooser.__ItemActivatedHandler: ArgumentOutOfRangeException!")
                     pass # No item selected
 
     def SetFocusOnCurrent(self):
