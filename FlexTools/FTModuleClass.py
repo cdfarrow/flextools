@@ -105,8 +105,8 @@ class FlexToolsModuleClass (object):
     def Run(self, DB, report, modify = False):
         if self.runFunction:
             # Prevent writes if not documented
-            if not self.docs[FTM_ModifiesDB]:
-                report.Warning("Changes are enabled, but this module doesn't allow it: Disabling changes.")
+            if modify and not self.docs[FTM_ModifiesDB]:
+                report.Warning("Changes are enabled, but this module doesn't allow it. Disabling changes.")
                 modify = False
             self.runFunction(DB, report, modify)
 
