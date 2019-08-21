@@ -13,37 +13,41 @@ A FLExTools module must include the following:
 Imports
 -------
 
+```python
 from FTModuleClass import *
 
 #(These are needed for string operations)
 from SIL.LCModel.Core.KernelInterfaces import ITsString, ITsStrBldr
 from SIL.LCModel.Core.Text import TsStringUtils 
-
+```
 
 Define a 'docs' dictionary
 --------------------------
 
-    docs = {FTM_Name       : "<name of module>",
-            FTM_Version    : "1.0",
-            FTM_ModifiesDB : True/False,
-            FTM_Synopsis   : "<description of module>",
-            FTM_Help       : None/link-to-help-file[pdf,html,etc.],
-            FTM_Description: 
-    """
-    <a multi-line full description of the module and how to use it>
-    """
-    }
+```python
+docs = {FTM_Name       : "<name of module>",
+        FTM_Version    : "1.0",
+        FTM_ModifiesDB : True/False,
+        FTM_Synopsis   : "<description of module>",
+        FTM_Help       : None/link-to-help-file[pdf,html,etc.],
+        FTM_Description: 
+"""
+<a multi-line full description of the module and how to use it>
+"""
+}
+```
 
 Define a main function and 'FlexToolsModule'
 --------------------------------------------
 
+```python
 def Main(flexProject, report, modifyAllowed):
     report.Info("Processing...")
     pass
 
 FlexToolsModule = FlexToolsModuleClass(runFunction = Main,
                                        docs = docs)
-
+```
 
 Path Matters
 ============
