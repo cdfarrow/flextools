@@ -4,7 +4,6 @@
 #   Platform: .NET v2 Windows.Forms (Python.NET 2.7)
 #
 #   Main FLexTools UI:
-#    - loads straight into configured project and collection.
 #    - A split panel with Collections list above and Report results below.
 #
 #

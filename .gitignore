@@ -1,5 +1,4 @@
-FlexTools/Modules-User
-FlexTools/Modules-Dev
+FlexTools/Modules-*
 
 # Temp files
 *.tmp
