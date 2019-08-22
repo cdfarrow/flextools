@@ -1,8 +1,7 @@
 FLExTools
 =========
 
-FLExTools is a Python scripting utility for SIL [FieldWorks Language Explorer](https://software.sil.org/fieldworks/).
+FLExTools is a Python scripting utility for SIL's [FieldWorks Language Explorer](https://software.sil.org/fieldworks/).
 
 
-+ [FLExTools](https://github.com/cdfarrow/flextools/wiki/FLExTools/)
-
+Read all about it on the [wiki](https://github.com/cdfarrow/flextools/wiki/)
