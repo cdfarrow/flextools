@@ -41,7 +41,7 @@ class ReportWindow(ListView):
         self.View = View.Details
         self.GridLines = True
         self.FullRowSelect = True
-        self.HeaderStyle = ColumnHeaderStyle.None
+        self.HeaderStyle = getattr(ColumnHeaderStyle, "None")
         self.ShowItemToolTips = True
         self.Columns.Add("", -2, HorizontalAlignment.Left)
 
