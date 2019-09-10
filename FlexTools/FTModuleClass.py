@@ -9,7 +9,7 @@
 #   October 2010
 #
 
-import exceptions
+# import exceptions
 
 # FlexTools module documentation keys. These keys must be defined in the
 # docs dictionary passed to the FlexToolsModuleClass initialisation.
