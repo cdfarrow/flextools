@@ -38,8 +38,8 @@ def MainFunction(DB, report, modifyAllowed):
     output = io.open(headwordsFile, mode="w", encoding="utf-8")
     headwords = []
     for e in DB.LexiconAllEntries():
-		if DB.LexiconGetPublishInCount(e) > 0:
-			headwords.append(DB.LexiconGetHeadword(e))
+        if DB.LexiconGetPublishInCount(e) > 0:
+            headwords.append(DB.LexiconGetHeadword(e))
     numHeadwords = 0
     for headword in sorted(headwords, key=lambda s: s.lower()):
         output.write(headword + '\n')
