@@ -150,7 +150,7 @@ def check_pinyin(sgmtr, hanzi, pinyin):
         if l == r:
             try:
                 tonenum = join_segments(sgmtr, hanzi, l).strip()
-            except KeyError, msg:
+            except KeyError as msg:
                 errors.append('\thanzi %s: Unknown Chinese: %s' % (hanzi, msg))
             else:
                 if pinyin:

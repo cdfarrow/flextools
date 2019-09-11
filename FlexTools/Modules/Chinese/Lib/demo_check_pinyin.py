@@ -23,6 +23,8 @@
 
 """demonstration of chinese, pinyin checking code."""
 
+from __future__ import print_function
+
 from check_pinyin import init_chin_sgmtr
 from check_pinyin import check_pinyin as check_tonenum
 
@@ -48,4 +50,4 @@ chin_sgmtr = init_chin_sgmtr((dict_fname, dict_supp))
 errors = list()
 for chin, tonenum in tests:
     errors += check_tonenum(chin_sgmtr, chin, tonenum)
-print u'\n'.join(errors)
+print(u'\n'.join(errors))

@@ -13,6 +13,8 @@
 #   Platforms: Python .NET and IronPython
 #
 
+
+from __future__ import print_function
 from FTModuleClass import *
 
 
@@ -108,17 +110,17 @@ def HACK_Tonenum (hz, tn):
         parses = tn.lower().split(" | ")
         # 2 cases: 
         if len(parses) > 1: # ambiguous parse
-            #print "    Ambiguous parse:"
+            #print("    Ambiguous parse:")
             parses = map(__trim_ambiguities, parses)
             parses = map(chin_utils.get_tone_syls, parses)
             longest = commonprefix(parses)
             hacked_tn = " ".join(longest)
         else:               # single parse
-            #print "    Single parse"
+            #print("    Single parse")
             words = tn.split()
             firstword = words[0]
             if "|" in firstword:    # ambiguous word
-                #print "    First word ambiguous:", firstword
+                #print("    First word ambiguous:", firstword)
                 if HACK_LEVEL == HACK_FIRST_WORD_IGNORE_TONE:
                     segments = firstword.split("|")
                     stripped_segs = []
@@ -131,11 +133,11 @@ def HACK_Tonenum (hz, tn):
                 #else - ambiguous first word: no hack
             else:
                 # firstword not ambiguous - grab longest unambiguous sequence
-                #print "    First word not ambiguous:", words
+                #print("    First word not ambiguous:", words)
                 hacked_tn = __trim_ambiguities(tn)
 
     if hacked_tn:
-        #print " >>", hacked_tn
+        #print(" >>", hacked_tn)
         syls = chin_utils.get_tone_syls(hacked_tn)
         # Trim hz to match tonenum length
         hz = "".join(chin_utils.get_chars(hz)[:len(syls)])

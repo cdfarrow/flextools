@@ -9,6 +9,8 @@
 #
 #
 
+from __future__ import print_function
+
 import codecs
 import re
 
@@ -95,7 +97,7 @@ class ChineseParser(object):
             if l == r:
                 try:
                     newTonenum = join_segments(self.segmenter, hanzi, l).strip()
-                except KeyError, msg:
+                except KeyError as msg:
                     ch = str(msg)
                     if ch =="u'.'" and "..." in hanzi:
                         return u"[Use Ellipsis (U+2026): %s]" % msg
@@ -116,7 +118,7 @@ class ChineseParser(object):
                 try:
                     tonenum1 = join_segments(self.segmenter, hanzi, l).strip()
                     tonenum2 = join_segments(self.segmenter, hanzi, r).strip()
-                except KeyError, msg:
+                except KeyError as msg:
                     ch = str(msg)
                     if ch =="u'.'" and "..." in hanzi:
                         return u"[Use Ellipsis (U+2026): %s]" % msg
@@ -190,7 +192,7 @@ class SortStringDB(dict):
         try:
             f = codecs.open(fname, encoding="utf-8")
         except IOError:
-            print "File not found!"
+            print("File not found!")
             return
 
         for line in f.readlines():
@@ -266,7 +268,7 @@ class SortStringDB(dict):
         hzList = get_chars(hz)
         pyList = get_tone_syls(py.lower())
 
-        if len(hzList) <> len(pyList):
+        if len(hzList) != len(pyList):
             return u"[PY different length]"
 
         return u";".join([self.Lookup(h,p) for h, p in zip(hzList, pyList)])
@@ -357,18 +359,18 @@ if __name__ == "__main__":
                ]
 
 
-    print "--- Testing Chinese Parser and Sort String Generator ---"
+    print("--- Testing Chinese Parser and Sort String Generator ---")
     Parser = ChineseParser()
     Sorter = SortStringDB()
     for chns, tonenum in testSet:
-        print "%s [%s] %s" % (chns, repr(chns), tonenum)
-        #print "\tParse:\t", Parser.Tonenum(chns, tonenum)
+        print("%s [%s] %s" % (chns, repr(chns), tonenum))
+        #print("\tParse:\t", Parser.Tonenum(chns, tonenum))
         #if tonenum:
-        print "\tCheck:\t", tonenum
+        print("\tCheck:\t", tonenum)
         result = Parser.Tonenum(chns, tonenum)
-        print "\t\t", result if result else "OK"
+        print("\t\t", result if result else "OK")
         ss = Sorter.SortString(chns, tonenum)
-        print "\tSort:\t", ss
+        print("\tSort:\t", ss)
         
     
 

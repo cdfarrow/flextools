@@ -8,6 +8,8 @@
 #   using the Sort string database to check for consistency between
 #   the two databases.
 
+from __future__ import print_function
+
 import sys, codecs
 sys.stdout = codecs.getwriter("utf-8")(sys.stdout)
 
@@ -38,7 +40,7 @@ u'一二·九运动',
 HZdict = ChineseDB()
 SortDB = SortStringDB()
 
-print "Checking %s against sort file %s" % (HZdict.FileName, SortDB.FileName)
+print("Checking %s against sort file %s" % (HZdict.FileName, SortDB.FileName))
 
 notOk = missingComposed = 0
 
@@ -61,10 +63,10 @@ for e in HZdict:
         notOk +=1
 
 
-print "Dictionary entries =", len(HZdict)
-print "Sort key entries =", len(SortDB)
-print "\tMissing composed characters (ignored) =", missingComposed
-print "\tKnown length mismatches (ignored) =", len(IgnoreErrors)
-print
-print "\tUnknown errors =", notOk
+print("Dictionary entries =", len(HZdict))
+print("Sort key entries =", len(SortDB))
+print("\tMissing composed characters (ignored) =", missingComposed)
+print("\tKnown length mismatches (ignored) =", len(IgnoreErrors))
+print()
+print("\tUnknown errors =", notOk)
 

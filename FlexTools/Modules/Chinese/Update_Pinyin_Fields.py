@@ -83,7 +83,7 @@ def UpdatePinyinFields(DB, report, modify=False):
         if msg:
             report.Warning("    %s: %s" % (headword, msg),
                            DB.BuildGotoURL(entry))
-        if newPinyin <> pinyin:
+        if newPinyin != pinyin:
             report.Info(("    Updating '%s': %s > %s" if modify else
                          "    '%s' needs updating: %s > %s") \
                          % (headword, tonenum, newPinyin))
@@ -105,7 +105,7 @@ def UpdatePinyinFields(DB, report, modify=False):
         if msg:
             report.Warning("    %s: %s" % (reversalForm, msg),
                            DB.BuildGotoURL(entry))
-        if newPinyin <> pinyin:
+        if newPinyin != pinyin:
             report.Info(("    Updating '%s': %s > %s" if modify else
                          "    '%s' needs updating: %s > %s") \
                          % (reversalForm, tonenum, newPinyin))
