@@ -6,7 +6,11 @@
 #
 
 import os
-import cPickle
+
+try:
+    import cPickle
+except ImportError:
+    import pickle as cPickle
 
 datapath = os.path.join(os.path.dirname(__file__), "Datafiles")
 
