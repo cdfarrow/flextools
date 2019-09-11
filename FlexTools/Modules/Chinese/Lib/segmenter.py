@@ -391,7 +391,7 @@ def make_start_end_dicts_old(lexeme_values):
     end_dict = dict()
     for lexeme, value in lexeme_vals.iteritems():
         if value is None:
-            raise ValueError, 'value of lexeme %s cannot be None' % lexeme
+            raise ValueError('value of lexeme %s cannot be None' % lexeme)
         lexstart = ''
         lexstart_list = list(lexeme)[:-1]
         for segment in lexstart_list:
@@ -407,7 +407,7 @@ def make_start_end_dicts_old(lexeme_values):
         else:
             if val:
                 # shouldn't happen
-                raise ValueError, 'lexeme %s, value %s' % (lexeme, repr(value))
+                raise ValueError('lexeme %s, value %s' % (lexeme, repr(value)))
             else:
                 start_dict[lexeme] = value
         lexend = ''
@@ -425,7 +425,7 @@ def make_start_end_dicts_old(lexeme_values):
         else:
             if val:
                 # shouldn't happen
-                raise ValueError, 'lexeme %s, value %s' % (lexeme, repr(value))
+                raise ValueError('lexeme %s, value %s' % (lexeme, repr(value)))
             else:
                 end_dict[lexeme] = value
     return (start_dict, end_dict)

@@ -173,7 +173,7 @@ def get_chars(s):
         else:
             next -= 1
     if next != 0:
-        #raise ValueError, 'unfinished ideographic description sequence, %s' % s
+        #raise ValueError('unfinished ideographic description sequence, %s' % s)
         logging.warning('unfinished ideographic description sequence, %s' % s)
     return l
 
