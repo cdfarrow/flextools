@@ -27,6 +27,6 @@ from ChineseUtilities import TonenumberToPinyin
 def Convert(tonenum):
 
     if '|' in tonenum or '[' in tonenum: 
-        return u""
+        return ""
     
     return TonenumberToPinyin(tonenum)

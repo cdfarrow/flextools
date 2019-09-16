@@ -23,6 +23,9 @@
 
 """demonstration of chinese, pinyin checking code."""
 
+from __future__ import unicode_literals
+from __future__ import print_function
+
 from check_pinyin import init_chin_sgmtr
 from check_pinyin import check_pinyin as check_tonenum
 
@@ -32,20 +35,20 @@ dict_fname="xhc4_words.txt"
 dict_supp="laibin_chin_supp.txt"
 
 tests = (
-    (u'坳', 'ao4'),
-    (u'敷草药', 'fu1 cao3yao4'),
-    (u'敷草药', 'fu1cao3yao4'),
-    (u'失利的仗', 'shi1//li4 .de5 zhang4'),
-    (u'失利的仗', 'shi1//li4 .de5 zhang4 de5'),
-    (u'人民公园', 'ren2'),
-    (u'同仁小区', 'ren2'),
-    (u'民和路', 'min2 he2|he4|hu2|huo2|huo4 lu4'),
+    ('坳', 'ao4'),
+    ('敷草药', 'fu1 cao3yao4'),
+    ('敷草药', 'fu1cao3yao4'),
+    ('失利的仗', 'shi1//li4 .de5 zhang4'),
+    ('失利的仗', 'shi1//li4 .de5 zhang4 de5'),
+    ('人民公园', 'ren2'),
+    ('同仁小区', 'ren2'),
+    ('民和路', 'min2 he2|he4|hu2|huo2|huo4 lu4'),
 )
 
-    
+
 chin_sgmtr = init_chin_sgmtr((dict_fname, dict_supp))
 
 errors = list()
 for chin, tonenum in tests:
     errors += check_tonenum(chin_sgmtr, chin, tonenum)
-print u'\n'.join(errors)
+print('\n'.join(errors))

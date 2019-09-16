@@ -3,9 +3,9 @@
 #   Chinese.Update Reversal Sort Fields
 #    - A FlexTools Module -
 #
-#   Finds the Chinese Reversal Index and uses the Hanzi field and Pinyin Numbered
-#   fields to populate the Sort field. See documentation below for the Writing System
-#   codes.
+#   Finds the Chinese Reversal Index and uses the Hanzi field and 
+#   Pinyin Numbered fields to populate the Sort field. See the 
+#   documentation below for the Writing System codes.
 #
 #   C D Farrow
 #   May 2011
@@ -13,8 +13,15 @@
 #   Platforms: Python .NET and IronPython
 #
 
+from __future__ import unicode_literals
+from builtins import str
+
 from FTModuleClass import *
 
+import site
+site.addsitedir(r"Lib")
+
+from ChineseUtilities import SortStringDB, ChineseWritingSystems
 
 #----------------------------------------------------------------
 # Documentation for the user:
@@ -25,7 +32,7 @@ docs = {FTM_Name       : "Update Reversal Index Sort Field",
         FTM_Synopsis   : "Updates the Chinese sort field in the Chinese Reversal Index. Sorts by pronunciation.",
         FTM_Help       : r"Doc\Chinese Utilities Help.pdf",
         FTM_Description:
-u"""
+"""
 This module sets the sort field in the Chinese Reversal Index ('Chinese, Mandarin (China)' (zh-CN))
 
 The sort field (zh-CN-x-zhsort) is generated from the Chinese Hanzi (zh-CN) field and
@@ -54,10 +61,6 @@ by stroke count, and finally by stroke order. This follows the ordering in
 
 See Chinese Utilities Help.pdf for detailed information on configuration and usage.
 """ }
-
-
-from ChineseUtilities import SortStringDB, ChineseWritingSystems
-
                  
 #----------------------------------------------------------------
 # The main processing function

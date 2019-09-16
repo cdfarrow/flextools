@@ -8,6 +8,9 @@
 #   using the Sort string database to check for consistency between
 #   the two databases.
 
+from __future__ import unicode_literals
+from __future__ import print_function
+
 import sys, codecs
 sys.stdout = codecs.getwriter("utf-8")(sys.stdout)
 
@@ -19,17 +22,17 @@ from ChineseUtilities import ChineseDB, SortStringDB
 # ---------------------------------------------------------------
 IgnoreErrors = [
 # These are old forms with a 2-syllable pronunciation
-u'浬',
-u'瓩',
-u'吋',
-u'呎',
-u'㖊',
-u'唡',
-u'哩',
-u'⿰口畝',
+'浬',
+'瓩',
+'吋',
+'呎',
+'㖊',
+'唡',
+'哩',
+'⿰口畝',
 # These have punctuation that isn't handled by SortString
-u'尼格罗－澳大利亚人种',
-u'一二·九运动',
+'尼格罗－澳大利亚人种',
+'一二·九运动',
 ]
 
 # ---------------------------------------------------------------
@@ -38,7 +41,7 @@ u'一二·九运动',
 HZdict = ChineseDB()
 SortDB = SortStringDB()
 
-print "Checking %s against sort file %s" % (HZdict.FileName, SortDB.FileName)
+print("Checking %s against sort file %s" % (HZdict.FileName, SortDB.FileName))
 
 notOk = missingComposed = 0
 
@@ -57,14 +60,14 @@ for e in HZdict:
         if e[0] in IgnoreErrors:
             continue
 
-        print ">>", sort, e[0], repr(e[0]), e[1]
+        print(">>", sort, e[0], repr(e[0]), e[1])
         notOk +=1
 
 
-print "Dictionary entries =", len(HZdict)
-print "Sort key entries =", len(SortDB)
-print "\tMissing composed characters (ignored) =", missingComposed
-print "\tKnown length mismatches (ignored) =", len(IgnoreErrors)
-print
-print "\tUnknown errors =", notOk
+print("Dictionary entries =", len(HZdict))
+print("Sort key entries =", len(SortDB))
+print("\tMissing composed characters (ignored) =", missingComposed)
+print("\tKnown length mismatches (ignored) =", len(IgnoreErrors))
+print()
+print("\tUnknown errors =", notOk)
 

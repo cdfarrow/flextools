@@ -10,8 +10,17 @@
 #   Platforms: Python .NET and IronPython
 #
 
+from __future__ import unicode_literals
+from builtins import str
+
+import unicodedata
+
 from FTModuleClass import *
 
+import site
+site.addsitedir(r"Lib")
+
+from ChineseUtilities import ChineseWritingSystems, TonenumberToPinyin
 
 #----------------------------------------------------------------
 # Documentation for the user:
@@ -22,7 +31,7 @@ docs = {FTM_Name       : "Update Pinyin Fields",
         FTM_Synopsis   : "Generate Pinyin with tone diacritics from the tone numbers",
         FTM_Help       : r"Doc\Chinese Utilities Help.pdf",
         FTM_Description:
-u"""
+"""
 Populates the Pinyin (zh-CN-x-py) writing system
 from the Pinyin Numbered (zh-CN-x-pyn) field for:
 
@@ -36,11 +45,6 @@ changes are enabled.)
 
 See Chinese Utilities Help.pdf for detailed information on configuration and usage.
 """ }
-
-
-import unicodedata
-from ChineseUtilities import ChineseWritingSystems, TonenumberToPinyin
-
                  
 #----------------------------------------------------------------
 # The main processing function
@@ -65,11 +69,11 @@ def UpdatePinyinFields(DB, report, modify=False):
                 msg = "Ambiguous tone number: %s" % tonenum
                 # Clear the Pinyin field if ambiguity in 
                 # the tonenum field hasn't been resolved
-                newPinyin = u""
+                newPinyin = ""
             else:
                 newPinyin = TonenumberToPinyin(tonenum)
         else:
-            newPinyin = u""              # Clear if the tonenum is blank
+            newPinyin = ""              # Clear if the tonenum is blank
                 
         return (unicodedata.normalize('NFD', newPinyin), msg)
 
@@ -83,7 +87,7 @@ def UpdatePinyinFields(DB, report, modify=False):
         if msg:
             report.Warning("    %s: %s" % (headword, msg),
                            DB.BuildGotoURL(entry))
-        if newPinyin <> pinyin:
+        if newPinyin != pinyin:
             report.Info(("    Updating '%s': %s > %s" if modify else
                          "    '%s' needs updating: %s > %s") \
                          % (headword, tonenum, newPinyin))
@@ -105,7 +109,7 @@ def UpdatePinyinFields(DB, report, modify=False):
         if msg:
             report.Warning("    %s: %s" % (reversalForm, msg),
                            DB.BuildGotoURL(entry))
-        if newPinyin <> pinyin:
+        if newPinyin != pinyin:
             report.Info(("    Updating '%s': %s > %s" if modify else
                          "    '%s' needs updating: %s > %s") \
                          % (reversalForm, tonenum, newPinyin))
@@ -115,9 +119,9 @@ def UpdatePinyinFields(DB, report, modify=False):
 
         # Subentries (Changed from OC to OS in FW8)
         try:
-            subentries = entry.SubentriesOC
-        except AttributeError:
             subentries = entry.SubentriesOS
+        except AttributeError:
+            subentries = entry.SubentriesOC
             
         for se in subentries:
             __WriteReversalPinyin(DB, se)

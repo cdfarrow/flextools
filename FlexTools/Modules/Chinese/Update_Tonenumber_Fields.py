@@ -10,7 +10,15 @@
 #   Platforms: Python .NET and IronPython
 #
 
+from __future__ import unicode_literals
+from builtins import str
+
 from FTModuleClass import *
+
+import site
+site.addsitedir(r"Lib")
+
+from ChineseUtilities import ChineseWritingSystems, ChineseParser
 
 
 #----------------------------------------------------------------
@@ -22,7 +30,7 @@ docs = {FTM_Name       : "Update Tone Number Fields",
         FTM_Synopsis   : "Generate Pinyin with tone numbers from Chinese Hanzi",
         FTM_Help       : r"Doc\Chinese Utilities Help.pdf",
         FTM_Description:
-u"""
+"""
 Populates the Pinyin Numbered (zh-CN-x-pyn) writing system
 from the Chinese Hanzi (zh-CN) for:
 
@@ -53,9 +61,6 @@ Note: So that manual edits are not lost, this Module will not over-write the Pin
 
 See Chinese Utilities Help.pdf for detailed information on configuration and usage.
 """ }
-
-
-from ChineseUtilities import ChineseWritingSystems, ChineseParser
 
                  
 #----------------------------------------------------------------

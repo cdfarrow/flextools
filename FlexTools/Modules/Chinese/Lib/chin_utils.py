@@ -21,22 +21,25 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+from __future__ import unicode_literals
+from builtins import str
+
 import types, re
 import logging
 
 ideograph_desc = { 
-    u'\N{IDEOGRAPHIC DESCRIPTION CHARACTER LEFT TO RIGHT}': 2,
-    u'\N{IDEOGRAPHIC DESCRIPTION CHARACTER ABOVE TO BELOW}': 2,
-    u'\N{IDEOGRAPHIC DESCRIPTION CHARACTER LEFT TO MIDDLE AND RIGHT}': 3,
-    u'\N{IDEOGRAPHIC DESCRIPTION CHARACTER ABOVE TO MIDDLE AND BELOW}': 3,
-    u'\N{IDEOGRAPHIC DESCRIPTION CHARACTER FULL SURROUND}': 2,
-    u'\N{IDEOGRAPHIC DESCRIPTION CHARACTER SURROUND FROM ABOVE}': 2,
-    u'\N{IDEOGRAPHIC DESCRIPTION CHARACTER SURROUND FROM BELOW}': 2,
-    u'\N{IDEOGRAPHIC DESCRIPTION CHARACTER SURROUND FROM LEFT}': 2,
-    u'\N{IDEOGRAPHIC DESCRIPTION CHARACTER SURROUND FROM UPPER LEFT}': 2,
-    u'\N{IDEOGRAPHIC DESCRIPTION CHARACTER SURROUND FROM UPPER RIGHT}': 2,
-    u'\N{IDEOGRAPHIC DESCRIPTION CHARACTER SURROUND FROM LOWER LEFT}': 2,
-    u'\N{IDEOGRAPHIC DESCRIPTION CHARACTER OVERLAID}': 2}
+    '\N{IDEOGRAPHIC DESCRIPTION CHARACTER LEFT TO RIGHT}': 2,
+    '\N{IDEOGRAPHIC DESCRIPTION CHARACTER ABOVE TO BELOW}': 2,
+    '\N{IDEOGRAPHIC DESCRIPTION CHARACTER LEFT TO MIDDLE AND RIGHT}': 3,
+    '\N{IDEOGRAPHIC DESCRIPTION CHARACTER ABOVE TO MIDDLE AND BELOW}': 3,
+    '\N{IDEOGRAPHIC DESCRIPTION CHARACTER FULL SURROUND}': 2,
+    '\N{IDEOGRAPHIC DESCRIPTION CHARACTER SURROUND FROM ABOVE}': 2,
+    '\N{IDEOGRAPHIC DESCRIPTION CHARACTER SURROUND FROM BELOW}': 2,
+    '\N{IDEOGRAPHIC DESCRIPTION CHARACTER SURROUND FROM LEFT}': 2,
+    '\N{IDEOGRAPHIC DESCRIPTION CHARACTER SURROUND FROM UPPER LEFT}': 2,
+    '\N{IDEOGRAPHIC DESCRIPTION CHARACTER SURROUND FROM UPPER RIGHT}': 2,
+    '\N{IDEOGRAPHIC DESCRIPTION CHARACTER SURROUND FROM LOWER LEFT}': 2,
+    '\N{IDEOGRAPHIC DESCRIPTION CHARACTER OVERLAID}': 2}
 
 class Character(object):
     __slots__ = ('character', 'pronunciations', 'stroke_count', 'strokes')
@@ -51,7 +54,7 @@ class Character(object):
     def __setstate__(self, state):
         self.character, self.pronunciations, self.stroke_count, self.strokes = state
 
-tonenum_syl_pat = re.compile(u"\N{HORIZONTAL ELLIPSIS}|,|;|\?|//|/|\(|\)|[a-z:^]*[1-5]|[1-3]")
+tonenum_syl_pat = re.compile("\N{HORIZONTAL ELLIPSIS}|,|;|\?|//|/|\(|\)|[a-z:^]*[1-5]|[1-3]")
 
 def get_tone_syls(tonenum):
     """return a list of the tonenum syllables in tonenum.
@@ -63,7 +66,7 @@ def get_tone_syls(tonenum):
     """
     syls = list()
     for s in tonenum_syl_pat.findall(tonenum.replace('(r)', '')):
-        if s == u"//":  # Has to be matched to distinguish from '/'; but not a syllable
+        if s == "//":  # Has to be matched to distinguish from '/'; but not a syllable
             continue
         if len(s) > 3 and s[-2] == 'r' and s[0:-2] != 'er':
             new_s = s[0:-2] + s[-1]
@@ -88,12 +91,12 @@ def is_chinese_punctuation(c):
     
     # codepoints from Unicode 5.0
     ans = False
-    if u'\u3000' <= c <= u'\u303f':
+    if '\u3000' <= c <= '\u303f':
         # CJK Symbols and Punctuation
         ans = True
-    elif c == u'\N{FULLWIDTH COMMA}':
+    elif c == '\N{FULLWIDTH COMMA}':
         ans = True
-    elif c == u'\N{HORIZONTAL ELLIPSIS}':
+    elif c == '\N{HORIZONTAL ELLIPSIS}':
         ans = True
     return ans
 
@@ -126,16 +129,16 @@ def is_chinese_char(c):
     
     # codepoints from Unicode 5.0
     ans = False
-    if  u'\u4e00' <= c <= u'\u9fbb':
+    if  '\u4e00' <= c <= '\u9fbb':
         # CJK Unified Ideographs
         ans = True
-    elif u'\u3400' <= c <= u'\u4db5':
+    elif '\u3400' <= c <= '\u4db5':
         # CJK Unified Ideographs Extension A
         ans = True
-    elif  u'\u020000' <= c <= u'\u02a6d6':
+    elif  '\u020000' <= c <= '\u02a6d6':
         # CJK Unified Ideographs Extension B
         ans = True
-    elif u'\u2ff0' <= c <= u'\u2ffb':
+    elif '\u2ff0' <= c <= '\u2ffb':
         # Ideographic Description Characters
         ans = True
     return ans
@@ -177,14 +180,14 @@ def get_chars(s):
         logging.warning('unfinished ideographic description sequence, %s' % s)
     return l
 
-nonchar_pat = re.compile( u'[  \N{MIDDLE DOT}\N{HORIZONTAL ELLIPSIS}' +
-    u'\N{FULLWIDTH QUESTION MARK}\N{FULLWIDTH COMMA}' + 
-    u'\N{FULLWIDTH LEFT PARENTHESIS}\N{FULLWIDTH RIGHT PARENTHESIS}' +
-    u'\N{LEFT DOUBLE ANGLE BRACKET}\N{RIGHT DOUBLE ANGLE BRACKET}]')
+nonchar_pat = re.compile( '[  \N{MIDDLE DOT}\N{HORIZONTAL ELLIPSIS}' +
+    '\N{FULLWIDTH QUESTION MARK}\N{FULLWIDTH COMMA}' + 
+    '\N{FULLWIDTH LEFT PARENTHESIS}\N{FULLWIDTH RIGHT PARENTHESIS}' +
+    '\N{LEFT DOUBLE ANGLE BRACKET}\N{RIGHT DOUBLE ANGLE BRACKET}]')
 
-valid_pinyin = set(u'abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ12345.: ()/,-…^')
-radicals = set(u'\N{CJK RADICAL FOOT}\N{CJK RADICAL BAMBOO}\N{CJK RADICAL SMALL ONE}\N{CJK RADICAL C-SIMPLIFIED CART}')
-chin_paren = set(u'\N{FULLWIDTH LEFT PARENTHESIS}\N{FULLWIDTH RIGHT PARENTHESIS}')
+valid_pinyin = set('abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ12345.: ()/,-…^')
+radicals = set('\N{CJK RADICAL FOOT}\N{CJK RADICAL BAMBOO}\N{CJK RADICAL SMALL ONE}\N{CJK RADICAL C-SIMPLIFIED CART}')
+chin_paren = set('\N{FULLWIDTH LEFT PARENTHESIS}\N{FULLWIDTH RIGHT PARENTHESIS}')
 
 def check_chinese(std_prons, chinese, tonenum):
     errors = list()
@@ -199,7 +202,7 @@ def check_chinese(std_prons, chinese, tonenum):
     chars = get_chars(nonchar_pat.sub('', chinese))
     if len(chars) != len(tonenums):
         errors.append('syllable mismatch %s %s' % ('[%s]' % ', '.join(chars), tonenums))
-    char_prons = zip(chars, tonenums)
+    char_prons = list(zip(chars, tonenums))
     for char, pron in char_prons:
         if char not in std_prons:
             unicode_val = ''
@@ -287,7 +290,7 @@ def lookup(dict, s):
             l.append(entries)
             start += len(entries[0].lexeme)
         else:
-            logging.warning(u'missing symbol %s' % s[start])
+            logging.warning('missing symbol %s' % s[start])
             l.append(s[start])
             start += 1
     return l
@@ -302,12 +305,12 @@ def get_pinyin(entries_seq, entry_sep = ' ', reading_sep = '/'):
     """
     l = []
     for entries in entries_seq:
-        if isinstance(entries, types.StringTypes):
-            if entries == u'\n{FULLWIDTH LEFT PARENTHESIS}':
+        if isinstance(entries, (str,)):
+            if entries == '\n{FULLWIDTH LEFT PARENTHESIS}':
                 entries = '('
-            elif entries == u'\n{FULLWIDTH RIGHT PARENTHESIS}':
+            elif entries == '\n{FULLWIDTH RIGHT PARENTHESIS}':
                 entries = ')'
-            elif entries == u'\n{FULLWIDTH COMMA}':
+            elif entries == '\n{FULLWIDTH COMMA}':
                 entries = ','
             l.append(entries)
         else:
@@ -328,12 +331,12 @@ def get_english(entries_seq, entry_sep = ' ', sense_sep = '/'):
     """
     l = []
     for entries in entries_seq:
-        if isinstance(entries, types.StringTypes):
-            if entries == u'\n{FULLWIDTH LEFT PARENTHESIS}':
+        if isinstance(entries, (str,)):
+            if entries == '\n{FULLWIDTH LEFT PARENTHESIS}':
                 entries = '('
-            elif entries == u'\n{FULLWIDTH RIGHT PARENTHESIS}':
+            elif entries == '\n{FULLWIDTH RIGHT PARENTHESIS}':
                 entries = ')'
-            elif entries == u'\n{FULLWIDTH COMMA}':
+            elif entries == '\n{FULLWIDTH COMMA}':
                 entries = ','
             l.append(entries)
         else:
@@ -364,7 +367,7 @@ def to_xhc_tonenum(s):
     @return:
     @rtype: dictionary
     """
-    return s.replace('r:', ':r').replace('ue:', 'u:e').replace(u'\u00b7', '.')
+    return s.replace('r:', ':r').replace('ue:', 'u:e').replace('\u00b7', '.')
 
 def from_xhc_tonenum(s):
     """return a list of the characters in s.
@@ -374,7 +377,7 @@ def from_xhc_tonenum(s):
     @return:
     @rtype: dictionary
     """
-    return s.replace('.', u'\u00b7')
+    return s.replace('.', '\u00b7')
 
 def to_semdom_tonenum(s):
     """return a list of the characters in s.
@@ -384,7 +387,7 @@ def to_semdom_tonenum(s):
     @return:
     @rtype: dictionary
     """
-    return s.replace('(r)', '').replace('ue:', 'u:e').replace('//', '').replace(u'\u00b7', '.')
+    return s.replace('(r)', '').replace('ue:', 'u:e').replace('//', '').replace('\u00b7', '.')
 
 def from_semdom_tonenum(s):
     """return a list of the characters in s.
@@ -394,4 +397,4 @@ def from_semdom_tonenum(s):
     @return:
     @rtype: dictionary
     """
-    return s.replace('u:e', 'ue:').replace(':r', 'r:').replace('.', u'\u00b7')
+    return s.replace('u:e', 'ue:').replace(':r', 'r:').replace('.', '\u00b7')

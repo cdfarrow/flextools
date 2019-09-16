@@ -21,10 +21,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-"""Module docstring.
-
-This serves as a long usage message.
-"""
+from __future__ import unicode_literals
+from builtins import str
 
 import segmenter
 import chin_utils
@@ -42,7 +40,7 @@ def get_tonenum_dict(fname):
     word_file = open(fname)
     line_num = 0
     word_tonenum = list()
-    digits = set(u'123456789')
+    digits = set('123456789')
     removeR = re.compile(r"(?<=[a-z]{2})r(?=[:1-5])")
     #char_prons = get_xhc_char_prons()
     for line in word_file:
@@ -54,48 +52,48 @@ def get_tonenum_dict(fname):
         else:
             chinese, tonenum = fields
             # perhaps should skip at this point
-            if chinese[-1] == u'*':
+            if chinese[-1] == '*':
                 chinese = chinese[:-1]
             if chinese[-1] in digits:
                 chinese = chinese[:-1]
             # maybe don't want to do this
             tonenum = tonenum.replace('(r)', '')
             # get rid of erhua
-            if u'（儿）' in chinese:
+            if '（儿）' in chinese:
                 # include with erhua
-                word_tonenum += ((chinese.replace(u'（儿）', u'儿'), tonenum),)
+                word_tonenum += ((chinese.replace('（儿）', '儿'), tonenum),)
                 # and without erhua
                 tonenum 
-                word_tonenum += ((chinese.replace(u'（儿）', ''),
+                word_tonenum += ((chinese.replace('（儿）', ''),
                                   removeR.sub("", tonenum)),)
             else:
                 word_tonenum += ((chinese, tonenum),)
     return word_tonenum
 
 punctuation = {
-    u'\N{IDEOGRAPHIC COMMA}': u', ',
-    u'\N{FULLWIDTH COMMA}': u', ',
-    u'\N{IDEOGRAPHIC FULL STOP}': u'. ',
-    u'\N{FULLWIDTH SEMICOLON}': u'; ',
-    u'\N{FULLWIDTH COLON}': u': ',
-    u'\N{HORIZONTAL ELLIPSIS}': u'…',
-    u'\N{FULLWIDTH QUESTION MARK}': u'? ',
-    u'\N{FULLWIDTH EXCLAMATION MARK}': u'! ',
-    u'\N{FULLWIDTH LEFT PARENTHESIS}': u' (',
-    u'\N{FULLWIDTH RIGHT PARENTHESIS}': u') ',
-    u'\N{FULLWIDTH LEFT SQUARE BRACKET}': u' [',
-    u'\N{FULLWIDTH RIGHT SQUARE BRACKET}': u'] ',
-    u'\N{LEFT DOUBLE ANGLE BRACKET}': u' <<',
-    u'\N{RIGHT DOUBLE ANGLE BRACKET}': u'>> ',
-    u'“': u' \N{LEFT DOUBLE QUOTATION MARK}',
-    u'”': u'\N{RIGHT DOUBLE QUOTATION MARK} ',
-    u'‘': u' \N{LEFT SINGLE QUOTATION MARK}',
-    u'’': u'\N{RIGHT SINGLE QUOTATION MARK} ',
-    u'/': u'/',         # Allow '/' for gloss separation
-    u'1': u'1 ',        # Allow '1' - '3' for person-marking in glosses
-    u'2': u'2 ',
-    u'3': u'3 ',
-    u'\n': u'\n',
+    '\N{IDEOGRAPHIC COMMA}': ', ',
+    '\N{FULLWIDTH COMMA}': ', ',
+    '\N{IDEOGRAPHIC FULL STOP}': '. ',
+    '\N{FULLWIDTH SEMICOLON}': '; ',
+    '\N{FULLWIDTH COLON}': ': ',
+    '\N{HORIZONTAL ELLIPSIS}': '…',
+    '\N{FULLWIDTH QUESTION MARK}': '? ',
+    '\N{FULLWIDTH EXCLAMATION MARK}': '! ',
+    '\N{FULLWIDTH LEFT PARENTHESIS}': ' (',
+    '\N{FULLWIDTH RIGHT PARENTHESIS}': ') ',
+    '\N{FULLWIDTH LEFT SQUARE BRACKET}': ' [',
+    '\N{FULLWIDTH RIGHT SQUARE BRACKET}': '] ',
+    '\N{LEFT DOUBLE ANGLE BRACKET}': ' <<',
+    '\N{RIGHT DOUBLE ANGLE BRACKET}': '>> ',
+    '“': ' \N{LEFT DOUBLE QUOTATION MARK}',
+    '”': '\N{RIGHT DOUBLE QUOTATION MARK} ',
+    '‘': ' \N{LEFT SINGLE QUOTATION MARK}',
+    '’': '\N{RIGHT SINGLE QUOTATION MARK} ',
+    '/': '/',         # Allow '/' for gloss separation
+    '1': '1 ',        # Allow '1' - '3' for person-marking in glosses
+    '2': '2 ',
+    '3': '3 ',
+    '\n': '\n',
 }
 
 def startdict_to_string(start_dict):
@@ -150,7 +148,7 @@ def check_pinyin(sgmtr, hanzi, pinyin):
         if l == r:
             try:
                 tonenum = join_segments(sgmtr, hanzi, l).strip()
-            except KeyError, msg:
+            except KeyError as msg:
                 errors.append('\thanzi %s: Unknown Chinese: %s' % (hanzi, msg))
             else:
                 if pinyin:
@@ -182,5 +180,5 @@ def init_chin_sgmtr(dict_files):
     for fname in dict_files:
         word_tonenum = get_tonenum_dict(fname)
         chin_sgmtr.add_segment_values(word_tonenum)
-    chin_sgmtr.add_segment_values(punctuation.items())
+    chin_sgmtr.add_segment_values(list(punctuation.items()))
     return chin_sgmtr

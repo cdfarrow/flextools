@@ -4,6 +4,9 @@
 #   Reads char_dat.pkl and writes out a fresh ch2sort.txt from it.
 #   
 
+from __future__ import unicode_literals
+from __future__ import print_function
+
 import site
 site.addsitedir("..\Lib")
 
@@ -18,7 +21,7 @@ f = codecs.open(datafiles.SortDB,'w','utf-8','strict')
 
 
 count = 0
-for c, d in sortData.iteritems():
+for c, d in sortData.items():
     # c is Hanzi
     # d is list of [chr, pinyin, # strokes, order of strokes by type]
 
@@ -35,5 +38,5 @@ for c, d in sortData.iteritems():
 
 f.close()
 
-print "%s written with %d entries." % (datafiles.SortDB, count)
+print("%s written with %d entries." % (datafiles.SortDB, count))
 

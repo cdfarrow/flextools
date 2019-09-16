@@ -6,7 +6,7 @@
 #
 
 import os
-import cPickle
+import pickle
 
 datapath = os.path.join(os.path.dirname(__file__), "Datafiles")
 
@@ -18,12 +18,12 @@ SortPickle = os.path.join(datapath, "char_dat.pkl")
 
 def loadSortData(fname=SortPickle):
     pkl=file(fname, 'r')
-    SortData = cPickle.load(pkl)
+    SortData = pickle.load(pkl)
     pkl.close()
     return SortData
 
 def saveSortData(SortData, fname=SortPickle):
     pkl=file(fname,'w')
-    cPickle.dump(SortData, pkl)
+    pickle.dump(SortData, pkl)
     pkl.close()
 

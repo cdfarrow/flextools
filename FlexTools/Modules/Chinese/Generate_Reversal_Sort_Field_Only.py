@@ -3,15 +3,18 @@
 #   Chinese.Generate Reversal Sort Field Only
 #    - A FlexTools Module -
 #
-#   Finds the Chinese Reversal Index and uses the Hanzi field to generate the Pinyin Numbered
-#   field, and then uses those to populate the Sort field. See documentation below for the Writing System
-#   codes.
+#   Finds the Chinese Reversal Index and uses the Hanzi field to generate 
+#   the Pinyin Numbered field, and then uses those to populate the Sort 
+#   field. See documentation below for the Writing System codes.
 #
 #   C D Farrow
 #   Jul 2016
 #
 #   Platforms: Python .NET and IronPython
 #
+
+from __future__ import unicode_literals
+from builtins import str
 
 from FTModuleClass import *
 
@@ -25,7 +28,7 @@ docs = {FTM_Name       : "Generate Reversal Index Sort Field Only",
         FTM_Synopsis   : "Generates the Chinese sort field in the Chinese Reversal Index. Sorts by pronunciation.",
         FTM_Help       : r"Doc\Chinese Utilities Help.pdf",
         FTM_Description:
-u"""
+"""
 This module sets the sort field in the Chinese Reversal Index ('Chinese, Mandarin (China)' (zh-CN))
 
 The sort field (zh-CN-x-zhsort) is generated from the Chinese Hanzi (zh-CN) field and
@@ -89,8 +92,8 @@ import chin_utils
 import itertools
 from os.path import commonprefix
 
-HACK_ENDING = u"()"
-HACK_FULLWIDTH_ENDING = u"\N{FULLWIDTH LEFT PARENTHESIS}\N{FULLWIDTH RIGHT PARENTHESIS}"                 
+HACK_ENDING = "()"
+HACK_FULLWIDTH_ENDING = "\N{FULLWIDTH LEFT PARENTHESIS}\N{FULLWIDTH RIGHT PARENTHESIS}"                 
 
 
 def HACK_Tonenum (hz, tn):
@@ -109,8 +112,8 @@ def HACK_Tonenum (hz, tn):
         # 2 cases: 
         if len(parses) > 1: # ambiguous parse
             #print "    Ambiguous parse:"
-            parses = map(__trim_ambiguities, parses)
-            parses = map(chin_utils.get_tone_syls, parses)
+            parses = list(map(__trim_ambiguities, parses))
+            parses = list(map(chin_utils.get_tone_syls, parses))
             longest = commonprefix(parses)
             hacked_tn = " ".join(longest)
         else:               # single parse
