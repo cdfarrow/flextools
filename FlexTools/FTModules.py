@@ -19,7 +19,6 @@ from builtins import str
 import os
 import sys
 import imp
-import exceptions
 import traceback
 
 import Version
