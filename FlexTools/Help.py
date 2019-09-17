@@ -38,7 +38,7 @@ class AboutInfo(RichTextBox):
         RichTextBox.__init__(self)
         self.Dock = DockStyle.Fill
         self.BackColor = UIGlobal.helpDialogColor
-        self.BorderStyle = BorderStyle.None
+        self.BorderStyle = getattr(BorderStyle, "None")
         self.TabStop = False  # Hides flashing caret
 
         self.Clear()

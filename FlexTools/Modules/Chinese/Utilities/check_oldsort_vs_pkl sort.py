@@ -8,7 +8,6 @@
 #   using the Sort string database to check for consistency between
 #   the two databases.
 
-
 from __future__ import unicode_literals
 from __future__ import print_function
 
@@ -34,7 +33,7 @@ print("Checking %s against sort file %s" % (OldSortDB.FileName, SortDB.FileName)
 notOk = missingComposed = 0
 
 for e in sorted(OldSortDB.items()):
-##    print e
+##    print(e)
     try:
         sort = SortDB[e[0]]
     except KeyError:
@@ -44,16 +43,16 @@ for e in sorted(OldSortDB.items()):
     if sort != e[1]:
         if len(sort) < len(e[1]):
             notOk += 1
-            print(e[0], list(sort.keys()), "<>", list(e[1].keys()))
+            print(e[0], list(sort.keys()), "!=", list(e[1].keys()))
 
 
 for i in ['\u602b', '\u602b\u7136']: print(i)
 
-##print "Dictionary entries =", len(HZdict)
-##print "Sort key entries =", len(SortDB)
-##print "\tMissing composed characters (ignored) =", missingComposed
-##print "\tKnown length mismatches (ignored) =", len(IgnoreErrors)
-##print
+##print("Dictionary entries =", len(HZdict))
+##print("Sort key entries =", len(SortDB))
+##print("\tMissing composed characters (ignored) =", missingComposed)
+##print("\tKnown length mismatches (ignored) =", len(IgnoreErrors))
+##print()
 print("\tUnknown errors =", notOk)
 ##
 ##

@@ -193,7 +193,7 @@ class CollectionsModuleList(ListView):
         self.Dock = DockStyle.Fill
         self.BackColor = UIGlobal.rightPanelColor
         self.LabelEdit = False
-        self.Sorting = SortOrder.None
+        self.Sorting = getattr(SortOrder, "None")
         self.View = View.List
         self.MultiSelect = False
 

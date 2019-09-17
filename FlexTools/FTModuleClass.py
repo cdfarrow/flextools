@@ -61,12 +61,12 @@ class FlexToolsModuleClass (object):
 
     - _user_documentation_ is a dictionary with the following keys defined:
         FTM_Name           : A short name for the module.
-        FTM_Version        : The module version as a string or anything that 
+        FTM_Version        : The module version as a string or anything that
                              can be converted with str().
                              e.g. an integer, "1.3", "Beta release 5", etc.
         FTM_ModifiesDB     : True/False indicating whether this module
                              makes changes to the project (when the user
-                             permits it.) 
+                             permits it.)
         FTM_Synopsis       : A description of the module's function or purpose.
         FTM_Help           : A link to a help file for this module.
         FTM_Description    : A multi-line description of the module's
@@ -82,16 +82,16 @@ class FlexToolsModuleClass (object):
                       FTM_ModifiesDB,
                       FTM_Synopsis,
                       FTM_Description]
-    
+
     def __init__(self, runFunction, docs, configuration=[]):
         if any([x not in docs for x in self.__requiredDocKeys]):
             raise FTM_ModuleError("Module documentation is missing required key.\n"\
                                    "Required keys:\n\t" + "\n\t".join(self.__requiredDocKeys))
-        
+
         self.docs = docs
         self.configurationItems = configuration
         self.runFunction = runFunction
-                 
+
         self.docs[FTM_HasConfig] = (len(self.configurationItems) > 0)
 
     def GetDocs(self):
@@ -110,7 +110,7 @@ class FlexToolsModuleClass (object):
 
     def Help(self):
         #
-        # Returns information on this module formatted as a multi-line 
+        # Returns information on this module formatted as a multi-line
         # string.
         #
 

@@ -114,7 +114,7 @@ def MergeSenses(DB, report, modifyAllowed):
 
                     # A simple check in case we hit a corner case where something goes wrong.
                     if originalNumSenses - (len(senses)-1) != entry.SensesOS.Count:
-                        report.Warning("%s: Error merging senses--%i senses -%i senses <> %i" %
+                        report.Warning("%s: Error merging senses--%i senses -%i senses != %i" %
                                        entry.HomographForm,
                                        originalNumSenses,
                                        len(senses)-1,

@@ -176,7 +176,7 @@ def get_chars(s):
         else:
             next -= 1
     if next != 0:
-        #raise ValueError, 'unfinished ideographic description sequence, %s' % s
+        #raise ValueError('unfinished ideographic description sequence, %s' % s)
         logging.warning('unfinished ideographic description sequence, %s' % s)
     return l
 
@@ -268,7 +268,7 @@ def pinyin_sort_transform(char_data, chin, tonenum):
             #stroke_count = 0
             #strokes = ''
         else:
-            #print char
+            #print(char)
             stroke_count = char[2]
             strokes = char[3]
         key.append((tonenum_sort_transform(c_pron), stroke_count, strokes))

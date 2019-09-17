@@ -34,15 +34,15 @@ def add_py(key, py):
         print(key, z)
         count += 1
     else:
-        pass #print "Duplicate Pinyin!"
+        pass #print("Duplicate Pinyin!")
 
     
 print("Edit Chinese Sort Data")
 print("[%s]" % datafiles.SortPickle)
 print("%d entries" % len(SortData))
 print()
-print("Lookup with: SortData[u'\\u5b50']")
+print("Lookup with: SortData['\\u5b50']")
 print("\tEntries are tuple: (Chinese, [Pinyin], Stroke count, Strokes)")
 print("\tE.g.", SortData['\u5b50'])
-print("Add a valid Pinyin pronunciation with: add_py(u'\\u5b50', 'pin1')")
+print("Add a valid Pinyin pronunciation with: add_py('\\u5b50', 'pin1')")
 print("Save data with save()")

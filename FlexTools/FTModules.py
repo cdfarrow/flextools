@@ -1,4 +1,3 @@
-
 #
 #   Project: FlexTools
 #   Module:  FTModules
@@ -40,7 +39,7 @@ logger = logging.getLogger(__name__)
 class ModuleManager (object):
 
     def __always_import(self, path, name):
-        # This code is from Python 2.5 Help section 29.1.1, but skipping 
+        # This code is from Python 2.5 Help section 29.1.1, but skipping
         # the check for the module already being in sys.modules.
         # This allows us to have more than one .py Module file with the same
         # name, but in different directories.
@@ -79,7 +78,7 @@ class ModuleManager (object):
         #logger.debug("__closeProject %s" % repr(self.project))
         if self.project:
             # Free the LCM Cache to get fresh data next time
-            del self.project  
+            del self.project
 
     def __buildExceptionMessages(self, e, msg):
         __copyMessage = "Use Ctrl-C to copy this report to the clipboard to see more information."
@@ -116,7 +115,7 @@ class ModuleManager (object):
             logger.info("From library %s: %s" % (library, repr(modNames)))
 
             for moduleFileName in modNames:
-                # Don't try to directly import python files starting with 
+                # Don't try to directly import python files starting with
                 # double underscore.
                 if moduleFileName.startswith("__"):
                     continue
@@ -204,7 +203,7 @@ class ModuleManager (object):
             except Exception as e:
                 msg, details = self.__buildExceptionMessages(e, "Module failed with exception {}!")
                 reporter.Error(msg, details)
-                
+
         numErrors   = reporter.messageCounts[reporter.ERROR]
         numWarnings = reporter.messageCounts[reporter.WARNING]
         reporter.Info("Processing completed with %d error%s and %d warning%s" \

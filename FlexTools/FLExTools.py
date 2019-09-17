@@ -365,21 +365,21 @@ class FTMainForm (Form):
                             "Help on using FlexTools"),
                          (Help.ProgrammingHelp,
                             "Programming Help",
-                            Shortcut.None,
+                            getattr(Shortcut, "None"),
                             "Help on how to program a FlexTools module"),
                          (Help.APIHelp,
                             "API Help",
-                            Shortcut.None,
+                            getattr(Shortcut, "None"),
                             "Help on the Programming Interface"),
                          None,     # Separator
                          (Help.LaunchLCMBrowser,
                             "Launch LCMBrowser",
-                            Shortcut.None,
+                            getattr(Shortcut, "None"),
                             "Open the Fieldworks LCMBrowser application"),
                          None,     # Separator
                          (Help.About,
                             "About",
-                            Shortcut.None,
+                            getattr(Shortcut, "None"),
                             None)
                          ]
 

@@ -43,7 +43,7 @@ class ProjectList(ListView):
 
         self.View = View.Details
         self.FullRowSelect = True
-        self.HeaderStyle = ColumnHeaderStyle.None
+        self.HeaderStyle = getattr(ColumnHeaderStyle, "None")
         self.Columns.Add("", -2, HorizontalAlignment.Left);
 
         # behaviour
