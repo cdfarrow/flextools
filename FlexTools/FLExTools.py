@@ -23,7 +23,15 @@ import traceback
 
 # -----------------------------------------------------------
 import logging
-logging.basicConfig(filename='flextools.log', filemode='w', level=logging.DEBUG)
+
+if len(sys.argv) > 1 and (sys.argv[1] == "DEBUG"):
+    loggingLevel = logging.DEBUG 
+else:
+    loggingLevel = logging.INFO
+
+logging.basicConfig(filename='flextools.log', 
+                    filemode='w', 
+                    level=loggingLevel)
 # -----------------------------------------------------------
 
 
