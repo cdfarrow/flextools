@@ -458,11 +458,13 @@ class FTMainForm (Form):
             progressText = "[%s: %i%%]" % (msg, self.progressPercent)
         else:
             progressText = ""
-        self.StatusBar.Text = "Collection: '%s'   Project: '%s'   %s" %\
+        newText = "Collection: '%s'   Project: '%s'   %s" %\
              (self.configuration.currentCollection,
               #self.configuration.currentServer
               self.configuration.currentProject,
               progressText)
+        if self.StatusBar.Text != newText:
+            self.StatusBar.Text = newText
 
     def __ProgressBar(self, val, max, msg=None):
         if max == 0: # Clear progress bar
