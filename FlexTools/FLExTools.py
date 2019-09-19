@@ -32,6 +32,8 @@ else:
 logging.basicConfig(filename='flextools.log', 
                     filemode='w', 
                     level=loggingLevel)
+
+logger = logging.getLogger(__name__)
 # -----------------------------------------------------------
 
 
@@ -402,6 +404,7 @@ class FTMainForm (Form):
 
 
     def __LoadModules(self):
+        logger.debug("Loading modules")
         if not hasattr(self, "moduleManager"):
             self.moduleManager = FTModules.ModuleManager()
         errorList = self.moduleManager.LoadAll()
@@ -416,6 +419,7 @@ class FTMainForm (Form):
         self.Text = "FLExTools " + Version.number
 
         ## Get configurables - current DB, current collection
+        logger.debug("Reading configuration")
         self.configuration = ConfigStore(FTPaths.CONFIG_PATH)
         if not self.configuration.currentCollection:
             self.configuration.currentCollection = "Examples"
@@ -569,7 +573,9 @@ class FTMainForm (Form):
 def main():
     FLExInit.Initialize()
 
+    logger.debug("Creating MainForm")
     form = FTMainForm()
+    logger.debug("Launching WinForms Application")
     Application.Run(form)
 
     FLExInit.Cleanup()
