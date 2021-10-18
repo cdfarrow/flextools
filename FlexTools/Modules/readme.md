@@ -32,7 +32,8 @@ docs = {FTM_Name       : "<name of module>",
         FTM_Help       : None/link-to-help-file[pdf,html,etc.],
         FTM_Description: 
 """
-<a multi-line full description of the module and how to use it>
+<A multi-line full description of the module and how to use it.
+The user can view this description in the Module Info dialog.>
 """
 }
 ```
@@ -52,5 +53,5 @@ FlexToolsModule = FlexToolsModuleClass(runFunction = Main,
 Path Matters
 ============
 
-If python library files are included with the FLExTools modules (to be imported by the main module), then they can be put in a Libs sub-folder and a .pth file added here, which references that folder. See chinese.pth for an example.
+If Python library files are included with the FLExTools modules (to be imported by the main module), then they can be put in a Libs sub-folder and a .pth file added here that references that folder. See chinese.pth for an example.
 
