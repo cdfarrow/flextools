@@ -25,7 +25,7 @@ import traceback
 import logging
 
 if len(sys.argv) > 1 and (sys.argv[1] == "DEBUG"):
-    loggingLevel = logging.DEBUG 
+    loggingLevel = logging.DEBUG
 else:
     loggingLevel = logging.INFO
 
@@ -75,17 +75,18 @@ from System.Threading import Thread, ThreadStart, ApartmentState
 import FTPaths
 import Version
 
+logging.info("FLExTools %s" % Version.number)
+
 try:
     from flexlibs import FLExInit
 
 except Exception as e:
-    MessageBox.Show("Error interfacing with Fieldworks:\n%s\n(This version of FLExTools has been tested with Fieldworks versions %s - %s.)\nSee error.log for more details."
-                    % (e.message, Version.MinFWVersion, Version.MaxFWVersion),
+    MessageBox.Show("There was an issue interfacing with FieldWorks:\n%s\n(This version of FLExTools has been tested with Fieldworks versions %s - %s.)\nSee flextools.log for more details."
+                    % (e, Version.MinFWVersion, Version.MaxFWVersion),
                     "FLExTools: Fatal Error",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation)
-    print("Fatal exception importing flexlibs:\n%s" % traceback.format_exc())
-    print("FLExTools %s" % Version.number)
+    logging.error("Fatal exception importing flexlibs:\n%s" % traceback.format_exc())
     sys.exit(1)
 
 import UIGlobal
