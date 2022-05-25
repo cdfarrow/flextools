@@ -1,13 +1,22 @@
 
-FLExApps History
-----------------
+FLExTools History
+-----------------
 
 ==== Known Issues ====
 
-* Requires 32 bit version of Python, even on 64 bit Windows
+* Requires Python <= 3.8
 
 
 ====== History =======
+
+2.0.0 (Beta) - 25 May 2022
+--------------------------
+
++ Supports FieldWorks 9 only
++ Works with Python 2.7, 3.5-3.8
+
+
+----------------------------------------------------------- 
 
 1.2.5 - 5 Aug 2016
 ------------------
