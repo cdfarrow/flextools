@@ -1,9 +1,10 @@
 @echo off
 
 REM Assume that the default Python will match FLEx for 32/64 bit.
-REM If it doesn't, then the user needs to install the correct Python
-REM or call FLExTools.py manually with the correct Python.exe.
+REM If it doesn't, or it is an unsupported Python version, then 
+REM add a parameter to the command below to select the right version.
+REM Use "py --help" to see the options.
 
-python FlexTools\FlexTools.py %*
+py FlexTools\FlexTools.py %*
 
 :END
