@@ -115,7 +115,7 @@ class AboutBox (Form):
         self.Controls.Add(AboutInfo())
 
 
-HELP_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "docs")
+HELP_PATH = os.path.join(os.path.dirname(__file__), "..\docs")
 
 GeneralHelpFile     = os.path.join(HELP_PATH, "FLExTools Help.pdf")
 ProgrammingHelpFile = os.path.join(HELP_PATH, "FLExTools Programming.pdf")
