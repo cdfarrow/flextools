@@ -15,6 +15,9 @@ from __future__ import unicode_literals
 
 from FTModuleClass import *
 
+import logging
+logger = logging.getLogger(__name__)
+
 #----------------------------------------------------------------
 # Configurables:
 
@@ -40,6 +43,7 @@ def MainFunction(DB, report, modifyAllowed):
     ##coffeeShops === 0         ## Uncomment for syntax error
     coffeeShops = 0
 
+    logger.error("Testing NameError exception")
     report.Info("Name error...")
     report.Info("%d coffee shops" % numEntries)
 

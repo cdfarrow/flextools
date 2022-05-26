@@ -24,8 +24,11 @@
 from __future__ import unicode_literals
 from builtins import str
 
-import types, re
+import types
+import re
+
 import logging
+logger = logging.getLogger(__name__)
 
 ideograph_desc = { 
     '\N{IDEOGRAPHIC DESCRIPTION CHARACTER LEFT TO RIGHT}': 2,
@@ -177,7 +180,7 @@ def get_chars(s):
             next -= 1
     if next != 0:
         #raise ValueError('unfinished ideographic description sequence, %s' % s)
-        logging.warning('unfinished ideographic description sequence, %s' % s)
+        logger.warning('unfinished ideographic description sequence, %s' % s)
     return l
 
 nonchar_pat = re.compile( '[  \N{MIDDLE DOT}\N{HORIZONTAL ELLIPSIS}' +
@@ -261,7 +264,7 @@ def pinyin_sort_transform(char_data, chin, tonenum):
         try:
             char = char_data[c]
         except KeyError:
-            logging.warning('unknown character "%s" in "%s"' % (repr(c), chin))
+            logger.warning('unknown character "%s" in "%s"' % (repr(c), chin))
             #might not be the right thing for punctuation
             continue
             #pron = ['']
@@ -290,7 +293,7 @@ def lookup(dict, s):
             l.append(entries)
             start += len(entries[0].lexeme)
         else:
-            logging.warning('missing symbol %s' % s[start])
+            logger.warning('missing symbol %s' % s[start])
             l.append(s[start])
             start += 1
     return l

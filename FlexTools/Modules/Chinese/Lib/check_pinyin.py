@@ -26,8 +26,10 @@ from builtins import str
 
 import segmenter
 import chin_utils
-import logging
 import re
+
+import logging
+logger = logging.getLogger(__name__)
 
 def get_tonenum_dict(fname):
     """return a dictionary of tonenums keyed by lexeme
@@ -48,7 +50,7 @@ def get_tonenum_dict(fname):
         line = line.decode('utf8').strip()
         fields = line.split('\t')
         if len(fields) != 2:
-            logging.error("line %d: num of fields != 2" %  line_num)
+            logger.error("line %d: num of fields != 2" %  line_num)
         else:
             chinese, tonenum = fields
             # perhaps should skip at this point
@@ -120,7 +122,7 @@ def join_segments(sgmtr, s, positions):
         seg = segs[-1]
         tonenum.append('|'.join(sorted(list(sgmtr.values(seg)))))
     else:
-        logging.warning('no segments found')
+        logger.warning('no segments found')
     return ''.join(tonenum)
 
 def check_pinyin(sgmtr, hanzi, pinyin):
@@ -156,11 +158,11 @@ def check_pinyin(sgmtr, hanzi, pinyin):
                         if not __check_hanzi_with_pinyin(l):
                             errors.append('hanzi %s: Expected "%s"' % (hanzi, tonenum))
 ##                        else:
-##                            logging.info('\thanzi %s: gp "%s" segments as expected' % (hanzi, tonenum))
+##                            logger.info('\thanzi %s: gp "%s" segments as expected' % (hanzi, tonenum))
 ##                    else:
-##                        logging.info('\thanzi %s: gp "%s" as expected' % (hanzi, tonenum))
+##                        logger.info('\thanzi %s: gp "%s" as expected' % (hanzi, tonenum))
 ##                else:
-##                    logging.info('\thanzi %s: adding pinyin "%s"' % (hanzi, tonenum))
+##                    logger.info('\thanzi %s: adding pinyin "%s"' % (hanzi, tonenum))
         else:
             if pinyin:
                 if not (__check_hanzi_with_pinyin(l) or\

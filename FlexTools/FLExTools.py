@@ -75,7 +75,7 @@ from System.Threading import Thread, ThreadStart, ApartmentState
 import FTPaths
 import Version
 
-logging.info("FLExTools %s" % Version.number)
+logger.info("FLExTools %s" % Version.number)
 
 try:
     from flexlibs import FLExInit
@@ -86,7 +86,7 @@ except Exception as e:
                     "FLExTools: Fatal Error",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation)
-    logging.error("Fatal exception importing flexlibs:\n%s" % traceback.format_exc())
+    logger.error("Fatal exception importing flexlibs:\n%s" % traceback.format_exc())
     sys.exit(1)
 
 import UIGlobal
