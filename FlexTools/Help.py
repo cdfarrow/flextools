@@ -14,7 +14,8 @@ import Version
 import os
 import sys
 
-from flexlibs import FLExGlobals
+from flexlibs import FWShortVersion, FWCodeDir, APIHelpFile
+
 
 from FTModules import ModuleManager
 
@@ -70,7 +71,7 @@ class AboutInfo(RichTextBox):
         self.AppendText("Python version: %s\n" % sys.version.split()[0])
         self.SelectionFont = UIGlobal.normalFont
         self.AppendText("Fieldworks version: %s\n\n" %
-                            FLExGlobals.FWShortVersion)
+                            FWShortVersion)
 
         self.SelectionFont = UIGlobal.normalFont
         self.AppendText("FLExTools: \thttps://github.com/cdfarrow/flextools/wiki\n")
@@ -119,7 +120,7 @@ HELP_PATH = os.path.join(os.path.dirname(__file__), "..\docs")
 
 GeneralHelpFile     = os.path.join(HELP_PATH, "FLExTools Help.pdf")
 ProgrammingHelpFile = os.path.join(HELP_PATH, "FLExTools Programming.pdf")
-APIHelpFile         = FLExGlobals.APIHelpFile
+APIHelpFile         = APIHelpFile
 
 
 def Help(helpfile):
@@ -149,7 +150,7 @@ def APIHelp(sender=None, event=None):
     Help(APIHelpFile)
 
 def LaunchLCMBrowser(sender=None, event=None):
-    os.startfile(os.sep.join((FLExGlobals.FWCodeDir, "LCMBrowser.exe")))
+    os.startfile(os.sep.join((FWCodeDir, "LCMBrowser.exe")))
 
 
 # ------------------------------------------------------------------

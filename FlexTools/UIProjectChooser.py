@@ -10,8 +10,8 @@
 #
 
 import UIGlobal
-from flexlibs import FLExInit
-from flexlibs.FLExProject import GetProjectNames
+from flexlibs import FLExInitialize, FLExCleanup
+from flexlibs import AllProjectNames
 
 from System.Drawing import (Color, SystemColors, Point, Rectangle, Size, Bitmap,
                             Image, Icon,
@@ -53,7 +53,7 @@ class ProjectList(ListView):
         # initialise the list
         self.itemToSetAsSelected = None
 
-        for name in GetProjectNames():
+        for name in AllProjectNames():
             item = self.Items.Add(name)
             if name == currentProject:
                 self.itemToSetAsSelected = item
@@ -119,7 +119,7 @@ class ProjectChooser(Form):
 
 # ------------------------------------------------------------------
 if __name__ == "__main__":
-    FLExInit.Initialize()
+    FLExInitialize()
 
     # Demonstration:
     dlg = ProjectChooser()
@@ -127,4 +127,4 @@ if __name__ == "__main__":
     if dlg.projectName:
          MessageBox.Show (dlg.projectName, "Project selected")
 
-    FLExInit.Cleanup()
+    FLExCleanup()

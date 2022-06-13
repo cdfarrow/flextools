@@ -21,8 +21,15 @@ import imp
 import traceback
 
 import Version
+import System
+
 import FTReport
-from flexlibs.FLExProject import *
+from flexlibs import (
+    FLExProject, 
+    FP_ProjectError, 
+    FP_RuntimeError,
+    )
+
 from FTModuleClass import *
 
 # Loads .pth files from Modules\

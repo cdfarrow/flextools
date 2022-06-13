@@ -78,7 +78,7 @@ import Version
 logger.info("FLExTools %s" % Version.number)
 
 try:
-    from flexlibs import FLExInit
+    from flexlibs import FLExInitialize, FLExCleanup
 
 except Exception as e:
     MessageBox.Show("There was an issue interfacing with FieldWorks:\n%s\n(This version of FLExTools has been tested with Fieldworks versions %s - %s.)\nSee flextools.log for more details."
@@ -572,14 +572,14 @@ class FTMainForm (Form):
 
 # ------------------------------------------------------------------
 def main():
-    FLExInit.Initialize()
+    FLExInitialize()
 
     logger.debug("Creating MainForm")
     form = FTMainForm()
     logger.debug("Launching WinForms Application")
     Application.Run(form)
 
-    FLExInit.Cleanup()
+    FLExCleanup()
 
 if __name__ == '__main__':
     main()

@@ -19,9 +19,11 @@ logging.basicConfig(
 
 logger = logging.getLogger("_TestAModule")
 
-from flexlibs import FLExInit
-from flexlibs.FLExProject import (FLExProject, 
-    FP_ProjectError, FP_FileNotFoundError)
+from flexlibs import FLExInitialize, FLExCleanup
+from flexlibs import (
+    FLExProject, 
+    FP_ProjectError, 
+    FP_FileNotFoundError)
 
 from FTModuleClass import FTM_ModuleError
 import FTReport
@@ -134,8 +136,8 @@ if __name__ == "__main__":
     ProjectName  = sys.argv[1] 
     ModuleToTest = sys.argv[2] 
 
-    FLExInit.Initialize()
+    FLExInitialize()
 
     main(ProjectName, ModuleToTest)
 
-    FLExInit.Cleanup()
+    FLExCleanup()
