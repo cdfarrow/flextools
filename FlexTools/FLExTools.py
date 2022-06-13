@@ -221,7 +221,7 @@ class FTPanel(Panel):
         if self.__ChooseProjectHandler:
             self.__ChooseProjectHandler()
 
-    def __Run(self, message, modules, modifyDB = False):
+    def __Run(self, message, modules, modifyAllowed = False):
         # Reload the modules to make sure we're using the latest code.
         if self.reloadFunction: self.reloadFunction()
 
@@ -229,12 +229,12 @@ class FTPanel(Panel):
             self.reportWindow.Reporter.Error("No project selected! Use the Choose Project button in the toolbar.")
             return
 
-        if not modifyDB:
-            modifyDB = (Control.ModifierKeys == Keys.Shift)
+        if not modifyAllowed:
+            modifyAllowed = (Control.ModifierKeys == Keys.Shift)
 
         self.reportWindow.Clear()
 
-        if modifyDB:
+        if modifyAllowed:
             dlgmsg = "Are you sure you want to make changes to the '%s' project? "\
                       "Please back up the project first."
             title = "Confirm allow changes"
@@ -251,21 +251,21 @@ class FTPanel(Panel):
         self.moduleManager.RunModules(self.projectName,
                                       modules,
                                       self.reportWindow.Reporter,
-                                      modifyDB)
+                                      modifyAllowed)
         # Make sure the progress indicator is off
         self.reportWindow.Reporter.ProgressStop()
 
 
-    def RunAll(self, modify=False):
+    def RunAll(self, modifyAllowed=False):
         self.__Run("Running all modules...",
                    self.listOfModules,
-                   modify)
+                   modifyAllowed)
 
-    def RunOne(self, modify=False):
+    def RunOne(self, modifyAllowed=False):
         if self.modulesList.SelectedIndex >= 0:
             self.__Run("Running single module...",
                        [self.listOfModules[self.modulesList.SelectedIndex]],
-                       modify)
+                       modifyAllowed)
 
     def RunAllModify(self):
         self.RunAll(True)
@@ -535,7 +535,7 @@ class FTMainForm (Form):
 
 ##        # Use FW Open Project dialog; This is rather broken
 ##        # (TODO: Server option not supported yet:
-##        # I haven't found out how to open the db on a server, yet:
+##        # I haven't found out how to open the project on a server, yet:
 ##        # Look in FDOBrowser::BrowserProjectId)
 ##        dbServer, dbPath = FDO.ChooseDatabaseDialog()
 ##        if dbPath:

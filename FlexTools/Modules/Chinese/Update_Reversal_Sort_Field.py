@@ -67,59 +67,59 @@ See Chinese Utilities Help.pdf for detailed information on configuration and usa
 
 UpdatedSortStrings = 0
 
-def UpdateReversalSortFields(DB, report, modify=False):
+def UpdateReversalSortFields(project, report, modifyAllowed=False):
 
     
-    def __WriteSortString(DB, entry):
+    def __WriteSortString(project, entry):
         global UpdatedSortStrings
-        # Note that DB is passed to each of these local functions otherwise
-        # DB is treated as a global and isn't released for garbage collection.
+        # Note that project is passed to each of these local functions otherwise
+        # project is treated as a global and isn't released for garbage collection.
         # That keeps the database locked so FT has to be restarted to use
         # that database again.
 
-        hz = DB.ReversalGetForm(entry, ChineseWS)
-        tn = DB.ReversalGetForm(entry, ChineseTonenumWS)
-        ss = DB.ReversalGetForm(entry, ChineseSortWS)
+        hz = project.ReversalGetForm(entry, ChineseWS)
+        tn = project.ReversalGetForm(entry, ChineseTonenumWS)
+        ss = project.ReversalGetForm(entry, ChineseSortWS)
 
         newSortString, msg = SortDB.CalculateSortString(hz, tn, ss)
         if msg:
             report.Warning("    %s: %s" % (hz, msg),
-                           DB.BuildGotoURL(entry))
+                           project.BuildGotoURL(entry))
         if newSortString is not None:
-            report.Info(("    Updating %s: (%s + %s) > %s" if modify else
+            report.Info(("    Updating %s: (%s + %s) > %s" if modifyAllowed else
                          "    %s needs updating: (%s + %s) > %s") \
                          % (hz, hz, tn, newSortString))
-            if modify:
-                DB.ReversalSetForm(entry, newSortString, ChineseSortWS)
+            if modifyAllowed:
+                project.ReversalSetForm(entry, newSortString, ChineseSortWS)
             UpdatedSortStrings += 1
                 
         # (Subentries don't need the sort string)
 
     ChineseWS,\
     ChineseTonenumWS,\
-    ChineseSortWS = ChineseWritingSystems(DB, report, Hanzi=True, Tonenum=True, Sort=True)
+    ChineseSortWS = ChineseWritingSystems(project, report, Hanzi=True, Tonenum=True, Sort=True)
 
     if not ChineseWS or not ChineseTonenumWS or not ChineseSortWS:
         report.Error("Please read the instructions and configure the necessary writing systems")
         return
     else:
         report.Info("Using writing systems:")
-        report.Info("    Hanzi: %s" % DB.WSUIName(ChineseWS))
-        report.Info("    Tone number Pinyin: %s" % DB.WSUIName(ChineseTonenumWS))
-        report.Info("    Chinese sort field: %s" % DB.WSUIName(ChineseSortWS))
+        report.Info("    Hanzi: %s" % project.WSUIName(ChineseWS))
+        report.Info("    Tone number Pinyin: %s" % project.WSUIName(ChineseTonenumWS))
+        report.Info("    Chinese sort field: %s" % project.WSUIName(ChineseSortWS))
 
     SortDB = SortStringDB()
 
-    index = DB.ReversalIndex(ChineseWS)
+    index = project.ReversalIndex(ChineseWS)
     if index:
         report.ProgressStart(index.AllEntries.Count)
         report.Info("Updating sort strings for '%s' reversal index"
-                    % DB.WSUIName(ChineseWS))
-        for entryNumber, entry in enumerate(DB.ReversalEntries(ChineseWS)):
+                    % project.WSUIName(ChineseWS))
+        for entryNumber, entry in enumerate(project.ReversalEntries(ChineseWS)):
             report.ProgressUpdate(entryNumber)
-            __WriteSortString(DB, entry)
+            __WriteSortString(project, entry)
     
-    report.Info(("  %d %s updated" if modify else
+    report.Info(("  %d %s updated" if modifyAllowed else
                  "  %d %s to update") \
                  % (UpdatedSortStrings, "entry" if (UpdatedSortStrings==1) else "entries"))
 

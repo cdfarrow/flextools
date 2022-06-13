@@ -41,23 +41,24 @@ class FlexToolsModuleClass (object):
                                               _user_documentation_)
 
      - _processing_function_ is a function of the form:
-         def _processing_function_(DB, report, modificationAllowed):
+         def _processing_function_(project, report, modifyAllowed):
 
-           - DB is a FLExProject instance:
+           - _project_ is a FLExProject instance:
                    See flexlibs\FLExProject.py for the methods that are
                    provided.
-           - report is a class instance that reports status messages:
+           - _report_ is a FTReport.FTReporter instance that reports 
+                   status messages:
                    report.Info(msg)
                    report.Warning(msg, reference)
                    report.Error(msg, reference)
                        - reference is an optional hyperlink to a lexical
                          entry in FLEx.
-                         It is built with DB.BuildGotoURL(entry)
-           - modificationAllowed is True if the user has permitted any kind
+                         It is built with project.BuildGotoURL(entry)
+           - _modififyAllowed_ is True if the user has permitted any kind
              of modification to the project. If this is False then the module
              should ensure that no data is modified.
-             Users should be warned to back up their projects before
-             attempting any modifications via a FlexTools module.
+             Users are warned to back up their projects before attempting 
+             any modifications via a FlexTools module.
 
     - _user_documentation_ is a dictionary with the following keys defined:
         FTM_Name           : A short name for the module.
@@ -100,13 +101,13 @@ class FlexToolsModuleClass (object):
     def GetConfigurables(self):
         return self.configurationItems
 
-    def Run(self, DB, report, modify = False):
+    def Run(self, project, report, modifyAllowed = False):
         if self.runFunction:
             # Prevent writes if not documented
-            if modify and not self.docs[FTM_ModifiesDB]:
+            if modifyAllowed and not self.docs[FTM_ModifiesDB]:
                 report.Warning("Changes are enabled, but this module doesn't allow it. Disabling changes.")
-                modify = False
-            self.runFunction(DB, report, modify)
+                modifyAllowed = False
+            self.runFunction(project, report, modifyAllowed)
 
     def Help(self):
         #

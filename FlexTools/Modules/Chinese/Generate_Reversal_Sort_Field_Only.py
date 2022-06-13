@@ -154,28 +154,28 @@ UpdatedTonenums = 0
 UpdatedSortStrings = 0
 HackedSortStrings = 0
 
-def GenerateReversalSortFields(DB, report, modify=False):
+def GenerateReversalSortFields(project, report, modifyAllowed=False):
 
     def __WriteReversalTonenumAndSortString(entry):
         global UpdatedTonenums
         global UpdatedSortStrings
         global HackedSortStrings
         
-        hz = DB.ReversalGetForm(entry, ChineseWS)
-        tn = DB.ReversalGetForm(entry, ChineseTonenumWS)
-        ss = DB.ReversalGetForm(entry, ChineseSortWS)
+        hz = project.ReversalGetForm(entry, ChineseWS)
+        tn = project.ReversalGetForm(entry, ChineseTonenumWS)
+        ss = project.ReversalGetForm(entry, ChineseSortWS)
         
         # Tone number
         newTonenum, msg = Parser.CalculateTonenum(hz, tn)
         if msg:
             report.Warning("    %s" % msg,
-                           DB.BuildGotoURL(entry))
+                           project.BuildGotoURL(entry))
         if newTonenum is not None:
-            report.Info(("    Updating %s > %s" if modify else
+            report.Info(("    Updating %s > %s" if modifyAllowed else
                          "    %s needs updating > %s") \
                          % (hz, newTonenum))
-            if modify:
-                DB.ReversalSetForm(entry, newTonenum, ChineseTonenumWS)
+            if modifyAllowed:
+                project.ReversalSetForm(entry, newTonenum, ChineseTonenumWS)
             UpdatedTonenums += 1
             tn = newTonenum
                 
@@ -184,7 +184,7 @@ def GenerateReversalSortFields(DB, report, modify=False):
             if tn != hacked_tn:
                 HackedSortStrings += 1
                 report.Warning("    Hacked %s" % hz,
-                               DB.BuildGotoURL(entry))
+                               project.BuildGotoURL(entry))
                 hz = hacked_hz
                 tn = hacked_tn
 
@@ -193,48 +193,48 @@ def GenerateReversalSortFields(DB, report, modify=False):
         newSortString, msg = SortDB.CalculateSortString(hz, tn, ss)
         if msg:
             report.Warning("    %s: %s" % (hz, msg),
-                           DB.BuildGotoURL(entry))
+                           project.BuildGotoURL(entry))
 
         if newSortString is not None:
-            report.Info(("    Updating %s: (%s + %s) > %s" if modify else
+            report.Info(("    Updating %s: (%s + %s) > %s" if modifyAllowed else
                          "    %s needs updating: (%s + %s) > %s") \
                          % (hz, hz, tn, newSortString))
-            if modify:
-                DB.ReversalSetForm(entry, newSortString, ChineseSortWS)
+            if modifyAllowed:
+                project.ReversalSetForm(entry, newSortString, ChineseSortWS)
             UpdatedSortStrings += 1
                 
         # (Subentries don't need the sort string)
 
     ChineseWS,\
     ChineseTonenumWS,\
-    ChineseSortWS = ChineseWritingSystems(DB, report, Hanzi=True, Tonenum=True, Sort=True)
+    ChineseSortWS = ChineseWritingSystems(project, report, Hanzi=True, Tonenum=True, Sort=True)
 
     if not ChineseWS or not ChineseTonenumWS or not ChineseSortWS:
         report.Error("Please read the instructions and configure the necessary writing systems")
         return
     else:
         report.Info("Using writing systems:")
-        report.Info("    Hanzi: %s" % DB.WSUIName(ChineseWS))
-        report.Info("    Tone number Pinyin: %s" % DB.WSUIName(ChineseTonenumWS))
-        report.Info("    Chinese sort field: %s" % DB.WSUIName(ChineseSortWS))
+        report.Info("    Hanzi: %s" % project.WSUIName(ChineseWS))
+        report.Info("    Tone number Pinyin: %s" % project.WSUIName(ChineseTonenumWS))
+        report.Info("    Chinese sort field: %s" % project.WSUIName(ChineseSortWS))
 
     Parser = ChineseParser()       
     SortDB = SortStringDB()
 
-    index = DB.ReversalIndex(ChineseWS)
+    index = project.ReversalIndex(ChineseWS)
     if index:
         report.ProgressStart(index.AllEntries.Count)
         report.Info("Updating sort strings for '%s' reversal index"
-                    % DB.WSUIName(ChineseWS))
-        for entryNumber, entry in enumerate(DB.ReversalEntries(ChineseWS)):
+                    % project.WSUIName(ChineseWS))
+        for entryNumber, entry in enumerate(project.ReversalEntries(ChineseWS)):
             report.ProgressUpdate(entryNumber)
             __WriteReversalTonenumAndSortString(entry)
     
-    report.Info(("  %d %s updated" if modify else
+    report.Info(("  %d %s updated" if modifyAllowed else
                  "  %d %s to update") \
                  % (UpdatedTonenums, "tone number" if (UpdatedTonenums==1) else "tone numbers"))
                  
-    report.Info(("  %d %s updated" if modify else
+    report.Info(("  %d %s updated" if modifyAllowed else
                  "  %d %s to update") \
                  % (UpdatedSortStrings, "sort string" if (UpdatedSortStrings==1) else "sort strings"))
     if HACK_LEVEL:

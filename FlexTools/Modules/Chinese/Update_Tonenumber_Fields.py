@@ -69,45 +69,45 @@ See Chinese Utilities Help.pdf for detailed information on configuration and usa
 UpdatedSenses = 0
 UpdatedReversals = 0
 
-def UpdateTonenumberFields(DB, report, modify=False):
+def UpdateTonenumberFields(project, report, modifyAllowed=False):
 
-    def __WriteSenseTonenum(DB, entry, sense):
+    def __WriteSenseTonenum(project, entry, sense):
         global UpdatedSenses
-        hz = DB.LexiconGetSenseGloss(sense, ChineseWS)
-        tn = DB.LexiconGetSenseGloss(sense, ChineseTonenumWS)
-        headword = DB.LexiconGetHeadword(entry)
+        hz = project.LexiconGetSenseGloss(sense, ChineseWS)
+        tn = project.LexiconGetSenseGloss(sense, ChineseTonenumWS)
+        headword = project.LexiconGetHeadword(entry)
 
         newTonenum, msg = Parser.CalculateTonenum(hz, tn)
         if msg:
             report.Warning("    %s: %s" % (headword, msg),
-                           DB.BuildGotoURL(entry))
+                           project.BuildGotoURL(entry))
         if newTonenum is not None:
-            report.Info(("    Updating %s: %s > %s" if modify else
+            report.Info(("    Updating %s: %s > %s" if modifyAllowed else
                          "    %s needs updating: %s > %s") \
                          % (headword, hz, newTonenum))
-            if modify:
-                DB.LexiconSetSenseGloss(sense, newTonenum, ChineseTonenumWS)
+            if modifyAllowed:
+                project.LexiconSetSenseGloss(sense, newTonenum, ChineseTonenumWS)
             UpdatedSenses += 1
                                     
         # Subentries
         for se in sense.SensesOS:
-            __WriteSenseTonenum(DB, entry, se)
+            __WriteSenseTonenum(project, entry, se)
 
-    def __WriteReversalTonenum(DB, entry):
+    def __WriteReversalTonenum(project, entry):
         global UpdatedReversals
-        hz = DB.ReversalGetForm(entry, ChineseWS)
-        tn = DB.ReversalGetForm(entry, ChineseTonenumWS)
+        hz = project.ReversalGetForm(entry, ChineseWS)
+        tn = project.ReversalGetForm(entry, ChineseTonenumWS)
         
         newTonenum, msg = Parser.CalculateTonenum(hz, tn)
         if msg:
             report.Warning("    %s" % msg,
-                           DB.BuildGotoURL(entry))
+                           project.BuildGotoURL(entry))
         if newTonenum is not None:
-            report.Info(("    Updating %s > %s" if modify else
+            report.Info(("    Updating %s > %s" if modifyAllowed else
                          "    %s needs updating > %s") \
                          % (hz, newTonenum))
-            if modify:
-                DB.ReversalSetForm(entry, newTonenum, ChineseTonenumWS)
+            if modifyAllowed:
+                project.ReversalSetForm(entry, newTonenum, ChineseTonenumWS)
             UpdatedReversals += 1
                 
         # Subentries (Changed from OC to OS in FW8)
@@ -117,51 +117,51 @@ def UpdateTonenumberFields(DB, report, modify=False):
             subentries = entry.SubentriesOS
             
         for se in subentries:
-            __WriteReversalTonenum(DB, se)
+            __WriteReversalTonenum(project, se)
 
 
     # -----------------------------------------------------------
     # Find the Chinese writing systems
 
     ChineseWS,\
-    ChineseTonenumWS = ChineseWritingSystems(DB, report, Hanzi=True, Tonenum=True)
+    ChineseTonenumWS = ChineseWritingSystems(project, report, Hanzi=True, Tonenum=True)
 
     if not ChineseWS or not ChineseTonenumWS:
         report.Error("Please read the instructions and configure the necessary writing systems")
         return
     else:
         report.Info("Using these writing systems:")
-        report.Info("    Hanzi: %s" % DB.WSUIName(ChineseWS))
-        report.Info("    Tone number Pinyin: %s" % DB.WSUIName(ChineseTonenumWS))
+        report.Info("    Hanzi: %s" % project.WSUIName(ChineseWS))
+        report.Info("    Tone number Pinyin: %s" % project.WSUIName(ChineseTonenumWS))
 
     Parser = ChineseParser()
     
     # Lexicon Glosses
 
     report.Info("Updating tone number Pinyin for all lexical entries")
-    report.ProgressStart(DB.LexiconNumberOfEntries(), "Lexicon")
+    report.ProgressStart(project.LexiconNumberOfEntries(), "Lexicon")
    
-    for entryNumber, entry in enumerate(DB.LexiconAllEntries()):
+    for entryNumber, entry in enumerate(project.LexiconAllEntries()):
         report.ProgressUpdate(entryNumber)
         for sense in entry.SensesOS:
-            __WriteSenseTonenum(DB, entry, sense)
+            __WriteSenseTonenum(project, entry, sense)
 
-    report.Info(("  %d %s updated" if modify else
+    report.Info(("  %d %s updated" if modifyAllowed else
                  "  %d %s to update") \
                  % (UpdatedSenses, "sense" if (UpdatedSenses==1) else "senses"))
     
     # Reversal Index
     
-    index = DB.ReversalIndex(ChineseWS)
+    index = project.ReversalIndex(ChineseWS)
     if index:
         report.ProgressStart(index.AllEntries.Count, "Reversal index")
         report.Info("Updating tone number Pinyin for '%s' reversal index"
-                    % DB.WSUIName(ChineseWS))
-        for entryNumber, entry in enumerate(DB.ReversalEntries(ChineseWS)):
+                    % project.WSUIName(ChineseWS))
+        for entryNumber, entry in enumerate(project.ReversalEntries(ChineseWS)):
             report.ProgressUpdate(entryNumber)
-            __WriteReversalTonenum(DB, entry)
+            __WriteReversalTonenum(project, entry)
             
-    report.Info(("  %d %s updated" if modify else
+    report.Info(("  %d %s updated" if modifyAllowed else
                  "  %d %s to update") \
                  % (UpdatedReversals, "entry" if (UpdatedReversals==1) else "entries"))
     

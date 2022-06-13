@@ -29,7 +29,7 @@ from pinyin import *
 # --- Chinese Writing Systems ---
 
 
-def ChineseWritingSystems(DB, report, Hanzi=False, Tonenum=False, Pinyin=False, Sort=False):
+def ChineseWritingSystems(project, report, Hanzi=False, Tonenum=False, Pinyin=False, Sort=False):
     """
     Returns a list of Language Tags for the requested Chinese writing systems.
     Checks for 'zh-CN' ones first, then 'cmn' ones as an alternative (for
@@ -37,9 +37,9 @@ def ChineseWritingSystems(DB, report, Hanzi=False, Tonenum=False, Pinyin=False, 
     """
 
     def __getWS(languageTag, alternateTag):
-        name = DB.WSUIName(languageTag)         # Check WS exists
+        name = project.WSUIName(languageTag)         # Check WS exists
         if not name:
-            name = DB.WSUIName(alternateTag)    # Try alternate
+            name = project.WSUIName(alternateTag)    # Try alternate
             if not name:
                 report.Warning("Writing system not found: %s" % languageTag)
                 return None
@@ -250,9 +250,9 @@ class SortStringDB(dict):
             sortInfo = self[hz]
         except KeyError:
             if len(hz) > 1:
-                return "[Composed HZ not in DB: %s]" % repr(hz)
+                return "[Composed HZ not in project: %s]" % repr(hz)
             else:
-                return "[HZ not in DB: %s]" % repr(hz)
+                return "[HZ not in project: %s]" % repr(hz)
         try:
             return sortInfo[py]
         except KeyError:

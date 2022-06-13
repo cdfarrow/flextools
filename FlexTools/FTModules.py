@@ -68,18 +68,18 @@ class ModuleManager (object):
             if fp:
                 fp.close()
 
-    def __openProject(self, dbName, modifyDB):
-        #logger.debug("__openProject %s" % dbName)
+    def __openProject(self, projectName, modifyAllowed):
+        #logger.debug("__openProject %s" % projectName)
         self.project = FLExProject()
 
         try:
-            self.project.OpenProject(dbName,
-                                writeEnabled = modifyDB)
+            self.project.OpenProject(projectName,
+                                writeEnabled = modifyAllowed)
         except:
-            logger.error("Project failed to open: %s" % dbName)
+            logger.error("Project failed to open: %s" % projectName)
             del self.project
             raise
-        logger.info("Project opened: %s" % dbName)
+        logger.info("Project opened: %s" % projectName)
 
     def __closeProject(self):
         #logger.debug("__closeProject %s" % repr(self.project))
@@ -174,13 +174,13 @@ class ModuleManager (object):
         except KeyError:
             return None
 
-    def RunModules(self, dbName, moduleList, reporter, modifyDB = False):
-        if not dbName:
+    def RunModules(self, projectName, moduleList, reporter, modifyAllowed = False):
+        if not projectName:
             return False
 
-        reporter.Info("Opening project %s..." % dbName)
+        reporter.Info("Opening project %s..." % projectName)
         try:
-            self.__openProject(dbName, modifyDB)
+            self.__openProject(projectName, modifyAllowed)
         except FP_ProjectError as e:
             reporter.Error("Error opening project: %s"
                            % e.message, e.message)
@@ -203,7 +203,7 @@ class ModuleManager (object):
             try:
                 self.__modules[moduleName].Run(self.project,
                                                reporter,
-                                               modify=modifyDB)
+                                               modifyAllowed=modifyAllowed)
             except FP_RuntimeError as e:
                 msg, details = self.__buildExceptionMessages(e, "Module failed with a programming error!")
                 reporter.Error(msg, details)
