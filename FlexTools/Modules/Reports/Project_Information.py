@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#   Reports.Database Information
+#   Reports.Project_Information
 #    - A FlexTools Module
 #
 #
@@ -17,10 +17,10 @@ from FTModuleClass import *
 #----------------------------------------------------------------
 # Documentation that the user sees:
 
-docs = {FTM_Name        : "Database Information",
+docs = {FTM_Name        : "Project Information",
         FTM_Version     : 1,
         FTM_ModifiesDB  : False,
-        FTM_Synopsis    : "Report detailed information about the database.",
+        FTM_Synopsis    : "Report detailed information about the project.",
         FTM_Description :
 """
 This module reports information about writing systems, custom fields, and
