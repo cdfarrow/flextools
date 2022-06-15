@@ -3,7 +3,7 @@
 #   Reports.Text_Statistics
 #    - A FlexTools Module -
 #
-#   Produces a word-count report of the Texts in a FLEx database:
+#   Produces a word-count report of the Texts in a FLEx project:
 #       Number of words
 #       Number of sentences
 #       Average words per sentence
@@ -34,13 +34,13 @@ plus average numbers of words, sentences and paragraphs.
 #----------------------------------------------------------------
 # The main processing function
 
-def MainFunction(DB, report, modifyAllowed):
+def MainFunction(project, report, modifyAllowed):
 
     numTexts = 0
     numParagraphs = 0
     numSentences = 0
     numWords = 0
-    for name, text in DB.TextsGetAll():
+    for name, text in project.TextsGetAll():
         report.Info("Text: %s" % name)
         numTexts      += 1
         numParagraphs += text.count("\n") + 1

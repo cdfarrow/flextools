@@ -3,7 +3,7 @@
 #   Reports.Dump_SemanticDomains_To_File
 #    - A FlexTools Module -
 #
-#   Dump the Semantic Domain list in a FLEx database to file.
+#   Dump the Semantic Domain list in a FLEx project to a file.
 #
 #   Kien-Wei Tseng
 #   March 2016
@@ -31,13 +31,13 @@ Dump the Semantic Domain list to a file.
 #----------------------------------------------------------------
 # The main processing function
 
-def MainFunction(DB, report, modifyAllowed):
+def MainFunction(project, report, modifyAllowed):
 
-    outputFile = "SemanticDomains_{0}.txt".format(DB.ProjectName())
+    outputFile = "SemanticDomains_{0}.txt".format(project.ProjectName())
     output = io.open(outputFile, mode="w", encoding="utf-8")
 
     count = 0
-    for sd in DB.GetAllSemanticDomains(True):
+    for sd in project.GetAllSemanticDomains(True):
         #output.write(sd.Hvo + '\n')
         output.write(sd.ToString() + '\n')
         report.Info("Semantic Domain: %s" % sd)

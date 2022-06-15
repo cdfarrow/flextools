@@ -56,7 +56,7 @@ class AboutInfo(RichTextBox):
 
         self.SelectionColor = Color.DarkSlateBlue
         self.SelectionFont = UIGlobal.normalFont
-        self.AppendText("A framework for running Python scripts on a Fieldworks Language Explorer database. \n")
+        self.AppendText("A framework for running Python scripts on a Fieldworks Language Explorer project. \n")
 
         self.SelectionAlignment = HorizontalAlignment.Left
         self.SelectionFont = UIGlobal.smallFont

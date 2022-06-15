@@ -3,7 +3,7 @@
 #   Duplicates.Find Duplicate Entries
 #    - A FlexTools Module
 #
-#   Scans a FLEx database checking for homographs with the same grammatical
+#   Scans a FLEx project checking for homographs with the same grammatical
 #   category, and tags them as candidates for merging.
 #
 #   If changes are enabled then the entry-level custom field FTFlags is used to 
@@ -44,7 +44,7 @@ docs = {FTM_Name       : "Find Duplicate Entries",
 This module scans all lexical entries that have homographs, and reports on any
 entries that have the same morpheme type and same grammatical info (i.e. part-of-speech).
 
-If database modification is permitted, then "m" is written to the 
+If project modification is permitted, then "m" is written to the 
 entry-level custom field called FTFlags for any entries that meet 
 the criteria above. Within FieldWorks the entries can be filtered on 
 FTFlags, and the value edited for use by the Merge Entries module.
@@ -62,26 +62,26 @@ up homograph numbers and duplicate grammatical info details.
 #----------------------------------------------------------------
 # The main processing function
 
-def MainFunction(DB, report, modifyAllowed):
+def MainFunction(project, report, modifyAllowed):
 
-    def __EntryMessage(DB, entry, message):
+    def __EntryMessage(project, entry, message):
         report.Info("   %s(%i) [%s][%s] %s" % (entry.HomographForm,
                                                 entry.HomographNumber,
-                                                DB.BestStr(MorphType.Name),
+                                                project.BestStr(MorphType.Name),
                                                 POSList,
                                                 message),
-                    DB.BuildGotoURL(entry))
+                    project.BuildGotoURL(entry))
 
-    numEntries = DB.LexiconNumberOfEntries()
+    numEntries = project.LexiconNumberOfEntries()
     report.Info("Scanning %s entries for homographs..." % numEntries)
     report.ProgressStart(numEntries)
 
     AddTagToField = modifyAllowed
 
-    tagsField = DB.LexiconGetEntryCustomFieldNamed("FTFlags")
+    tagsField = project.LexiconGetEntryCustomFieldNamed("FTFlags")
     if not tagsField:
         report.Warning("FTFlags custom field doesn't exist at entry level")
-    elif not DB.LexiconFieldIsStringType(tagsField):
+    elif not project.LexiconFieldIsStringType(tagsField):
         report.Error("FTFlags custom field is not of type Single-line Text")
         tagsField = None
     if AddTagToField and not tagsField:
@@ -90,7 +90,7 @@ def MainFunction(DB, report, modifyAllowed):
    
     homographs = defaultdict(list)
 
-    for entryNumber, entry in enumerate(DB.LexiconAllEntries()):
+    for entryNumber, entry in enumerate(project.LexiconAllEntries()):
         if (entry.HomographNumber == 0):
             continue
 
@@ -107,7 +107,7 @@ def MainFunction(DB, report, modifyAllowed):
         if entry.EntryRefsOS.Count > 0:
             if ((MorphType.Guid != MoMorphTypeTags.kguidMorphPhrase) and
                 (MorphType.Guid != MoMorphTypeTags.kguidMorphDiscontiguousPhrase)):
-                __EntryMessage(DB, entry, "skipped because it is a variant or complex form")
+                __EntryMessage(project, entry, "skipped because it is a variant or complex form")
                 continue
 
         # Handle Grammatical Categories as sets: so senses of (Noun, Verb) will match (Verb, Noun)
@@ -116,27 +116,27 @@ def MainFunction(DB, report, modifyAllowed):
 
         # Skip entries with contents in FTFlags
         if tagsField:
-            tag = DB.LexiconGetFieldText(entry, tagsField)
+            tag = project.LexiconGetFieldText(entry, tagsField)
             if tag:
                 if tag in ALL_MERGE_TAGS:
-                    __EntryMessage(DB, entry, "ready for merge (FTFlags = '%s')" % tag)
+                    __EntryMessage(project, entry, "ready for merge (FTFlags = '%s')" % tag)
                 else:
-                    __EntryMessage(DB, entry, "skipped because FTFlags contains data ('%s')" % tag)
+                    __EntryMessage(project, entry, "skipped because FTFlags contains data ('%s')" % tag)
                 continue
 
         # Keep track of this entry
         key = "{} [{}][{}]".format(entry.HomographForm,
-                                   DB.BestStr(MorphType.Name),
+                                   project.BestStr(MorphType.Name),
                                    POSList)
 
         homographs[key].append(entry)
-        __EntryMessage(DB, entry, "")
+        __EntryMessage(project, entry, "")
 
 
     if AddTagToField:
         s = "Writing tag '%s' to FTFlags" % TAG_Merge
     else:
-        s = "Run again with Modify to write '%s' to FTFlags" % TAG_Merge
+        s = "Run again with 'Modify enabled' to write '%s' to FTFlags" % TAG_Merge
     report.Info("Homographs to consider for merging: (%s)" % s)
 
     homographItems = sorted(homographs.items())
@@ -144,10 +144,10 @@ def MainFunction(DB, report, modifyAllowed):
         if len(data) < 2:
             continue
         report.Info("   {}: {} homographs".format(key, len(data)),
-                    DB.BuildGotoURL(data[0]))
+                    project.BuildGotoURL(data[0]))
         if AddTagToField:
             for e in data:
-                DB.LexiconAddTagToField(e, tagsField, TAG_Merge) 
+                project.LexiconAddTagToField(e, tagsField, TAG_Merge) 
 
     # Mark entries with only one homograph with "review"
     
@@ -159,10 +159,10 @@ def MainFunction(DB, report, modifyAllowed):
     for key, data in homographItems:
         if len(data) == 1:
             report.Info("   {}".format(key),
-                        DB.BuildGotoURL(data[0]))
+                        project.BuildGotoURL(data[0]))
             if AddTagToField:
                 e = data[0]
-                DB.LexiconAddTagToField(e, tagsField, TAG_MergeReview) 
+                project.LexiconAddTagToField(e, tagsField, TAG_MergeReview) 
 
 #----------------------------------------------------------------
 

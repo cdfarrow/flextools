@@ -134,11 +134,11 @@ class FTPanel(Panel):
                       (self.RunOneModify,
                        "Run (Modify)",
                        "arrow-forward-!",
-                       "Run the selected module allowing database changes"),
+                       "Run the selected module allowing changes to the project"),
                       (self.RunAllModify,
                        "Run All (Modify)",
                        "arrow-forward-double-!",
-                       "Run all modules allowing database changes")
+                       "Run all modules allowing changes to the project")
                        ]
 
         return CustomToolBar(ButtonList,
@@ -349,7 +349,7 @@ class FTMainForm (Form):
                          (self.RunOneModify,
                           "Run Module (Modify Enabled)",
                           Shortcut.CtrlShiftR,
-                          "Run the selected module allowing database changes"),
+                          "Run the selected module allowing changes to the project"),
                          (self.RunAll,
                           "Run All Modules",
                           Shortcut.CtrlA,
@@ -357,7 +357,7 @@ class FTMainForm (Form):
                          (self.RunAllModify,
                           "Run All Modules (Modify Enabled)",
                           Shortcut.CtrlShiftA,
-                          "Run all modules allowing database changes"),]
+                          "Run all modules allowing changes to the project"),]
 
         ReportMenu =    [(self.CopyToClipboard, 
                           "Copy to Clipboard", 
@@ -419,7 +419,7 @@ class FTMainForm (Form):
         self.ClientSize = Size(700, 500)
         self.Text = "FLExTools " + Version.number
 
-        ## Get configurables - current DB, current collection
+        ## Get configurables - current project, current collection
         logger.debug("Reading configuration")
         self.configuration = ConfigStore(FTPaths.CONFIG_PATH)
         if not self.configuration.currentCollection:
@@ -532,22 +532,6 @@ class FTMainForm (Form):
             self.configuration.currentProject = dlg.projectName
             self.UIPanel.UpdateProjectName(dlg.projectName)
             self.__UpdateStatusBar()
-
-##        # Use FW Open Project dialog; This is rather broken
-##        # (TODO: Server option not supported yet:
-##        # I haven't found out how to open the project on a server, yet:
-##        # Look in FDOBrowser::BrowserProjectId)
-##        dbServer, dbPath = FDO.ChooseDatabaseDialog()
-##        if dbPath:
-##            dataDir = FLExRegUtil.GetFWDirs()[1]
-##            if os.path.commonprefix([dataDir, dbPath]) == dataDir:
-##                projectName = os.path.splitext(os.path.basename(dbPath))[0]
-##            else:
-##                projectName = dbPath
-##            self.configuration.currentServer = dbServer
-##            self.configuration.currentProject = projectName
-##            self.UIPanel.UpdateProjectName(projectName)
-##            self.__UpdateStatusBar()
 
     def CopyToClipboard(self, sender, event):
         self.UIPanel.CopyReportToClipboard()

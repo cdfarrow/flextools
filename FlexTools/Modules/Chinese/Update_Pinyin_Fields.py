@@ -40,7 +40,7 @@ from the Pinyin Numbered (zh-CN-x-pyn) field for:
  - forms in a Reversal Index based on the 'zh-CN' writing system.
 
 If the tone number has any unresolved ambiguities then the Pinyin field is
-cleared, otherwise the Pinyin field is always overwritten (when database
+cleared, otherwise the Pinyin field is always overwritten (when project
 changes are enabled.)
 
 See Chinese Utilities Help.pdf for detailed information on configuration and usage.
@@ -57,8 +57,8 @@ def UpdatePinyinFields(project, report, modifyAllowed=False):
     def __CalcNewPinyin(project, tonenum, pinyin):
         # Note that project is passed to each of these local functions otherwise
         # project is treated as a global and isn't released for garbage collection.
-        # That keeps the database locked so FT has to be restarted to use
-        # that database again.
+        # That keeps the project locked so FT has to be restarted to use
+        # that project again.
         # Returns a tuple: (newPinyin, msg)
         #   newPinyin: new value for the Pinyin field
         #   msg: a warning message about the data, or None

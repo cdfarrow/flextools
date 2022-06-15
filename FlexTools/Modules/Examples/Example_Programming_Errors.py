@@ -38,7 +38,7 @@ error lines to reach the next error.
 #----------------------------------------------------------------
 # The main processing function
 
-def MainFunction(DB, report, modifyAllowed):
+def MainFunction(project, report, modifyAllowed):
 
     ##coffeeShops === 0         ## Uncomment for syntax error
     coffeeShops = 0

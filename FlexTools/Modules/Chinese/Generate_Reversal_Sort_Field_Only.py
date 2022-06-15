@@ -36,7 +36,7 @@ Pinyin Numbered (zh-CN-x-pyn) field.
 The three writing systems mentioned above must be configured in FLEx
 under Tools | Configure | Setup Writing Systems. Note that fields using
 the old 'cmn' locale are also supported, but this locale code should not be used in
-new databases.
+new projects.
 
 This Module generates the Pinyin tone number field from the Hanzi
 field and then generates the Sort field from those two. The sort field will be left 

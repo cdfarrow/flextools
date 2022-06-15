@@ -45,17 +45,17 @@ Wordforms with status of Incorrect are not changed.
 #----------------------------------------------------------------
 # The main processing function
 
-def MainFunction(DB, report, modifyAllowed):
+def MainFunction(project, report, modifyAllowed):
 
     report.Info("Approving spelling of numbers...")
     if not modifyAllowed:
-        report.Info("Run with database changes allowed to actually change the status.")
+        report.Info("Run with project changes allowed to actually change the status.")
     
-    for w in DB.ObjectsIn(IWfiWordformRepository):
+    for w in project.ObjectsIn(IWfiWordformRepository):
         if w.SpellingStatus == SpellingStatusStates.undecided:
             form = ITsString(w.Form.BestVernacularAlternative).Text
             if NumberFormRegEx.match(form):
-                report.Info(form, DB.BuildGotoURL(w))
+                report.Info(form, project.BuildGotoURL(w))
                 if modifyAllowed:
                     w.SpellingStatus = SpellingStatusStates.correct
 

@@ -37,39 +37,39 @@ number of senses with definitions and examples.
 #----------------------------------------------------------------
 # The main processing function
 
-def MainFunction(DB, report, modifyAllowed):
+def MainFunction(project, report, modifyAllowed):
     
     global numSenses
     global numWithDefinitions
     global numWithExamples
 
-    def __recordSenseInfo(DB, sense):
+    def __recordSenseInfo(project, sense):
         global numSenses
         global numWithDefinitions
         global numWithExamples
         
         numSenses += 1
-        if DB.LexiconGetSenseDefinition(sense):
+        if project.LexiconGetSenseDefinition(sense):
             numWithDefinitions += 1
         if sense.ExamplesOS.Count > 0:
             numWithExamples += 1
 
         for subsense in sense.SensesOS:
-            __recordSenseInfo(DB, subsense)
+            __recordSenseInfo(project, subsense)
 
 
     report.Info("Lexicon contains:")
-    numberEntries = DB.LexiconNumberOfEntries()
+    numberEntries = project.LexiconNumberOfEntries()
     report.Info("    %d entries" % numberEntries)
     report.ProgressStart(numberEntries)
 
     numSenses = 0
     numWithExamples = 0
     numWithDefinitions = 0
-    for entryNumber, entry in enumerate(DB.LexiconAllEntries()):
+    for entryNumber, entry in enumerate(project.LexiconAllEntries()):
         report.ProgressUpdate(entryNumber)
         for sense in entry.SensesOS:
-            __recordSenseInfo(DB, sense)
+            __recordSenseInfo(project, sense)
 
     report.Info("    %d senses" % numSenses)
     if numSenses:

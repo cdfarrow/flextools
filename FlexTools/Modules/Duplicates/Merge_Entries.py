@@ -62,7 +62,7 @@ Additionally, all entries tagged ‘del’ (or 'delete') will be deleted.
 
 Note: This module does not merge duplicate senses. See the Merge Senses module.
 
-If database modification is permitted, then the commands are actioned, otherwise
+If project modification is permitted, then the commands are actioned, otherwise
 this module reports what it would do, and highlights any errors in the command tags.
 
 WARNING: Always back-up the project first, and then carefully review the results
@@ -72,16 +72,16 @@ to be sure there were no mistakes or unintended effects.
 
 #----------------------------------------------------------------
 
-def MergeEntries(DB, report, modifyAllowed):
+def MergeEntries(project, report, modifyAllowed):
 
     # --------------------------------------------------------------------
     def __EntryMessage(entry, message, reportFunc=report.Info):
         POSList = "; ".join(set([x.ShortName for x in entry.MorphoSyntaxAnalysesOC]))
         reportFunc("   %s [%s][%s] %s" % (entry.HomographForm,
-                                           DB.BestStr(MorphType.Name),
+                                           project.BestStr(MorphType.Name),
                                            POSList,
                                            message),
-                    DB.BuildGotoURL(entry))
+                    project.BuildGotoURL(entry))
         
     # --------------------------------------------------------------------
     def __WarningMessage(entry, message):
@@ -89,14 +89,14 @@ def MergeEntries(DB, report, modifyAllowed):
 
    
     # --------------------------------------------------------------------
-    numEntries = DB.LexiconNumberOfEntries()
+    numEntries = project.LexiconNumberOfEntries()
     report.Info("Scanning %s entries for merge commands..." % numEntries)
     report.ProgressStart(numEntries)
 
-    tagsField = DB.LexiconGetEntryCustomFieldNamed("FTFlags")
+    tagsField = project.LexiconGetEntryCustomFieldNamed("FTFlags")
     if not tagsField:
         report.Error("FTFlags custom field doesn't exist at entry level")
-    elif not DB.LexiconFieldIsStringType(tagsField):
+    elif not project.LexiconFieldIsStringType(tagsField):
         report.Error("FTFlags custom field is not of type Single-line Text")
         tagsField = None
     if not tagsField:
@@ -113,12 +113,12 @@ def MergeEntries(DB, report, modifyAllowed):
     mergeList = defaultdict(dict_list_factory)
     deleteList = list()
 
-    for entryNumber, entry in enumerate(DB.LexiconAllEntries()):
+    for entryNumber, entry in enumerate(project.LexiconAllEntries()):
         report.ProgressUpdate(entryNumber)
 
         MorphType = entry.LexemeFormOA.MorphTypeRA
         
-        tag = DB.LexiconGetFieldText(entry, tagsField)
+        tag = project.LexiconGetFieldText(entry, tagsField)
         if not tag: continue
         tag = tag.lower()
         
@@ -127,7 +127,7 @@ def MergeEntries(DB, report, modifyAllowed):
 
             # Usage count in the text corpus is different to the information given in
             # the deletion warning message.
-            usageCount = DB.LexiconEntryAnalysesCount(entry)
+            usageCount = project.LexiconEntryAnalysesCount(entry)
 
             __EntryMessage(entry, "to be deleted (used %i time%s in text corpus)" %
                                   (usageCount, "" if usageCount == 1 else "s"))
@@ -153,7 +153,7 @@ def MergeEntries(DB, report, modifyAllowed):
             
             # Record this entry for merging
             key = "{} [{}][{}]".format(entry.HomographForm,
-                                        DB.BestStr(MorphType.Name),
+                                        project.BestStr(MorphType.Name),
                                         POSList)
             mergeList[key][tag].append(entry)
 
@@ -207,7 +207,7 @@ def MergeEntries(DB, report, modifyAllowed):
 
         if merged:
             if DoCommands:
-                DB.LexiconSetFieldText(targetEntry, tagsField, TAG_MergeComplete)
+                project.LexiconSetFieldText(targetEntry, tagsField, TAG_MergeComplete)
                 __EntryMessage(targetEntry, "merged")
             else:
                 __EntryMessage(targetEntry, "to be merged")

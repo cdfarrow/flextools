@@ -3,7 +3,7 @@
 #   Reports.Dump_Published_Headwords_To_File
 #    - A FlexTools Module -
 #
-#   Dump all Headwords in a FLEx database to file.
+#   Dump all Headwords in a FLEx project to a file.
 #
 #   Kien-Wei Tseng
 #   April 2016
@@ -32,22 +32,22 @@ one value.)
 #----------------------------------------------------------------
 # The main processing function
 
-def MainFunction(DB, report, modifyAllowed):
+def MainFunction(project, report, modifyAllowed):
 
-    headwordsFile = "Headwords_Published_{0}.txt".format(DB.ProjectName())
+    headwordsFile = "Headwords_Published_{0}.txt".format(project.ProjectName())
     output = io.open(headwordsFile, mode="w", encoding="utf-8")
     headwords = []
-    for e in DB.LexiconAllEntries():
-        if DB.LexiconGetPublishInCount(e) > 0:
-            headwords.append(DB.LexiconGetHeadword(e))
+    for e in project.LexiconAllEntries():
+        if project.LexiconGetPublishInCount(e) > 0:
+            headwords.append(project.LexiconGetHeadword(e))
     numHeadwords = 0
     for headword in sorted(headwords, key=lambda s: s.lower()):
         output.write(headword + '\n')
         numHeadwords += 1
     report.Info("Dumped {0} headwords to file {1}".format(
                  numHeadwords, headwordsFile))
-    report.Info("Total Lexical Entries in Database = {}".format(
-                DB.LexiconNumberOfEntries()))
+    report.Info("Total Lexical Entries in Project = {}".format(
+                project.LexiconNumberOfEntries()))
     output.close()		
 
 #----------------------------------------------------------------

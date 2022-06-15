@@ -31,32 +31,32 @@ parts of speech.
 #----------------------------------------------------------------
 # The main processing function
 
-def MainFunction(DB, report, modifyAllowed):
+def MainFunction(project, report, modifyAllowed):
 
     # Global things in the Language Project
 
-    report.Info("Database created: %s" % DB.lp.DateCreated)
-    report.Info("Last modified: %s"    % DB.lp.DateModified)
+    report.Info("Project created: %s" % project.lp.DateCreated)
+    report.Info("Last modified: %s"    % project.lp.DateModified)
     report.Blank()    
  
 
     # Writing Systems 
 
-    vernWSs = DB.GetAllVernacularWSs()
-    analWSs = DB.GetAllAnalysisWSs()
+    vernWSs = project.GetAllVernacularWSs()
+    analWSs = project.GetAllAnalysisWSs()
     report.Info("%i Writing Systems: [Language Tag, Handle]"
                 % (len(vernWSs)+len(analWSs)))
     report.Info("   Vernacular:")
     for tag in vernWSs:
         report.Info("      %s [%s, %i]%s" %
-                    (DB.WSUIName(tag), tag, DB.WSHandle(tag),
-                     " {Default}" if DB.GetDefaultVernacularWS()[0] == tag else ""))
+                    (project.WSUIName(tag), tag, project.WSHandle(tag),
+                     " {Default}" if project.GetDefaultVernacularWS()[0] == tag else ""))
 
     report.Info("  Analysis:")
     for tag in analWSs:
         report.Info("      %s [%s, %i]%s" %
-                    (DB.WSUIName(tag), tag, DB.WSHandle(tag),
-                     " {Default}" if DB.GetDefaultAnalysisWS()[0] == tag else ""))
+                    (project.WSUIName(tag), tag, project.WSHandle(tag),
+                     " {Default}" if project.GetDefaultAnalysisWS()[0] == tag else ""))
     report.Blank()    
 
 
@@ -64,18 +64,18 @@ def MainFunction(DB, report, modifyAllowed):
 
     report.Info("Custom Fields:")
     report.Info("   Entry level:")
-    for cf in DB.LexiconGetEntryCustomFields():
+    for cf in project.LexiconGetEntryCustomFields():
         # Tuple of flid and user-defined name:
         report.Info("      %s [%i]" % (cf[1], cf[0]))
     report.Info("   Sense level:")
-    for cf in DB.LexiconGetSenseCustomFields():
+    for cf in project.LexiconGetSenseCustomFields():
         report.Info("      %s [%i]" % (cf[1], cf[0]))
     report.Blank()    
 
 
     # Grammatical Info (Parts of Speech)
     
-    posList = DB.GetPartsOfSpeech()
+    posList = project.GetPartsOfSpeech()
     report.Info("%i Parts of Speech:" % len(posList))
     for pos in posList:
         report.Info("    %s" % pos)

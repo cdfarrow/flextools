@@ -3,7 +3,7 @@
 #   Reports.Dump_Texts_To_File
 #    - A FlexTools Module -
 #
-#   Dump all Texts in a FLEx database to file.
+#   Dump all Texts in a FLEx project to a file.
 #
 #   Kien-Wei Tseng
 #   March 2016
@@ -31,13 +31,13 @@ Dump all texts to file.
 #----------------------------------------------------------------
 # The main processing function
 
-def MainFunction(DB, report, modifyAllowed):
+def MainFunction(project, report, modifyAllowed):
 
-    textsFile = "Texts_{0}.txt".format(DB.ProjectName())
+    textsFile = "Texts_{0}.txt".format(project.ProjectName())
     output = io.open(textsFile, mode="w", encoding="utf-8")
 
     numTexts = 0
-    for name, text in sorted(DB.TextsGetAll()):
+    for name, text in sorted(project.TextsGetAll()):
         output.write(name + '\n')
         output.write(text)
         output.write('\n\n')

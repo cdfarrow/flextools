@@ -125,7 +125,7 @@ class ModuleInfoPane(RichTextBox):
         if moduleDocs[FTM_ModifiesDB]:
              self.SelectionFont = UIGlobal.normalFont
              self.SelectionColor = Color.Red
-             self.AppendText("Modifies the database!\n")
+             self.AppendText("Can modify the project\n")
 
         # Module Synopsis
         self.SelectionColor = Color.DarkSlateBlue

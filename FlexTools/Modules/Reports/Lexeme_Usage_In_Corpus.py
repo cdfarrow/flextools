@@ -45,7 +45,7 @@ This module counts how many times lexical entries and senses have been
 assigned to wordforms in the text corpus. This is the total usage:
 that is, counting every occurance even in the same wordform.
 
-The statistics can be written into the FLEx database. To do this create
+The statistics can be written into the FLEx project. To do this create
 an entry-level and/or a sense-level custom field called 'Entry Frequency'
 and 'Sense Frequency' resepctively.
 Create the fields with type 'Number'. Both custom fields are optional: 
@@ -66,41 +66,41 @@ for analysis.
 #----------------------------------------------------------------
 # The main processing function
 
-def MainFunction(DB, report, modifyAllowed):
+def MainFunction(project, report, modifyAllowed):
 
     entryUsageField = None
     senseUsageField = None
 
     if modifyAllowed:
-        entryUsageField = DB.LexiconGetEntryCustomFieldNamed("Entry Frequency")
-        senseUsageField = DB.LexiconGetSenseCustomFieldNamed("Sense Frequency")
+        entryUsageField = project.LexiconGetEntryCustomFieldNamed("Entry Frequency")
+        senseUsageField = project.LexiconGetSenseCustomFieldNamed("Sense Frequency")
     
         if not (entryUsageField or senseUsageField):
             report.Warning("Usage custom fields don't exist. Please read the instructions.")
 
     report.Info("Lexeme Usage:")
 
-    numLexemes = DB.LexiconNumberOfEntries()
+    numLexemes = project.LexiconNumberOfEntries()
     report.ProgressStart(numLexemes)
 
     numAttested = 0
-    for entryNumber, entry in enumerate(DB.LexiconAllEntries()):
+    for entryNumber, entry in enumerate(project.LexiconAllEntries()):
         report.ProgressUpdate(entryNumber)
-        lexeme = DB.LexiconGetHeadword(entry)
+        lexeme = project.LexiconGetHeadword(entry)
         entryTotal = 0
         for sense in entry.SensesOS:
             senseCount = sense.SenseAnalysesCount
             if senseCount:
                 report.Info("%s (%s), %d" % (lexeme,
-                                             DB.LexiconGetSenseGloss(sense),
+                                             project.LexiconGetSenseGloss(sense),
                                              senseCount))
                 entryTotal += senseCount
                 
             if senseUsageField:
-                DB.LexiconSetFieldInteger(sense.Hvo, senseUsageField, senseCount)
+                project.LexiconSetFieldInteger(sense.Hvo, senseUsageField, senseCount)
 
         if entryUsageField:
-            DB.LexiconSetFieldInteger(entry.Hvo, entryUsageField, entryTotal)
+            project.LexiconSetFieldInteger(entry.Hvo, entryUsageField, entryTotal)
             
         if entryTotal > 0:
             numAttested += 1

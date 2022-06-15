@@ -39,7 +39,7 @@ if the gloss field is empty). Later senses are merged into earlier
 matching ones. Glosses, definitions, semantic domains, etc. are appended 
 if they are different.
 
-If database modification is permitted, then the commands are actioned, otherwise
+If project modification is permitted, then the commands are actioned, otherwise
 this module just reports duplicate senses.
 
 WARNING: Always back-up the project first, and then carefully review the results
@@ -49,18 +49,18 @@ to be sure there were no mistakes or unintended effects.
 
 #----------------------------------------------------------------
 
-def MergeSenses(DB, report, modifyAllowed):
+def MergeSenses(project, report, modifyAllowed):
 
-    numEntries = DB.LexiconNumberOfEntries()
+    numEntries = project.LexiconNumberOfEntries()
     report.Info("Scanning %s entries for duplicate senses..." % numEntries)
     report.ProgressStart(numEntries)
 
     DoMerge = AddTagToField = modifyAllowed
 
-    tagsField = DB.LexiconGetEntryCustomFieldNamed("FTFlags")
+    tagsField = project.LexiconGetEntryCustomFieldNamed("FTFlags")
     if not tagsField:
         report.Warning("FTFlags custom field doesn't exist at entry level")
-    elif not DB.LexiconFieldIsStringType(tagsField):
+    elif not project.LexiconFieldIsStringType(tagsField):
         report.Warning("FTFlags custom field is not of type Single-line Text")
         tagsField = None
     if AddTagToField and not tagsField:
@@ -71,7 +71,7 @@ def MergeSenses(DB, report, modifyAllowed):
     totalEntries = 0
     totalMerged  = 0
 
-    for entryNumber, entry in enumerate(DB.LexiconAllEntries()):
+    for entryNumber, entry in enumerate(project.LexiconAllEntries()):
         report.ProgressUpdate(entryNumber)
 
         mergeList = defaultdict(list)
@@ -102,7 +102,7 @@ def MergeSenses(DB, report, modifyAllowed):
                 report.Info(msg % (entry.HomographForm,
                                    senses[0].ShortName,
                                    senseNumbers),
-                            DB.BuildGotoURL(entry))
+                            project.BuildGotoURL(entry))
 
                 if DoMerge:
                     originalNumSenses = entry.SensesOS.Count
@@ -124,7 +124,7 @@ def MergeSenses(DB, report, modifyAllowed):
         if merged:
             totalEntries += 1
             if AddTagToField:
-                DB.LexiconAddTagToField(entry, tagsField, TAG_MergedSenses) 
+                project.LexiconAddTagToField(entry, tagsField, TAG_MergedSenses) 
             
     if DoMerge:
         report.Info("%i %s merged (in %i %s)" %

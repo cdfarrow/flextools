@@ -41,7 +41,7 @@ Pinyin Numbered (zh-CN-x-pyn) field.
 The three writing systems mentioned above must be configured in FLEx
 under Tools | Configure | Setup Writing Systems. Note that fields using
 the old 'cmn' locale are also supported, but this locale code should not be used in
-new databases.
+new projects.
 
 The Pinyin tone number field should first be generated from the Hanzi
 (zh-CN) field using either the Update_Tonenumber_Fields FLExTools Module
@@ -74,8 +74,8 @@ def UpdateReversalSortFields(project, report, modifyAllowed=False):
         global UpdatedSortStrings
         # Note that project is passed to each of these local functions otherwise
         # project is treated as a global and isn't released for garbage collection.
-        # That keeps the database locked so FT has to be restarted to use
-        # that database again.
+        # That keeps the project locked so FT has to be restarted to use
+        # that project again.
 
         hz = project.ReversalGetForm(entry, ChineseWS)
         tn = project.ReversalGetForm(entry, ChineseTonenumWS)
