@@ -250,9 +250,9 @@ class SortStringDB(dict):
             sortInfo = self[hz]
         except KeyError:
             if len(hz) > 1:
-                return "[Composed HZ not in project: %s]" % repr(hz)
+                return "[Composed HZ not in DB: %s]" % repr(hz)
             else:
-                return "[HZ not in project: %s]" % repr(hz)
+                return "[HZ not in DB: %s]" % repr(hz)
         try:
             return sortInfo[py]
         except KeyError:
