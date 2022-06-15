@@ -38,7 +38,7 @@ class ProjectList(ListView):
         self.Dock = DockStyle.Fill
 
         # appearance
-        self.BackColor = UIGlobal.rightPanelColor
+        self.BackColor = UIGlobal.leftPanelColor
         self.Font = UIGlobal.normalFont
 
         self.View = View.Details

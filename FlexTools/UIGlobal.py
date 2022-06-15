@@ -42,5 +42,5 @@ headingFont = Font(FontFamily.GenericSansSerif, 11.0)
 
 # Colours
 leftPanelColor  = Color.FromArgb(0xFA, 0xF8, 0xF0) # Light wheat
-rightPanelColor = Color.FromArgb(0xFF, 0xFA, 0xE0) # Medium wheat
+rightPanelColor = Color.FromArgb(0xFF, 0xFA, 0xE8) # Light cream
 helpDialogColor = Color.White
