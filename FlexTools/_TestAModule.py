@@ -8,8 +8,8 @@
 import os
 import sys
 import imp
+# import importlib - TODO: switch to using importlib
 import traceback
-# import importlib
 
 import logging
 logging.basicConfig(
@@ -81,12 +81,12 @@ def importModule(moduleFolderAndName):
 
 #----------------------------------------------------------------
 def usage():
-    print ("USAGE: _TestAModule <Project> <Module> ")
+    print ("USAGE: _TestAModule <Module> <Project>")
 
 
 #----------------------------------------------------------------
 
-def main(project, module):
+def main(module, project):
 
     # --- Import the module ---
     ftm = importModule(module)
@@ -133,11 +133,12 @@ if __name__ == "__main__":
         usage()
         sys.exit(1)
 
-    ProjectName  = sys.argv[1] 
-    ModuleToTest = sys.argv[2] 
+        
+    ModuleToTest = sys.argv[1]
+    ProjectName  = sys.argv[2]
 
     FLExInitialize()
 
-    main(ProjectName, ModuleToTest)
+    main(ModuleToTest, ProjectName)
 
     FLExCleanup()
