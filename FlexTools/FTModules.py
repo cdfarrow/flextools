@@ -74,7 +74,7 @@ class ModuleManager (object):
 
         try:
             self.project.OpenProject(projectName,
-                                writeEnabled = modifyAllowed)
+                                     writeEnabled = modifyAllowed)
         except:
             logger.error("Project failed to open: %s" % projectName)
             del self.project
@@ -84,7 +84,8 @@ class ModuleManager (object):
     def __closeProject(self):
         #logger.debug("__closeProject %s" % repr(self.project))
         if self.project:
-            # Free the LCM Cache to get fresh data next time
+            # Save any changes and release the LCM Cache.
+            self.project.CloseProject()
             del self.project
 
     def __buildExceptionMessages(self, e, msg):

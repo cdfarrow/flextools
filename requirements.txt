@@ -1,3 +1,3 @@
 configparser
 git+https://github.com/cdfarrow/cdfutils.git
-git+https://github.com/cdfarrow/flexlibs.git
+flexlibs==1.1.3
