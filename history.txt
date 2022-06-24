@@ -9,12 +9,13 @@ FLExTools History
 
 ====== History =======
 
-2.0.0 (Beta) - 25 May 2022
---------------------------
+2.1.1 - 24 Jun 2022
+-------------------
 
-+ Supports FieldWorks 9 only
++ Supports FieldWorks 9.0 through to 9.1.11
 + Works with Python 2.7, 3.5-3.8
-
++ Back-end FLEx interaction was split off into a separate library
+  called flexlibs, which is installed from PyPI.
 
 ----------------------------------------------------------- 
 
