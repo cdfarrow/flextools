@@ -125,7 +125,8 @@ def main(module, project):
         if extra:
             logger.info (">>>>  %s" % extra)
     
-        
+    FlexDB.CloseProject()
+    
 
 if __name__ == "__main__":
 
