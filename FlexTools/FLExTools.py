@@ -40,9 +40,10 @@ logger = logging.getLogger(__name__)
 
 # This call is required to initialise the threading mode for COM calls
 # (e.g. using the clipboard) It must be made before clr is imported.
-
-import ctypes
-ctypes.windll.ole32.CoInitialize(None)
+# Note: ctypes doesn't have winll on Linux
+if platform.system() == "Windows":
+    import ctypes
+    ctypes.windll.ole32.CoInitialize(None)
 
 import clr
 import System
