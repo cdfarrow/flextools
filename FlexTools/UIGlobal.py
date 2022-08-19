@@ -20,14 +20,14 @@ from System.Drawing import (Color,
 
 # Icon path details
 
-ICON_PATH0      = os.path.join(os.path.dirname(__file__), "__icons\\")
-ICON_PATH1      = os.path.join(ICON_PATH0, "IconBuffet Redmond Studio\\")
+ICON_PATH0      = os.path.join(os.path.dirname(__file__), "__icons/")
+ICON_PATH1      = os.path.join(ICON_PATH0, "IconBuffet Redmond Studio/")
 ICON_SUFFIX1    = "_16.gif"
-ICON_PATH2      = os.path.join(ICON_PATH0, "Fugue\\")
+ICON_PATH2      = os.path.join(ICON_PATH0, "Fugue/")
 ICON_SUFFIX2    = ".png"
 
-ApplicationIcon   = ICON_PATH0 + "flextools.ico"
-ModuleIcon        = ICON_PATH0 + "module.ico"
+ApplicationIcon   = ICON_PATH0 + "/Flextools.ico"
+ModuleIcon        = ICON_PATH0 + "/Module.ico"
 ToolbarIconParams = (ICON_PATH1, ICON_SUFFIX1)
 ReportIconParams  = (ICON_PATH2, ICON_SUFFIX2)
 

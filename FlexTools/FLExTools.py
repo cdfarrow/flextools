@@ -18,6 +18,7 @@ import sys
 sys.stdout = codecs.getwriter("utf-8")(sys.stdout)
 
 import os
+import platform
 import traceback
 
 
@@ -39,6 +40,7 @@ logger = logging.getLogger(__name__)
 
 # This call is required to initialise the threading mode for COM calls
 # (e.g. using the clipboard) It must be made before clr is imported.
+
 import ctypes
 ctypes.windll.ole32.CoInitialize(None)
 
@@ -108,7 +110,7 @@ class FTPanel(Panel):
         ButtonList = [
                       (self.__ChooseProject,
                        "Choose Project",
-                       "FLEX",
+                       "Flex",
                        "Select the FieldWorks project to operate on"),
                       (self.__EditCollections,
                        "Collections",
