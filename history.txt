@@ -9,6 +9,16 @@ FLExTools History
 
 ====== History =======
 
+2.1.2 - TBD
+-------------------
+
++ FLEx has a sharing mode that allows FLExTools to run on a project 
+  even when it is open in FieldWorks. Turn on the "Share project 
+  contents with programs on this computer" option in the Sharing tab 
+  in Project Properties.
++ Issue #20: Don't show the folder name in the module list
+
+
 2.1.1 - 24 Jun 2022
 -------------------
 

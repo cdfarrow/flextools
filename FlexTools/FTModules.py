@@ -197,8 +197,11 @@ class ModuleManager (object):
                 continue
 
             reporter.Blank()
+            # Issue #20 - only display the base name of the module 
+            # in the main UI.
+            displayName = moduleName.split(".", 1)[1]
             reporter.Info("Running %s (version %s)..." %
-                          (moduleName,
+                          (displayName,
                            str(self.__modules[moduleName].docs[FTM_Version])))
 
             try:
