@@ -126,7 +126,10 @@ class ModulesList(ListBox):
         for moduleFullName in contents:
             itemInfo = self.moduleManager.GetDocs(moduleFullName)
             if itemInfo:
-                composedString = "%s, version %s\n%s" %(moduleFullName,
+                # Issue #20 - only display the base name of the module 
+                # in the main UI.
+                displayName = moduleFullName.split(".", 1)[1]
+                composedString = "%s, version %s\n%s" %(displayName,
                                                        str(itemInfo[FTM_Version]),
                                                        itemInfo[FTM_Synopsis])
                 if itemInfo[FTM_ModifiesDB]:
