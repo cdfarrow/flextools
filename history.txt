@@ -1,15 +1,16 @@
-
+-----------------
 FLExTools History
 -----------------
 
 ==== Known Issues ====
 
 * Requires Python <= 3.8
+* Doesn't work with FieldWorks >= 9.1.15
 
 
 ====== History =======
 
-2.1.2 - TBD
+2.1.2 - 15 Oct 2022
 -------------------
 
 + FLEx has a sharing mode that allows FLExTools to run on a project 
@@ -17,6 +18,8 @@ FLExTools History
   contents with programs on this computer" option in the Sharing tab 
   in Project Properties.
 + Issue #20: Don't show the folder name in the module list
++ Fix issue whereby the FLEx interfacing breaks with the newly released 
+  pythonnet library (v3.0) by forcing use of pythonnet 2.5.
 
 
 2.1.1 - 24 Jun 2022
