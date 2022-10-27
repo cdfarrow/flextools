@@ -144,7 +144,13 @@ class FTPanel(Panel):
         return CustomToolBar(ButtonList,
                              UIGlobal.ToolbarIconParams)
 
-    def __init__(self, moduleManager, projectName, listOfModules, reloadFunction, progressFunction):
+    def __init__(self, 
+                 moduleManager, 
+                 projectName,
+                 warnOnModify,
+                 listOfModules, 
+                 reloadFunction, 
+                 progressFunction):
         Panel.__init__(self)
 
         self.Dock = DockStyle.Fill
@@ -157,6 +163,7 @@ class FTPanel(Panel):
         # -- Module list and Report window
         self.moduleManager = moduleManager
         self.projectName = projectName
+        self.warnOnModify = warnOnModify        
         self.listOfModules = listOfModules
         self.reloadFunction = reloadFunction
 
@@ -235,14 +242,15 @@ class FTPanel(Panel):
         self.reportWindow.Clear()
 
         if modifyAllowed:
-            dlgmsg = "Are you sure you want to make changes to the '%s' project? "\
-                      "Please back up the project first."
-            title = "Confirm allow changes"
-            result = MessageBox.Show(dlgmsg % self.projectName, title,
-                                     MessageBoxButtons.YesNo,
-                                     MessageBoxIcon.Question)
-            if (result == DialogResult.No):
-                return
+            if (self.warnOnModify):
+                dlgmsg = "Are you sure you want to make changes to the '%s' project? "\
+                          "Please back up the project first."
+                title = "Allow changes?"
+                result = MessageBox.Show(dlgmsg % self.projectName, title,
+                                         MessageBoxButtons.YesNo,
+                                         MessageBoxIcon.Question)
+                if (result == DialogResult.No):
+                    return
 
             message += " (Changes enabled)"
 
@@ -295,6 +303,9 @@ class FTPanel(Panel):
         self.reportWindow.Report("Project '%s' selected." % self.projectName)
         self.toolbar.UpdateButtonText(0, self.projectName)
 
+    def UpdateWarnOnModify(self, warnOnModify):
+        self.warnOnModify = warnOnModify
+        
     def ModuleInfo(self):
         if self.modulesList.SelectedIndex >= 0:
             module = self.listOfModules[self.modulesList.SelectedIndex]
@@ -424,6 +435,8 @@ class FTMainForm (Form):
         self.configuration = ConfigStore(FTPaths.CONFIG_PATH)
         if not self.configuration.currentCollection:
             self.configuration.currentCollection = "Examples"
+        if self.configuration.warnOnModify == None:
+            self.configuration.warnOnModify = True
 
         self.collectionsManager = FTCollections.CollectionsManager()
 
@@ -448,9 +461,10 @@ class FTMainForm (Form):
 
         self.UIPanel = FTPanel(self.moduleManager,
                                self.configuration.currentProject,
+                               self.configuration.warnOnModify,
                                listOfModules,
                                self.__LoadModules,
-                               self.__ProgressBar
+                               self.__ProgressBar,
                                )
         self.UIPanel.SetChooseProjectHandler(self.ChooseProject)
         self.UIPanel.SetEditCollectionsHandler(self.EditCollections)
