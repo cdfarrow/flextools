@@ -5,7 +5,7 @@
 #   Global settings, etc., for the FLExTools UI
 #
 #   Craig Farrow
-#   Oct 2009-2019
+#   Oct 2009-2022
 #
 
 import clr
@@ -20,7 +20,8 @@ from System.Drawing import (Color,
 
 # Icon path details
 
-ICON_PATH0      = os.path.join(os.path.dirname(__file__), "__icons\\")
+ICON_PATH0      = os.path.join(os.path.dirname(os.path.dirname(__file__)),
+                               "icons\\")
 ICON_PATH1      = os.path.join(ICON_PATH0, "IconBuffet Redmond Studio\\")
 ICON_SUFFIX1    = "_16.gif"
 ICON_PATH2      = os.path.join(ICON_PATH0, "Fugue\\")
