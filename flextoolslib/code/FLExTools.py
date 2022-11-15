@@ -10,12 +10,12 @@
 #   Copyright Craig Farrow, 2010 - 2019
 #
 
-from __future__ import unicode_literals
-from builtins import str
+# from __future__ import unicode_literals
+# from builtins import str
 
-import codecs
 import sys
-sys.stdout = codecs.getwriter("utf-8")(sys.stdout)
+# import codecs
+# sys.stdout = codecs.getwriter("utf-8")(sys.stdout)
 
 import os
 import traceback
@@ -72,8 +72,8 @@ from System.Windows.Forms import (Application, BorderStyle, Button,
 
 from System.Threading import Thread, ThreadStart, ApartmentState
 
-import FTPaths
-import Version
+from . import FTPaths
+from . import Version
 
 logger.info("FLExTools %s" % Version.number)
 
@@ -89,12 +89,12 @@ except Exception as e:
     logger.error("Fatal exception importing flexlibs:\n%s" % traceback.format_exc())
     sys.exit(1)
 
-import UIGlobal
-import UICollections, FTCollections
-import UIModulesList, UIReport, UIModuleBrowser
-from UIProjectChooser import ProjectChooser
-import FTModules
-import Help
+from . import UIGlobal
+from . import UICollections, FTCollections
+from . import UIModulesList, UIReport, UIModuleBrowser
+from .UIProjectChooser import ProjectChooser
+from . import FTModules
+from . import Help
 
 from cdfutils.DotNet import CustomMainMenu, CustomToolBar
 from cdfutils.Config import ConfigStore
@@ -579,4 +579,3 @@ def main():
 
     FLExCleanup()
 
-main()

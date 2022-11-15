@@ -19,7 +19,7 @@ import os
 
 from configparser import ConfigParser
 
-from FTPaths import COLLECTIONS_PATH
+from .FTPaths import COLLECTIONS_PATH
 
 # ---- Exceptions ----
 

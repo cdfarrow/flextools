@@ -19,8 +19,8 @@ from builtins import str
 
 import os
 
-import UIGlobal
-from FTModuleClass import *
+from . import UIGlobal
+from .FTModuleClass import *
 
 from System.Drawing import (Color, Point, Rectangle, Size, Bitmap,
                             Icon,

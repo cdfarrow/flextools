@@ -14,8 +14,8 @@ from builtins import str
 
 import os
 
-import UIGlobal
-import FTReport
+from . import UIGlobal
+from . import FTReport
 
 from System.Drawing import (
                             Size, Bitmap, Image, Icon,

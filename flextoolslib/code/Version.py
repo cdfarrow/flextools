@@ -4,7 +4,8 @@
 #   Current version number for FLExTools
 #
 
-number = "2.1.2"
+from .. import version
+number = version        # From __init__.py
 
 # Minimum and maximum supported versions of Fieldworks
 # (Later versions should work if the LCM interface hasn't changed.)

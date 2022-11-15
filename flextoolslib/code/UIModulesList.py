@@ -6,15 +6,15 @@
 #   A custom list for selecting the modules in the main FLexTools UI.
 #
 #
-#   Copyright Craig Farrow, 2010 - 2018
+#   Copyright Craig Farrow, 2010 - 2022
 #
 
 from __future__ import unicode_literals
 from builtins import str
 
-import UIGlobal
-import Version
-from FTModuleClass import *
+from . import UIGlobal
+from . import Version
+from .FTModuleClass import *
 
 from System.Drawing import (Color, SystemColors, Point, PointF, Rectangle,
                             Size, Bitmap, Image, Icon, SystemIcons,

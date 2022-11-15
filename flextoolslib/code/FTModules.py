@@ -20,20 +20,20 @@ import sys
 import imp
 import traceback
 
-import Version
+from . import Version
 import System
 
-import FTReport
+from . import FTReport
 from flexlibs import (
     FLExProject, 
     FP_ProjectError, 
     FP_RuntimeError,
     )
 
-from FTModuleClass import *
+from .FTModuleClass import *
 
 # Loads .pth files from Modules\
-from FTPaths import MODULES_PATH
+from .FTPaths import MODULES_PATH
 import site
 site.addsitedir(MODULES_PATH)
 

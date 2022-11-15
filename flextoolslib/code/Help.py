@@ -9,15 +9,15 @@
 #   Nov 2010
 #
 
-import UIGlobal
-import Version
+from . import UIGlobal
+from . import Version
 import os
 import sys
 
 from flexlibs import FWShortVersion, FWCodeDir, APIHelpFile
 
 
-from FTModules import ModuleManager
+from .FTModules import ModuleManager
 
 from System.Drawing import (Color, SystemColors, Point, PointF, Rectangle,
                             Size, Bitmap, Image, Icon,

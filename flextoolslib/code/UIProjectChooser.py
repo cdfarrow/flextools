@@ -6,10 +6,10 @@
 #   Dialog for selecting a Fieldworks project.
 #
 #
-#   Copyright Craig Farrow, 2010 - 2018
+#   Copyright Craig Farrow, 2010 - 2022
 #
 
-import UIGlobal
+from . import UIGlobal
 from flexlibs import FLExInitialize, FLExCleanup
 from flexlibs import AllProjectNames
 

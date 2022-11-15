@@ -19,10 +19,10 @@
 #   Oct 2009
 #
 
-import UIGlobal
-from UIModuleBrowser import ModuleBrowser
-import FTCollections
-import FTModules
+from . import UIGlobal
+from .UIModuleBrowser import ModuleBrowser
+from . import FTCollections
+from . import FTModules
 
 
 from System.Drawing import (Color, SystemColors, Point, Rectangle, Size, Bitmap,
