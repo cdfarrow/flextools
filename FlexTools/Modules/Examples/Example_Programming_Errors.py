@@ -11,9 +11,7 @@
 #   Platforms: Python .NET
 #
 
-from __future__ import unicode_literals
-
-from FTModuleClass import *
+from flextools import *
 
 import logging
 logger = logging.getLogger(__name__)

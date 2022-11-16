@@ -10,9 +10,7 @@
 #   Platforms: Python .NET
 #
 
-from __future__ import unicode_literals
-
-from FTModuleClass import *
+from flextools import *
 
 #----------------------------------------------------------------
 # Documentation that the user sees:

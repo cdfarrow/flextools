@@ -10,7 +10,7 @@
 #   Platforms: Python .NET and IronPython
 #
 
-from FTModuleClass import *
+from flextools import *
 
 
 #----------------------------------------------------------------

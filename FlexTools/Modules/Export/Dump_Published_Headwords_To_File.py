@@ -11,9 +11,7 @@
 #   Platforms: Python .NET and IronPython
 #
 
-from __future__ import unicode_literals
-
-from FTModuleClass import *
+from flextools import *
 import io
 
 #----------------------------------------------------------------

@@ -9,14 +9,12 @@
 #   Platforms: Python.NET and IronPython
 #
 
-from __future__ import unicode_literals
+from flextools import *
 
-from FTModuleClass import *
 from SIL.LCModel import *
 from SIL.LCModel.Core.KernelInterfaces import ITsString, ITsStrBldr
 
 from collections import defaultdict
-
 
 #----------------------------------------------------------------
 # Documentation that the user sees:

@@ -14,9 +14,8 @@
 #   Platforms: Python.NET and IronPython
 #
 
-from __future__ import unicode_literals
+from flextools import *
 
-from FTModuleClass import *
 from SIL.LCModel import *
 
 from collections import defaultdict

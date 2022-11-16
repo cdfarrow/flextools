@@ -25,7 +25,7 @@ from flexlibs import (
     FP_ProjectError, 
     FP_FileNotFoundError)
 
-from FTModuleClass import FTM_ModuleError
+from flextools import FTM_ModuleError
 import FTReport
 import FTPaths
 

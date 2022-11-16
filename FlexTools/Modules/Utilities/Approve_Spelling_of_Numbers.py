@@ -13,14 +13,14 @@
 #   Platforms: Python.NET
 #
 
-from FTModuleClass import *
+from flextools import *
+
 from SIL.LCModel import *
 from SIL.LCModel.Core.KernelInterfaces import ITsString, ITsStrBldr   
 from SIL.LCModel import SpellingStatusStates
 
 import re
 from types import *
-
 
 #----------------------------------------------------------------
 # Configurables:
