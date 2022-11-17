@@ -14,7 +14,7 @@ FOR %%C IN ("Init"
     
 :Usage
     echo Usage:
-    echo      make init         - Install the libraries that are needed
+    echo      make init         - Install the libraries for building
     echo      make runtests     - Run pytest
     echo      make clean        - Clean out build files
     echo      make build        - Build the project
