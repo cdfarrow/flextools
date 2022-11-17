@@ -10,7 +10,7 @@
 #
 
 from . import UIGlobal
-from . import Version
+from .. import version
 import os
 import sys
 
@@ -52,7 +52,7 @@ class AboutInfo(RichTextBox):
 
         self.SelectionColor = Color.DarkSlateBlue
         self.SelectionFont  = UIGlobal.smallFont
-        self.AppendText("%s\n\n" % Version.number)
+        self.AppendText("%s\n\n" % version)
 
         self.SelectionColor = Color.DarkSlateBlue
         self.SelectionFont = UIGlobal.normalFont

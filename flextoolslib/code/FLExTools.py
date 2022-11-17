@@ -18,7 +18,7 @@ import traceback
 # -----------------------------------------------------------
 import logging
 
-if len(sys.argv) > 1 and (sys.argv[1] == "DEBUG"):
+if (sys.argv[-1].lower() == "debug"):
     loggingLevel = logging.DEBUG
 else:
     loggingLevel = logging.INFO
@@ -28,6 +28,7 @@ logging.basicConfig(filename='flextools.log',
                     level=loggingLevel)
 
 logger = logging.getLogger(__name__)
+
 # -----------------------------------------------------------
 
 
@@ -66,17 +67,17 @@ from System.Windows.Forms import (Application, BorderStyle, Button,
 
 from System.Threading import Thread, ThreadStart, ApartmentState
 
-from . import FTPaths
-from . import Version
+from .FTPaths import CONFIG_PATH
+from .. import version, MinFWVersion, MaxFWVersion
 
-logger.info("FLExTools %s" % Version.number)
+logger.info(f"FLExTools version: {version}")
 
 try:
     from flexlibs import FLExInitialize, FLExCleanup
 
 except Exception as e:
     MessageBox.Show("There was an issue interfacing with FieldWorks:\n%s\n(This version of FLExTools has been tested with Fieldworks versions %s - %s.)\nSee flextools.log for more details."
-                    % (e, Version.MinFWVersion, Version.MaxFWVersion),
+                    % (e, MinFWVersion, MaxFWVersion),
                     "FLExTools: Fatal Error",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation)
@@ -422,11 +423,11 @@ class FTMainForm (Form):
     def __init__(self):
         Form.__init__(self)
         self.ClientSize = Size(700, 500)
-        self.Text = "FLExTools " + Version.number
+        self.Text = "FLExTools " + version
 
         ## Get configurables - current project, current collection
-        logger.debug("Reading configuration")
-        self.configuration = ConfigStore(FTPaths.CONFIG_PATH)
+        logger.debug(f"Reading configuration from {CONFIG_PATH}")
+        self.configuration = ConfigStore(CONFIG_PATH)
         if not self.configuration.currentCollection:
             self.configuration.currentCollection = "Examples"
         if self.configuration.warnOnModify == None:

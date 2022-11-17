@@ -6,12 +6,28 @@
 
 version = "2.2.0a"
 
+# Minimum and maximum supported versions of Fieldworks
+# (Later versions should work if the LCM interface hasn't changed.)
+MinFWVersion = "9.0.4"
+MaxFWVersion = "9.1.12"
+
+
 # Define exported classes, etc. at the top level of the package
 
+# The main application
 from .code.FLExTools import (
     main, 
     )
 
+# The full paths to the config file (flextools.ini), and the Modules and 
+# Collections folders.
+from .code.FTPaths import (
+    CONFIG_PATH,
+    MODULES_PATH,
+    COLLECTIONS_PATH,
+    )
+    
+# The Modules class and documentation constants
 from .code.FTModuleClass import (
     FlexToolsModuleClass, 
     FTM_Name,

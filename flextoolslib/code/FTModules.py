@@ -20,7 +20,6 @@ import sys
 import imp
 import traceback
 
-from . import Version
 import System
 
 from . import FTReport

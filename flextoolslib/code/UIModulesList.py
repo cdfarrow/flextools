@@ -13,7 +13,6 @@ from __future__ import unicode_literals
 from builtins import str
 
 from . import UIGlobal
-from . import Version
 from .FTModuleClass import *
 
 from System.Drawing import (Color, SystemColors, Point, PointF, Rectangle,
