@@ -8,9 +8,18 @@
 #   Mar 2012
 #
 
-import os
+from os.path import dirname, join
+from sys import argv
+
+import logging
+logger = logging.getLogger(__name__)
+
+# We're running from bin\flextools.exe, so jump up a level:
+BASE_PATH = dirname(dirname(argv[0]))
+logger.info(f"Current working directory: {BASE_PATH}")
 
 # Create absolute paths relative to this directory
-MODULES_PATH = os.path.join(os.path.dirname(__file__), "Modules")
-COLLECTIONS_PATH = os.path.join(os.path.dirname(__file__), "Collections")
-CONFIG_PATH = os.path.join(os.path.dirname(__file__), "flextools.ini")
+CONFIG_PATH      = join(BASE_PATH, "flextools.ini")
+MODULES_PATH     = join(BASE_PATH, "Modules")
+COLLECTIONS_PATH = join(BASE_PATH, "Collections")
+
