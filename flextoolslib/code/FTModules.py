@@ -182,11 +182,13 @@ class ModuleManager (object):
         try:
             self.__openProject(projectName, modifyAllowed)
         except FP_ProjectError as e:
+            logger.error(e.message)
             reporter.Error("Error opening project: %s"
                            % e.message, e.message)
             return False
         except Exception as e:
             msg, details = self.__buildExceptionMessages(e, "OpenProject failed with exception {}!")
+            logger.error(details)
             reporter.Error(msg, details)
             return False
 
