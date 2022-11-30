@@ -9,7 +9,7 @@ version = "2.2.0a"
 # Minimum and maximum supported versions of Fieldworks
 # (Later versions should work if the LCM interface hasn't changed.)
 MinFWVersion = "9.0.4"
-MaxFWVersion = "9.1.12"
+MaxFWVersion = "9.1.16"
 
 
 # Define exported classes, etc. at the top level of the package
