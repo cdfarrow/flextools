@@ -1,0 +1,9 @@
+How to build Chinese Tools packages
+-----------------------------------
+
+1. Create Full ZIP for archiving.
+	1. Delete all .pyc and .log files from the Chinese tree
+	2. Create ZIP file with Chinese.pth + Chinese\
+	3. Name it "ChineseTools-MASTER-<date>.zip" (date in YYYY-MM-DD format)
+
+
