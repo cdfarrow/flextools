@@ -29,8 +29,10 @@ FOR %%C IN ("Init"
     exit
     
 :DoBuild
-    @REM Build the wheel with setuptools
-    %PYTHON% -m build -w
+    @REM Build the wheel for flextoolslibs with setuptools
+    %PYTHON% -m build -w -n
+    @REM Build the main FlexTools zip file
+    %PYTHON% makezip.py
     exit
     
 :DoPublish
