@@ -40,6 +40,7 @@ logging.basicConfig(filename='flextools.log',
 
 logger = logging.getLogger(__name__)
 
+
 # -----------------------------------------------------------
 # Paths and configuration
 # -----------------------------------------------------------
@@ -48,7 +49,6 @@ from .. import version
 logger.info(f"FLExTools version: {version}")
 
 from cdfutils.Config import ConfigStore
-
 
 
 #----------------------------------------------------------- 
@@ -80,11 +80,10 @@ except Exception as e:
 
 logger.info(f"flexlibs imported successfully")
 
+
 #----------------------------------------------------------- 
 # UI
 #----------------------------------------------------------- 
-
-
 
 import clr
 import System
@@ -93,7 +92,6 @@ clr.AddReference("System.Windows.Forms")
 from System.Windows.Forms import Application
 
 from .UIMain import FTMainForm
-
 
 
 # ------------------------------------------------------------------

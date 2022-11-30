@@ -5,7 +5,6 @@ set PYTHON=py -3.8
 
 REM Check that the argument is a valid command, and do it. /I ignores case.
 FOR %%C IN ("Init"
-            "RunTests"
             "Clean"
             "Build"
             "Publish") DO (
@@ -15,7 +14,6 @@ FOR %%C IN ("Init"
 :Usage
     echo Usage:
     echo      make init         - Install the libraries for building
-    echo      make runtests     - Run pytest
     echo      make clean        - Clean out build files
     echo      make build        - Build the project
     echo      make publish      - Publish the project to PyPI
@@ -25,17 +23,13 @@ FOR %%C IN ("Init"
     %PYTHON% -m pip install -r requirements.txt
     exit
     
-:DoRunTests
-    %PYTHON% -m pytest
-    exit
-
 :DoClean
     rmdir /s /q ".\build"
     rmdir /s /q ".\dist"
     exit
     
 :DoBuild
-    @REM Build the wheel & the exe with setuptools
+    @REM Build the wheel with setuptools
     %PYTHON% -m build -w
     exit
     
