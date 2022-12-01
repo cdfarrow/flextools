@@ -1,5 +1,5 @@
 #
-#   _ListProjects
+#   ListProjects
 #
 #   List the Fieldworks projects on this system.
 #
