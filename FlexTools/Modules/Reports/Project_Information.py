@@ -10,7 +10,7 @@
 #   Platforms: Python .NET
 #
 
-from flextools import *
+from flextoolslib import *
 
 #----------------------------------------------------------------
 # Documentation that the user sees:

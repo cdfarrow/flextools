@@ -11,7 +11,7 @@
 #   Platforms: Python .NET
 #
 
-from flextools import *
+from flextoolslib import *
 
 import logging
 logger = logging.getLogger(__name__)

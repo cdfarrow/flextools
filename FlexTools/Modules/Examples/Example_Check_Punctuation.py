@@ -18,7 +18,7 @@
 # Platforms: Python .NET and IronPython
 #
 
-from flextools import *
+from flextoolslib import *
 
 import re
 from types import *

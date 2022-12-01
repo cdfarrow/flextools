@@ -10,7 +10,7 @@
 #   Platforms: Python .NET and IronPython
 #
 
-from flextools import *
+from flextoolslib import *
 
 
 #----------------------------------------------------------------

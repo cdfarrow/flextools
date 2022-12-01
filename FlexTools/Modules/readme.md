@@ -14,7 +14,7 @@ Imports
 -------
 
 ```python
-from FTModuleClass import *
+from flextoolslib import *
 
 #(These are needed for string operations)
 from SIL.LCModel.Core.KernelInterfaces import ITsString, ITsStrBldr

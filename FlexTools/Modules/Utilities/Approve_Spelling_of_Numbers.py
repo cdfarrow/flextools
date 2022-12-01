@@ -13,7 +13,7 @@
 #   Platforms: Python.NET
 #
 
-from flextools import *
+from flextoolslib import *
 
 from SIL.LCModel import *
 from SIL.LCModel.Core.KernelInterfaces import ITsString, ITsStrBldr   

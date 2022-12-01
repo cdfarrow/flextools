@@ -14,7 +14,7 @@
 #   Platforms: Python .NET and IronPython
 #
 
-from flextools import *
+from flextoolslib import *
 
 #----------------------------------------------------------------
 # Documentation that the user sees:
