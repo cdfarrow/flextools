@@ -6,7 +6,10 @@
 #   Copyright Craig Farrow, 2022
 #
 
-from flextools import version
+import sys
+sys.path.append("FlexTools/scripts/")
+
+from Version import FlexToolsVersion
 
 import pathlib
 from zipfile import ZipFile, ZIP_DEFLATED
@@ -20,7 +23,7 @@ from zipfile import ZipFile, ZIP_DEFLATED
 
 FTPath = pathlib.Path("FlexTools")
 
-ZIPFILE_NAME = f"dist\\FlexTools_{version}.zip"
+ZIPFILE_NAME = f"dist\\FlexTools_{FlexToolsVersion}.zip"
 
 PATH_PATTERNS = (
     "*.*",
@@ -52,5 +55,4 @@ with ZipFile(ZIPFILE_NAME, 'w', ZIP_DEFLATED) as z:
         for fn in filter(includeFile, FTPath.glob(pathPattern)):
             print(f"adding '{fn}'")
             z.write(fn)
-
 

@@ -383,10 +383,10 @@ class FTMainForm (Form):
         if hasattr(self, "UIPanel"):
             self.UIPanel.RefreshModules()
 
-    def __init__(self):
+    def __init__(self, appVersion):
         Form.__init__(self)
         self.ClientSize = Size(700, 500)
-        self.Text = "FLExTools " + version
+        self.Text = "FLExTools " + appVersion
 
         ## Get configurables - current project, current collection
         logger.debug(f"Reading configuration from {CONFIG_PATH}")

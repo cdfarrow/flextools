@@ -2,6 +2,7 @@
 #   A shell module to launch FlexTools
 #
 
-import flextools
+import Version
+import flextoolslib
 
-flextools.main()
+flextoolslib.main(Version.FlexToolsVersion)

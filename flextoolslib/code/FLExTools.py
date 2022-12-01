@@ -95,11 +95,11 @@ from .UIMain import FTMainForm
 
 
 # ------------------------------------------------------------------
-def main():
+def main(appVersion=""):
     FLExInitialize()
 
     logger.debug("Creating MainForm")
-    form = FTMainForm()
+    form = FTMainForm(appVersion)
     logger.debug("Launching WinForms Application")
     Application.Run(form)
 

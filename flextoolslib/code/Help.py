@@ -52,7 +52,7 @@ class AboutInfo(RichTextBox):
 
         self.SelectionColor = Color.DarkSlateBlue
         self.SelectionFont  = UIGlobal.smallFont
-        self.AppendText("%s\n\n" % version)
+        self.AppendText(f"({version})\n\n")     # The flextoolslib version
 
         self.SelectionColor = Color.DarkSlateBlue
         self.SelectionFont = UIGlobal.normalFont
