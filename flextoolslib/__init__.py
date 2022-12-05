@@ -4,7 +4,7 @@
 #               FieldWorks Language Explorer projects.
 #----------------------------------------------------------------------------
 
-version = "2.2.0a"
+version = "2022.12.0"
 
 # Minimum and maximum supported versions of Fieldworks
 # (Later versions should work if the LCM interface hasn't changed.)
