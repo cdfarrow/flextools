@@ -37,22 +37,23 @@ func = GetRef("Do" & WScript.Arguments.Item(0))
 WshShell = Null
 
 '----------------------------------------------------------- 
-Function Error()
+Function ErrorMsg()
     MsgBox("Error running FlexTools with command '" & PY_CMD & "'. Please run InstallOrUpdate.vbs, then try again.")
 End Function
 
 Function DoRun()
     rc = WshShell.Run(FT_CMD, 0, True)
-    If rc <> 0 Then
-        Error
-    End If
+    If rc <> 0 Then ErrorMsg
 End Function
 
 Function DoDebug()
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    If fso.FileExists("flextools.log") Then
+        fso.DeleteFile("flextools.log")
+    End If
     rc = WshShell.Run(FT_CMD&" DEBUG", 0, True)
-    If rc <> 0 Then
-        Error
-    Else
+    If rc <> 0 Then ErrorMsg
+    If fso.FileExists("flextools.log") Then
         WshShell.Run("notepad flextools.log")
     End If
 End Function
