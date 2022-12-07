@@ -37,3 +37,7 @@ from .code.FTModuleClass import (
     FTM_Help,
     FTM_Description,
     )
+
+from .misc.RunModule import (
+    RunModule, 
+    )
