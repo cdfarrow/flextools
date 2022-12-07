@@ -24,6 +24,26 @@ import traceback
 
 
 # -----------------------------------------------------------
+# Imports
+# -----------------------------------------------------------
+
+# This call is required to initialise the threading mode for COM calls
+# (e.g. using the clipboard) It must be made before clr is imported.
+import ctypes
+ctypes.windll.ole32.CoInitialize(None)
+
+
+import clr
+import System
+
+clr.AddReference("System.Windows.Forms")
+from System.Windows.Forms import Application
+from System.Windows.Forms import (
+        MessageBox, 
+        MessageBoxButtons, 
+        MessageBoxIcon)
+
+# -----------------------------------------------------------
 # Logging
 # -----------------------------------------------------------
 
@@ -55,12 +75,6 @@ from cdfutils.Config import ConfigStore
 # flexlibs
 #----------------------------------------------------------- 
 
-# This call is required to initialise the threading mode for COM calls
-# (e.g. using the clipboard) It must be made before clr is imported.
-import ctypes
-ctypes.windll.ole32.CoInitialize(None)
-
-
 from .. import MinFWVersion, MaxFWVersion
 
 try:
@@ -84,12 +98,6 @@ logger.info(f"flexlibs imported successfully")
 #----------------------------------------------------------- 
 # UI
 #----------------------------------------------------------- 
-
-import clr
-import System
-
-clr.AddReference("System.Windows.Forms")
-from System.Windows.Forms import Application
 
 from .UIMain import FTMainForm
 
