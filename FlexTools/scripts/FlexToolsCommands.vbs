@@ -32,7 +32,7 @@ End If
 
 Set WshShell = CreateObject("WScript.Shell")
 
-func = GetRef( "Do" & WScript.Arguments.Item(0))
+func = GetRef("Do" & WScript.Arguments.Item(0))
 
 WshShell = Null
 
@@ -59,7 +59,7 @@ End Function
 
 Function DoInstall()
     ' Use CMD so we can do a pause to keep the output visible.
-    rc = WshShell.Run("%comspec% /c """&PY_CMD&" -m pip install --upgrade flextoolslib & pause""", 1, True)
+    rc = WshShell.Run("%comspec%  /c """&PY_CMD&" -m pip install --upgrade -r scripts\requirements.txt & pause""", 1, True)
 End Function
 
 Function DoList()
