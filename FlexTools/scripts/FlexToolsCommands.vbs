@@ -16,6 +16,7 @@
 '       Run      - run the program
 '       Debug    - run FlexTools with debugging output
 '       Install  - run pip to install or upgrade flextoolslib
+'       List     - output a list of all the FieldWorks projects
 '
 
 PY_CMD = "py -3.8"
@@ -28,8 +29,6 @@ If WScript.Arguments.Count > 1 Then
     FT_CMD = FT_CMD & " " & WScript.Arguments.Item(1)
 End If
 
-
-MsgBox FT_CMD
 
 Set WshShell = CreateObject("WScript.Shell")
 
@@ -61,6 +60,11 @@ End Function
 Function DoInstall()
     ' Use CMD so we can do a pause to keep the output visible.
     rc = WshShell.Run("%comspec% /c """&PY_CMD&" -m pip install --upgrade flextoolslib & pause""", 1, True)
+End Function
+
+Function DoList()
+    ' Use CMD so we can do a pause to keep the output visible.
+    rc = WshShell.Run("%comspec% /c """&PY_CMD&" .\scripts\ListProjects.py & pause""", 1, True)
 End Function
 '----------------------------------------------------------- 
 
