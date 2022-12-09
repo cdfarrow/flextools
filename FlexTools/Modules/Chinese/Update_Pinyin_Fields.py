@@ -15,7 +15,7 @@ from builtins import str
 
 import unicodedata
 
-from FTModuleClass import *
+from flextoolslib import *
 
 import site
 site.addsitedir(r"Lib")

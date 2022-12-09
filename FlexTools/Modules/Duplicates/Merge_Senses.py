@@ -11,9 +11,8 @@
 #   Platforms: Python.NET
 #
 
-from __future__ import unicode_literals
+from flextoolslib import *
 
-from FTModuleClass import *
 from SIL.LCModel import *
 from SIL.LCModel.Core.KernelInterfaces import ITsString, ITsStrBldr   
 
@@ -21,7 +20,6 @@ from __DuplicatesConfig import *
 
 from collections import defaultdict
 from types import *
-
 
 #----------------------------------------------------------------
 # Documentation that the user sees:

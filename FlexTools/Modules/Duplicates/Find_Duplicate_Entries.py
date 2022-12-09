@@ -16,9 +16,8 @@
 #   Platforms: Python .NET and IronPython
 #
 
-from __future__ import unicode_literals
+from flextoolslib import *
 
-from FTModuleClass import *
 from SIL.LCModel import *
 from SIL.LCModel import MoMorphTypeTags
 
@@ -26,10 +25,6 @@ from __DuplicatesConfig import *
 
 from collections import defaultdict
 from types import *
-
-
-
-# from SIL.FieldWorks.FDO import MoMorphTypeTags
 
 #----------------------------------------------------------------
 # Documentation that the user sees:

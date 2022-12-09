@@ -3,8 +3,9 @@
 #   Chinese.Generate Reversal Sort Field Only
 #    - A FlexTools Module -
 #
-#   Finds the Chinese Reversal Index and uses the Hanzi field to generate the Pinyin Numbered
-#   field, and then uses those to populate the Sort field. See documentation below for the Writing System
+#   Finds the Chinese Reversal Index and uses the Hanzi field to 
+#   generate the Pinyin Numbered field, and then uses those to populate 
+#   the Sort field. See documentation below for the Writing System
 #   codes.
 #
 #   C D Farrow
@@ -13,10 +14,7 @@
 #   Platforms: Python .NET and IronPython
 #
 
-from __future__ import unicode_literals
-from __future__ import print_function
-from FTModuleClass import *
-
+from flextoolslib import *
 
 #----------------------------------------------------------------
 # Documentation for the user:
