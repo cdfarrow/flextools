@@ -19,14 +19,14 @@
 '       List     - output a list of all the FieldWorks projects
 '
 
-PY_CMD = "py -3.8"
+PYTHON = "py -3.8"
 
-FT_CMD = PY_CMD&" .\scripts\RunFlexTools.py"
+FLEXTOOLS = PYTHON & " .\scripts\RunFlexTools.py"
 
 
 ' The ini file name/path can be supplied as an argument.
 If WScript.Arguments.Count > 1 Then
-    FT_CMD = FT_CMD & " " & WScript.Arguments.Item(1)
+    FLEXTOOLS = FLEXTOOLS & " " & WScript.Arguments.Item(1)
 End If
 
 
@@ -38,11 +38,11 @@ WshShell = Null
 
 '----------------------------------------------------------- 
 Function ErrorMsg()
-    MsgBox("Error running FlexTools with command '" & PY_CMD & "'. Please run InstallOrUpdate.vbs, then try again.")
+    MsgBox("Error running FlexTools with command '" & PYTHON & "'. Please run InstallOrUpdate.vbs, then try again.")
 End Function
 
 Function DoRun()
-    rc = WshShell.Run(FT_CMD, 0, True)
+    rc = WshShell.Run(FLEXTOOLS, 0, True)
     If rc <> 0 Then ErrorMsg
 End Function
 
@@ -51,7 +51,7 @@ Function DoDebug()
     If fso.FileExists("flextools.log") Then
         fso.DeleteFile("flextools.log")
     End If
-    rc = WshShell.Run(FT_CMD&" DEBUG", 0, True)
+    rc = WshShell.Run(FLEXTOOLS & " DEBUG", 0, True)
     If rc <> 0 Then ErrorMsg
     If fso.FileExists("flextools.log") Then
         WshShell.Run("notepad flextools.log")
@@ -60,12 +60,12 @@ End Function
 
 Function DoInstall()
     ' Use CMD so we can do a pause to keep the output visible.
-    rc = WshShell.Run("%comspec%  /c """&PY_CMD&" -m pip install --upgrade -r scripts\requirements.txt & pause""", 1, True)
+    rc = WshShell.Run("%comspec%  /c """&PYTHON&" -m pip install --upgrade -r scripts\requirements.txt & pause""", 1, True)
 End Function
 
 Function DoList()
     ' Use CMD so we can do a pause to keep the output visible.
-    rc = WshShell.Run("%comspec% /c """&PY_CMD&" .\scripts\ListProjects.py & pause""", 1, True)
+    rc = WshShell.Run("%comspec% /c """&PYTHON&" .\scripts\ListProjects.py & pause""", 1, True)
 End Function
 '----------------------------------------------------------- 
 
