@@ -17,25 +17,30 @@ FOR %%C IN ("Init"
     echo      make clean        - Clean out build files
     echo      make build        - Build the project
     echo      make publish      - Publish the project to PyPI
-    exit
+    goto :End
 
 :DoInit
     %PYTHON% -m pip install -r requirements.txt
-    exit
+    %PYTHON% -m pip install -r requirements-dev.txt
+    goto :End
     
 :DoClean
     rmdir /s /q ".\build"
     rmdir /s /q ".\dist"
-    exit
+    goto :End
     
 :DoBuild
     @REM Build the wheel for flextoolslibs with setuptools
-    %PYTHON% -m build -w -n
+    %PYTHON% -m build -w
+    
     @REM Build the main FlexTools zip file
     %PYTHON% makezip.py
-    exit
+    goto :End
     
 :DoPublish
     echo Publishing wheel to PyPI
     %PYTHON% -m twine upload .\dist\flextools*
-    exit
+    goto :End
+
+
+:End
