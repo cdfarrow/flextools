@@ -19,7 +19,8 @@ import os
 
 from configparser import ConfigParser
 
-from .FTPaths import COLLECTIONS_PATH
+from .FTConfig import FTConfig
+COLLECTIONS_PATH = FTConfig.CollectionsPath
 
 # ---- Exceptions ----
 

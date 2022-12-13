@@ -47,7 +47,7 @@ from System.Threading import Thread, ThreadStart, ApartmentState
 
 from .. import version
 from . import UIGlobal
-from .FTPaths import CONFIG_PATH
+from .FTConfig import FTConfig
 from . import UICollections, FTCollections
 from . import UIModulesList, UIReport, UIModuleBrowser
 from .UIProjectChooser import ProjectChooser
@@ -55,7 +55,6 @@ from . import FTModules
 from . import Help
 
 from cdfutils.DotNet import CustomMainMenu, CustomToolBar
-from cdfutils.Config import ConfigStore
 
 # ------------------------------------------------------------------
 
@@ -388,13 +387,11 @@ class FTMainForm (Form):
         self.ClientSize = Size(700, 500)
         self.Text = "FLExTools " + appVersion
 
-        ## Get configurables - current project, current collection
-        logger.debug(f"Reading configuration from {CONFIG_PATH}")
-        self.configuration = ConfigStore(CONFIG_PATH)
-        if not self.configuration.currentCollection:
-            self.configuration.currentCollection = "Examples"
-        if self.configuration.warnOnModify == None:
-            self.configuration.warnOnModify = True
+        ## Initialise default configuration values
+        if not FTConfig.currentCollection:
+            FTConfig.currentCollection = "Examples"
+        if FTConfig.warnOnModify == None:
+            FTConfig.warnOnModify = True
 
         self.collectionsManager = FTCollections.CollectionsManager()
 
@@ -402,10 +399,10 @@ class FTMainForm (Form):
 
         try:
             listOfModules = self.collectionsManager.ListOfModules(
-                                   self.configuration.currentCollection)
+                                            FTConfig.currentCollection)
         except FTCollections.FTC_NameError:
             # The configuration value is bad...
-            self.configuration.currentCollection = None
+            FTConfig.currentCollection = None
             listOfModules = []
 
         self.Icon = Icon(UIGlobal.ApplicationIcon)
@@ -418,8 +415,8 @@ class FTMainForm (Form):
         self.__UpdateStatusBar()
 
         self.UIPanel = FTPanel(self.moduleManager,
-                               self.configuration.currentProject,
-                               self.configuration.warnOnModify,
+                               FTConfig.currentProject,
+                               FTConfig.warnOnModify,
                                listOfModules,
                                self.__LoadModules,
                                self.__ProgressBar,
@@ -433,7 +430,7 @@ class FTMainForm (Form):
 
     def __OnFormClosed(self, sender, event):
         # Event triggered when self.Close() is called.
-        del self.configuration  # Save data by deleting ConfigStore object
+        # del FTConfig  # Save data by deleting ConfigStore object
         pass
 
     # ----
@@ -444,9 +441,9 @@ class FTMainForm (Form):
         else:
             progressText = ""
         newText = "Collection: '%s'   Project: '%s'   %s" %\
-             (self.configuration.currentCollection,
-              #self.configuration.currentServer
-              self.configuration.currentProject,
+             (FTConfig.currentCollection,
+              #FTConfig.currentServer
+              FTConfig.currentProject,
               progressText)
         if self.StatusBar.Text != newText:
             self.StatusBar.Text = newText
@@ -481,27 +478,27 @@ class FTMainForm (Form):
 
         dlg = UICollections.CollectionsDialog(self.collectionsManager,
                                               self.moduleManager,
-                                              self.configuration.currentCollection)
+                                              FTConfig.currentCollection)
         dlg.ShowDialog()
-        self.configuration.currentCollection = dlg.activatedCollection
+        FTConfig.currentCollection = dlg.activatedCollection
         self.__UpdateStatusBar()
 
         # Always refresh the list in case the current one was changed.
         try:
             listOfModules = self.collectionsManager.ListOfModules(
-                                    self.configuration.currentCollection)
+                                    FTConfig.currentCollection)
         except FTCollections.FTC_NameError:
             # The configuration value is bad or None...
-            self.configuration.currentCollection = None
+            FTConfig.currentCollection = None
             listOfModules = []
-        self.UIPanel.UpdateModuleList(self.configuration.currentCollection,
+        self.UIPanel.UpdateModuleList(FTConfig.currentCollection,
                                       listOfModules)
 
     def ChooseProject(self, sender=None, event=None):
-        dlg = ProjectChooser(self.configuration.currentProject)
+        dlg = ProjectChooser(FTConfig.currentProject)
         dlg.ShowDialog()
-        if dlg.projectName != self.configuration.currentProject:
-            self.configuration.currentProject = dlg.projectName
+        if dlg.projectName != FTConfig.currentProject:
+            FTConfig.currentProject = dlg.projectName
             self.UIPanel.UpdateProjectName(dlg.projectName)
             self.__UpdateStatusBar()
 

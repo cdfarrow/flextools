@@ -32,7 +32,9 @@ from flexlibs import (
 from .FTModuleClass import *
 
 # Loads .pth files from Modules\
-from .FTPaths import MODULES_PATH
+from .FTConfig import FTConfig
+MODULES_PATH = FTConfig.ModulesPath
+
 import site
 site.addsitedir(MODULES_PATH)
 

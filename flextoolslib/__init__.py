@@ -19,14 +19,6 @@ from .code.FLExTools import (
     main, 
     )
 
-# The full paths to the config file (flextools.ini), and the Modules and 
-# Collections folders.
-from .code.FTPaths import (
-    CONFIG_PATH,
-    MODULES_PATH,
-    COLLECTIONS_PATH,
-    )
-    
 # The Modules class and documentation constants
 from .code.FTModuleClass import (
     FlexToolsModuleClass, 

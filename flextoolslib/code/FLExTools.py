@@ -68,8 +68,7 @@ logger = logging.getLogger(__name__)
 from .. import version
 logger.info(f"FLExTools version: {version}")
 
-from cdfutils.Config import ConfigStore
-
+from .FTConfig import FTConfig
 
 #----------------------------------------------------------- 
 # flexlibs
@@ -104,6 +103,8 @@ from .UIMain import FTMainForm
 
 # ------------------------------------------------------------------
 def main(appVersion=""):
+    global FTConfig
+
     FLExInitialize()
 
     logger.debug("Creating MainForm")
@@ -111,5 +112,9 @@ def main(appVersion=""):
     logger.debug("Launching WinForms Application")
     Application.Run(form)
 
+    # Save the configuration
+    FTConfig.save()
+    
     FLExCleanup()
+    
 
