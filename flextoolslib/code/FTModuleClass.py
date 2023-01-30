@@ -105,7 +105,7 @@ class FlexToolsModuleClass (object):
         if self.runFunction:
             # Prevent writes if not documented
             if modifyAllowed and not self.docs[FTM_ModifiesDB]:
-                report.Warning("Changes are enabled, but this module doesn't allow it. Disabling changes.")
+                report.Info("(Modifications are allowed, but this module doesn't modify the project.)")
                 modifyAllowed = False
             self.runFunction(project, report, modifyAllowed)
 
