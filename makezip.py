@@ -26,7 +26,7 @@ FTPath = pathlib.Path("FlexTools")
 ZIPFILE_NAME = f"dist\\FlexTools_{FlexToolsVersion}.zip"
 
 PATH_PATTERNS = (
-    "*.*",
+    "*.vbs",
     "scripts/*",
     "Modules/**/*",     # "**" = recursive
     "Collections/*",
