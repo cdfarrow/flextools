@@ -66,7 +66,7 @@ logger = logging.getLogger(__name__)
 # -----------------------------------------------------------
 
 from .. import version
-logger.info(f"FLExTools version: {version}")
+logger.info(f"FLExTools library version: {version}")
 
 from .FTConfig import FTConfig
 
