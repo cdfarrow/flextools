@@ -39,7 +39,7 @@ FOR %%C IN ("Init"
     
 :DoPublish
     echo Publishing wheel to PyPI
-    %PYTHON% -m twine upload .\dist\flextools*
+    %PYTHON% -m twine upload .\dist\flextoolslib*
     goto :End
 
 
