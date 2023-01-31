@@ -17,9 +17,8 @@
 #   Platforms: Python.NET
 #
 
-from __future__ import unicode_literals
+from flextoolslib import *
 
-from FTModuleClass import *
 from SIL.LCModel import *
 from SIL.LCModel.Core.KernelInterfaces import ITsString, ITsStrBldr   
 

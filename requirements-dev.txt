@@ -1,0 +1,5 @@
+# Libraries required for building and publishing flextools.
+pytest
+build
+twine
+

@@ -1,0 +1,4 @@
+# Runtime requirements for FlexTools
+cdfutils >= 1.0.4
+flexlibs >= 1.1.6
+flextoolslib

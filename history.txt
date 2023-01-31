@@ -5,10 +5,19 @@ FLExTools History
 ==== Known Issues ====
 
 * Requires Python <= 3.8
-* Doesn't work with FieldWorks >= 9.1.15
 
 
 ====== History =======
+
+2.2.0_2023.01.31
+----------------
+
++ Works with FieldWorks up to 9.1.18
++ The main application was split off into a separate library called
+  flextoolslib, which is installed from PyPI. The Modules and launch
+  scripts are distributed as FlexTools.zip.
++ Issue #11: Changed warning message on Run (Modify) to an Info message.
+
 
 2.1.2 - 15 Oct 2022
 -------------------
