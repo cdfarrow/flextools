@@ -103,8 +103,6 @@ class FTPanel(Panel):
 
     def __init__(self, 
                  moduleManager, 
-                 projectName,
-                 warnOnModify,
                  listOfModules, 
                  reloadFunction, 
                  progressFunction):
@@ -119,8 +117,6 @@ class FTPanel(Panel):
 
         # -- Module list and Report window
         self.moduleManager = moduleManager
-        self.projectName = projectName
-        self.warnOnModify = warnOnModify        
         self.listOfModules = listOfModules
         self.reloadFunction = reloadFunction
 
@@ -133,8 +129,8 @@ class FTPanel(Panel):
         self.startupToolTip = None
 
         startupTips = []
-        if projectName:
-            self.UpdateProjectName(projectName)
+        if FTConfig.currentProject:
+            self.UpdateProjectName()
         else:
             msg = "Choose a project by clicking the Choose Project button in the toolbar."
             startupTips.append(msg)
@@ -189,7 +185,7 @@ class FTPanel(Panel):
         # Reload the modules to make sure we're using the latest code.
         if self.reloadFunction: self.reloadFunction()
 
-        if not self.projectName:
+        if not FTConfig.currentProject:
             self.reportWindow.Reporter.Error("No project selected! Use the Choose Project button in the toolbar.")
             return
 
@@ -199,11 +195,11 @@ class FTPanel(Panel):
         self.reportWindow.Clear()
 
         if modifyAllowed:
-            if (self.warnOnModify):
+            if (FTConfig.warnOnModify):
                 dlgmsg = "Are you sure you want to make changes to the '%s' project? "\
                           "Please back up the project first."
                 title = "Allow changes?"
-                result = MessageBox.Show(dlgmsg % self.projectName, title,
+                result = MessageBox.Show(dlgmsg % FTConfig.currentProject, title,
                                          MessageBoxButtons.YesNo,
                                          MessageBoxIcon.Question)
                 if (result == DialogResult.No):
@@ -213,7 +209,7 @@ class FTPanel(Panel):
 
         self.reportWindow.Reporter.Info(message)
         self.reportWindow.Refresh()
-        self.moduleManager.RunModules(self.projectName,
+        self.moduleManager.RunModules(FTConfig.currentProject,
                                       modules,
                                       self.reportWindow.Reporter,
                                       modifyAllowed)
@@ -253,15 +249,11 @@ class FTPanel(Panel):
         self.modulesList.UpdateAllItems(self.listOfModules)
         self.reportWindow.Report("Collection '%s' selected." % collectionName)
 
-    def UpdateProjectName(self, newProjectName):
+    def UpdateProjectName(self):
         if self.startupToolTip:
             self.startupToolTip.RemoveAll()
-        self.projectName = newProjectName
-        self.reportWindow.Report("Project '%s' selected." % self.projectName)
-        self.toolbar.UpdateButtonText(0, self.projectName)
-
-    def UpdateWarnOnModify(self, warnOnModify):
-        self.warnOnModify = warnOnModify
+        self.reportWindow.Report("Project '%s' selected." % FTConfig.currentProject)
+        self.toolbar.UpdateButtonText(0, FTConfig.currentProject)
         
     def ModuleInfo(self):
         if self.modulesList.SelectedIndex >= 0:
@@ -415,8 +407,6 @@ class FTMainForm (Form):
         self.__UpdateStatusBar()
 
         self.UIPanel = FTPanel(self.moduleManager,
-                               FTConfig.currentProject,
-                               FTConfig.warnOnModify,
                                listOfModules,
                                self.__LoadModules,
                                self.__ProgressBar,
@@ -499,7 +489,7 @@ class FTMainForm (Form):
         dlg.ShowDialog()
         if dlg.projectName != FTConfig.currentProject:
             FTConfig.currentProject = dlg.projectName
-            self.UIPanel.UpdateProjectName(dlg.projectName)
+            self.UIPanel.UpdateProjectName()
             self.__UpdateStatusBar()
 
     def CopyToClipboard(self, sender, event):
