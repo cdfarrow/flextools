@@ -2,7 +2,7 @@
 #   A shell module to launch FlexTools
 #
 
-FlexToolsVersion = "2.2.0"
+from Version import FlexToolsVersion
 
 import flextoolslib
 
