@@ -374,10 +374,13 @@ class FTMainForm (Form):
         if hasattr(self, "UIPanel"):
             self.UIPanel.RefreshModules()
 
-    def __init__(self, appVersion):
+    def __init__(self, appTitle=None):
         Form.__init__(self)
         self.ClientSize = Size(700, 500)
-        self.Text = "FLExTools " + appVersion
+        if appTitle:
+            self.Text = appTitle
+        else:
+            self.Text = f"flextoolslib {version}"
 
         ## Initialise default configuration values
         if not FTConfig.currentCollection:
