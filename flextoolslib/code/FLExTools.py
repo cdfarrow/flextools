@@ -51,6 +51,7 @@ import logging
 
 if (sys.argv[-1].lower() == "debug"):
     loggingLevel = logging.DEBUG
+    sys.argv.pop(-1)
 else:
     loggingLevel = logging.INFO
 
