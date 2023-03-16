@@ -9,6 +9,16 @@ FLExTools History
 
 ====== History =======
 
+2.2.1_2023.03.16
+----------------
+
++ Added support for tool-sets that use FlexTools as a platform, allowing
+  them to:
+    + Define a custom main window title
+    + Define a custom menu
+    + Define a custom location for flextools.ini
+    + Define custom locations for the Collections and Modules folders
+
 2.2.0_2023.01.31
 ----------------
 
