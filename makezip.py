@@ -9,7 +9,7 @@
 import sys
 sys.path.append("FlexTools/scripts/")
 
-from Version import FlexToolsVersion
+from Version import Version
 
 import pathlib
 from zipfile import ZipFile, ZIP_DEFLATED
@@ -23,7 +23,7 @@ from zipfile import ZipFile, ZIP_DEFLATED
 
 FTPath = pathlib.Path("FlexTools")
 
-ZIPFILE_NAME = f"dist\\FlexTools_{FlexToolsVersion}.zip"
+ZIPFILE_NAME = f"dist\\FlexTools_{Version}.zip"
 
 PATH_PATTERNS = (
     "*.vbs",
