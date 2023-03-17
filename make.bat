@@ -20,7 +20,6 @@ FOR %%C IN ("Init"
     goto :End
 
 :DoInit
-    %PYTHON% -m pip install -r requirements.txt
     %PYTHON% -m pip install -r requirements-dev.txt
     goto :End
     
