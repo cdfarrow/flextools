@@ -280,7 +280,7 @@ class FTPanel(Panel):
 
 class FTMainForm (Form):
 
-    def InitMainMenu(self):
+    def InitMainMenu(self, appMenu):
 
         # Handler, Text, Shortcut, Tooltip
         FlexToolsMenu = [(self.ChooseProject,
@@ -360,6 +360,8 @@ class FTMainForm (Form):
                     ("Report", ReportMenu),
                     ("Help", HelpMenu)]
 
+        if appMenu:
+            MenuList.insert(3, appMenu)
 
         self.Menu = CustomMainMenu(MenuList)
 
@@ -374,10 +376,13 @@ class FTMainForm (Form):
         if hasattr(self, "UIPanel"):
             self.UIPanel.RefreshModules()
 
-    def __init__(self, appVersion):
+    def __init__(self, appTitle=None, appMenu=None):
         Form.__init__(self)
         self.ClientSize = Size(700, 500)
-        self.Text = "FLExTools " + appVersion
+        if appTitle:
+            self.Text = appTitle
+        else:
+            self.Text = f"flextoolslib {version}"
 
         ## Initialise default configuration values
         if not FTConfig.currentCollection:
@@ -399,7 +404,7 @@ class FTMainForm (Form):
 
         self.Icon = Icon(UIGlobal.ApplicationIcon)
 
-        self.InitMainMenu()
+        self.InitMainMenu(appMenu)
 
         self.progressPercent = -1
         self.progressMessage = None

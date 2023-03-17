@@ -4,8 +4,9 @@
 #   Platform: .NET v2 Windows.Forms (Python.NET 2.7)
 #
 #   The main entry point for the FlexTools application is here as main().
-#   It is called from flextools.exe, which is created during the build 
-#   process.
+#   It is called from the launcher application in 
+#   FlexTools\scripts\RunFlexTools.py.
+
 #
 #   First, set up the following:
 #        - logging
@@ -51,6 +52,8 @@ import logging
 
 if (sys.argv[-1].lower() == "debug"):
     loggingLevel = logging.DEBUG
+
+    sys.argv.pop(-1)
 else:
     loggingLevel = logging.INFO
 
@@ -102,13 +105,34 @@ from .UIMain import FTMainForm
 
 
 # ------------------------------------------------------------------
-def main(appVersion=""):
+
+def main(appTitle=None, customMenu=None):
+    """
+    Parameters:
+        appTitle - a string with the name and version to display in 
+            the main title bar. This allows systems built on FlexTools 
+            to supply a custom title.
+        customMenu - a tuple defining a custom menu that is inserted
+            before the Help menu:
+                (Menu Title, Menu Items)
+                    Menu Title is a string
+                    Menu Items is a list of tuples:
+                        (Handler, Menu Text, Shortcut, Tooltip)
+                    Handlers are functions that take two parameters, 
+                    sender and event. 
+                    If the Handler is None, then the menu is disabled.
+                    Menu Text and Tooltip are strings.
+                    Shortcut is a System.Windows.Forms.Shortcut sub-value,
+                    or None.
+                    If the tuple is None, then a separator is inserted.
+    """
     global FTConfig
 
     FLExInitialize()
 
     logger.debug("Creating MainForm")
-    form = FTMainForm(appVersion)
+    form = FTMainForm(appTitle, customMenu)
+
     logger.debug("Launching WinForms Application")
     Application.Run(form)
 
