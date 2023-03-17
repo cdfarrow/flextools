@@ -6,7 +6,6 @@
 #   The main entry point for the FlexTools application is here as main().
 #   It is called from the launcher application in 
 #   FlexTools\scripts\RunFlexTools.py.
-
 #
 #   First, set up the following:
 #        - logging
@@ -52,7 +51,6 @@ import logging
 
 if (sys.argv[-1].lower() == "debug"):
     loggingLevel = logging.DEBUG
-
     sys.argv.pop(-1)
 else:
     loggingLevel = logging.INFO
@@ -105,7 +103,6 @@ from .UIMain import FTMainForm
 
 
 # ------------------------------------------------------------------
-
 def main(appTitle=None, customMenu=None):
     """
     Parameters:
@@ -132,7 +129,6 @@ def main(appTitle=None, customMenu=None):
 
     logger.debug("Creating MainForm")
     form = FTMainForm(appTitle, customMenu)
-
     logger.debug("Launching WinForms Application")
     Application.Run(form)
 
