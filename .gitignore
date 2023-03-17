@@ -1,10 +1,12 @@
-# Custom Modules folders are excluded
+# Custom Modules & Collections folders are excluded
 FlexTools/Modules-*
+FlexTools/Collections-*
+
+flextools.ini
 
 # Temp files
 *.tmp
 *.~*
-*.ini
 *.bak
 *.log
 
