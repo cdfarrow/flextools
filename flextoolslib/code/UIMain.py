@@ -344,7 +344,7 @@ class FTMainForm (Form):
                             "Help on the Programming Interface"),
                          None,     # Separator
                          (Help.LaunchLCMBrowser,
-                            "Launch LCMBrowser",
+                            "Launch Fieldworks LCMBrowser",
                             None,
                             "Open the Fieldworks LCMBrowser application"),
                          None,     # Separator
