@@ -13,25 +13,29 @@
 '       FlexToolsCommands.vbs <Command> (<ini-file>)
 '
 '   The commands are (case insensitive):
-'       Run      - run the program
+'       Run      - run FlexTools
 '       Debug    - run FlexTools with debugging output
 '       Install  - run pip to install or upgrade flextoolslib
 '       List     - output a list of all the FieldWorks projects
 '
 
+Set WshShell = CreateObject("WScript.Shell")
+Set FSO = CreateObject("Scripting.FileSystemObject")
+ScriptsDir = FSO.GetParentFolderName(WScript.ScriptFullName)
+
+Q = """"
+
 PYTHON = "py -3.8"
 
-FLEXTOOLS = PYTHON & " .\scripts\RunFlexTools.py"
+FLEXTOOLS = PYTHON & " " & Q & FSO.BuildPath(ScriptsDir, "RunFlexTools.py") & Q
 
 
-' The ini file name/path can be supplied as an argument.
+' The ini file name/path can be supplied as the first argument.
 If WScript.Arguments.Count > 1 Then
     FLEXTOOLS = FLEXTOOLS & " " & WScript.Arguments.Item(1)
 End If
 
-
-Set WshShell = CreateObject("WScript.Shell")
-
+' Jump table: call the function matching the command
 func = GetRef("Do" & WScript.Arguments.Item(0))
 
 WshShell = Null
@@ -47,13 +51,12 @@ Function DoRun()
 End Function
 
 Function DoDebug()
-    Set fso = CreateObject("Scripting.FileSystemObject")
-    If fso.FileExists("flextools.log") Then
-        fso.DeleteFile("flextools.log")
+    If FSO.FileExists("flextools.log") Then
+        FSO.DeleteFile("flextools.log")
     End If
     rc = WshShell.Run(FLEXTOOLS & " DEBUG", 0, True)
     If rc <> 0 Then ErrorMsg
-    If fso.FileExists("flextools.log") Then
+    If FSO.FileExists("flextools.log") Then
         WshShell.Run("notepad flextools.log")
     End If
 End Function
