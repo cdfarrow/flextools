@@ -13,6 +13,7 @@ from __future__ import unicode_literals
 from builtins import str
 
 from . import UIGlobal
+from .FTConfig import FTConfig
 from .FTModuleClass import *
 
 from System.Drawing import (Color, SystemColors, Point, PointF, Rectangle,
@@ -158,7 +159,8 @@ class ModulesList(ListBox):
         if handler:
             self.__ActivatedHandler = handler
             # Double-click and Enter will Run this module
-            self.DoubleClick += self.__ItemActivatedHandler
+            if not FTConfig.disableDoubleClick:
+                self.DoubleClick += self.__ItemActivatedHandler
             self.KeyDown += self.__ItemActivatedHandler
 
     def __ItemActivatedHandler(self, sender, event):

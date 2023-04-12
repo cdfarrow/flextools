@@ -4,8 +4,19 @@
 #
 #   Global definitions of data paths and configuration values.
 #   
+#   Within FlexTools, the config values are accessed like this:
+#       from .FTConfig import FTConfig
+#       FTConfig.ModulesPath
+#   
+#   The configuration values that are in use are (case insensitive):
+#       ModulesPath
+#       CollectionsPath
+#       CurrentProject
+#       WarnOnModify
+#       DisableDoubleClick
+#
 #   Craig Farrow
-#   Copyright 2012-2022
+#   Copyright 2012-2023
 #
 
 from os import getcwd, chdir
