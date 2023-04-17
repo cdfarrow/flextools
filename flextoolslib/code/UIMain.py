@@ -376,7 +376,7 @@ class FTMainForm (Form):
         if hasattr(self, "UIPanel"):
             self.UIPanel.RefreshModules()
 
-    def __init__(self, appTitle=None, appMenu=None):
+    def __init__(self, appTitle=None, appMenu=None, appStatusbar=None):
         Form.__init__(self)
         self.ClientSize = Size(700, 500)
         if appTitle:
@@ -411,6 +411,7 @@ class FTMainForm (Form):
         self.progressPercent = -1
         self.progressMessage = None
         self.StatusBar = StatusBar()
+        self.statusbarCallback = appStatusbar
         self.__UpdateStatusBar()
 
         self.UIPanel = FTPanel(self.moduleManager,
@@ -420,28 +421,31 @@ class FTMainForm (Form):
                                )
         self.UIPanel.SetChooseProjectHandler(self.ChooseProject)
         self.UIPanel.SetEditCollectionsHandler(self.EditCollections)
-        self.FormClosed += self.__OnFormClosed
 
         self.Controls.Add(self.UIPanel)
         self.Controls.Add(self.StatusBar)
 
-    def __OnFormClosed(self, sender, event):
-        # Event triggered when self.Close() is called.
-        # del FTConfig  # Save data by deleting ConfigStore object
-        pass
 
     # ----
     def __UpdateStatusBar(self):
+        collectionText = f"Collection: {FTConfig.currentCollection}"
+
+        if self.statusbarCallback:
+            try:
+                appText = self.statusbarCallback()
+            except:
+                appText = "ERROR with callback"
+        else:
+            appText = ""
+
         if self.progressPercent >= 0:
             msg = self.progressMessage if self.progressMessage else "Progress"
             progressText = "[%s: %i%%]" % (msg, self.progressPercent)
         else:
             progressText = ""
-        newText = "Collection: '%s'   Project: '%s'   %s" %\
-             (FTConfig.currentCollection,
-              #FTConfig.currentServer
-              FTConfig.currentProject,
-              progressText)
+        
+        newText = "   ".join((collectionText, appText, progressText))
+        
         if self.StatusBar.Text != newText:
             self.StatusBar.Text = newText
 
@@ -497,7 +501,7 @@ class FTMainForm (Form):
         if dlg.projectName != FTConfig.currentProject:
             FTConfig.currentProject = dlg.projectName
             self.UIPanel.UpdateProjectName()
-            self.__UpdateStatusBar()
+            #self.__UpdateStatusBar()  #Apr2023: removed project from statusbar
 
     def CopyToClipboard(self, sender, event):
         self.UIPanel.CopyReportToClipboard()
@@ -513,12 +517,19 @@ class FTMainForm (Form):
 
     def RunOne(self, sender, event):
         self.UIPanel.RunOne()
+        self.__UpdateStatusBar()
+        
     def RunOneModify(self, sender, event):
         self.UIPanel.RunOneModify()
+        self.__UpdateStatusBar()
+        
     def RunAll(self, sender, event):
         self.UIPanel.RunAll()
+        self.__UpdateStatusBar()
+        
     def RunAllModify(self, sender, event):
         self.UIPanel.RunAllModify()
+        self.__UpdateStatusBar()
 
 
 

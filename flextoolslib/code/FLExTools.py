@@ -103,7 +103,7 @@ from .UIMain import FTMainForm
 
 
 # ------------------------------------------------------------------
-def main(appTitle=None, customMenu=None):
+def main(appTitle=None, customMenu=None, statusbarCallback=None):
     """
     Parameters:
         appTitle - a string with the name and version to display in 
@@ -122,13 +122,16 @@ def main(appTitle=None, customMenu=None):
                     Shortcut is a System.Windows.Forms.Shortcut sub-value,
                     or None.
                     If the tuple is None, then a separator is inserted.
+        statusbarCallback - a function that returns a string to be
+            included in the status bar.
+        
     """
     global FTConfig
 
     FLExInitialize()
 
     logger.debug("Creating MainForm")
-    form = FTMainForm(appTitle, customMenu)
+    form = FTMainForm(appTitle, customMenu, statusbarCallback)
     logger.debug("Launching WinForms Application")
     Application.Run(form)
 
