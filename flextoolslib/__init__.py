@@ -31,6 +31,12 @@ from .code.FTModuleClass import (
     FTM_Description,
     )
 
+# Give access to the FlexTools configuration values, especially 
+# for currentProject
+from .code.FTConfig import (
+    FTConfig
+    )
+    
 # Expose RunModule for testing purposes (see TestAModule.py)
 from .misc.RunModule import (
     RunModule, 
