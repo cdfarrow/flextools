@@ -9,6 +9,20 @@ FLExTools History
 
 ====== History =======
 
+2.2.2_2023.04.TBD
+----------------
+
++ New Module:
+    + Restructure Data/Convert Custom Plurals
++ flexlibs API:
+    + New LexiconClearField() method
+    + LexiconSetFieldText(), LexiconGetFieldText() & GetCustomFieldValue()
+        now support Multi Strings, and a writing system parameter.
++ Added support for apps to define status bar text
++ New configuration option:
+    + DisableDoubleClick
+
+
 2.2.1_2023.03.16
 ----------------
 
