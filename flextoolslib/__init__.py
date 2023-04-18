@@ -18,6 +18,7 @@ MaxFWVersion = "9.1.18"
 # The main application
 from .code.FLExTools import (
     main, 
+    refreshStatusbar,
     )
 
 # The Modules class and documentation constants

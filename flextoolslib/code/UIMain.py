@@ -412,7 +412,7 @@ class FTMainForm (Form):
         self.progressMessage = None
         self.StatusBar = StatusBar()
         self.statusbarCallback = appStatusbar
-        self.__UpdateStatusBar()
+        self.UpdateStatusBar()
 
         self.UIPanel = FTPanel(self.moduleManager,
                                listOfModules,
@@ -427,7 +427,7 @@ class FTMainForm (Form):
 
 
     # ----
-    def __UpdateStatusBar(self):
+    def UpdateStatusBar(self):
         collectionText = f"Collection: {FTConfig.currentCollection}"
 
         if self.statusbarCallback:
@@ -453,7 +453,7 @@ class FTMainForm (Form):
         if max == 0: # Clear progress bar
             if self.progressPercent != -1:
                 self.progressPercent = -1
-                self.__UpdateStatusBar()
+                self.UpdateStatusBar()
             return
 
         newPercent = (val * 100) / max          # val = [0...max]
@@ -465,7 +465,7 @@ class FTMainForm (Form):
         if refresh:
             self.progressPercent = newPercent
             self.progressMessage = msg
-            self.__UpdateStatusBar()
+            self.UpdateStatusBar()
 
 
     # ---- Menu handlers ----
@@ -482,7 +482,7 @@ class FTMainForm (Form):
                                               FTConfig.currentCollection)
         dlg.ShowDialog()
         FTConfig.currentCollection = dlg.activatedCollection
-        self.__UpdateStatusBar()
+        self.UpdateStatusBar()
 
         # Always refresh the list in case the current one was changed.
         try:
@@ -501,7 +501,7 @@ class FTMainForm (Form):
         if dlg.projectName != FTConfig.currentProject:
             FTConfig.currentProject = dlg.projectName
             self.UIPanel.UpdateProjectName()
-            #self.__UpdateStatusBar()  #Apr2023: removed project from statusbar
+            #self.UpdateStatusBar()  #Apr2023: removed project from statusbar
 
     def CopyToClipboard(self, sender, event):
         self.UIPanel.CopyReportToClipboard()
@@ -517,19 +517,15 @@ class FTMainForm (Form):
 
     def RunOne(self, sender, event):
         self.UIPanel.RunOne()
-        self.__UpdateStatusBar()
         
     def RunOneModify(self, sender, event):
         self.UIPanel.RunOneModify()
-        self.__UpdateStatusBar()
         
     def RunAll(self, sender, event):
         self.UIPanel.RunAll()
-        self.__UpdateStatusBar()
         
     def RunAllModify(self, sender, event):
         self.UIPanel.RunAllModify()
-        self.__UpdateStatusBar()
 
 
 

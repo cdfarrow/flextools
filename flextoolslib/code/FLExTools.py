@@ -101,7 +101,7 @@ logger.info(f"flexlibs imported successfully")
 
 from .UIMain import FTMainForm
 
-
+mainForm = None
 # ------------------------------------------------------------------
 def main(appTitle=None, customMenu=None, statusbarCallback=None):
     """
@@ -127,13 +127,14 @@ def main(appTitle=None, customMenu=None, statusbarCallback=None):
         
     """
     global FTConfig
+    global mainForm
 
     FLExInitialize()
 
     logger.debug("Creating MainForm")
-    form = FTMainForm(appTitle, customMenu, statusbarCallback)
+    mainForm = FTMainForm(appTitle, customMenu, statusbarCallback)
     logger.debug("Launching WinForms Application")
-    Application.Run(form)
+    Application.Run(mainForm)
 
     # Save the configuration
     FTConfig.save()
@@ -141,3 +142,6 @@ def main(appTitle=None, customMenu=None, statusbarCallback=None):
     FLExCleanup()
     
 
+def refreshStatusbar():
+    global mainForm
+    mainForm.UpdateStatusBar()
