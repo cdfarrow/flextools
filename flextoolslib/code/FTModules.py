@@ -227,6 +227,10 @@ class ModuleManager (object):
             except Exception as e:
                 msg, details = self.__buildExceptionMessages(e, "Module failed with exception {}!")
                 reporter.Error(msg, details)
+                
+            if FTConfig.stopOnError:
+                if reporter.messageCounts[reporter.ERROR]:
+                    break
 
         numErrors   = reporter.messageCounts[reporter.ERROR]
         numWarnings = reporter.messageCounts[reporter.WARNING]

@@ -16,6 +16,8 @@
 #       simplifiedRunOps.
 #       If FTConfig.disableDoubleClick is True, then double-clicking a 
 #       module will not run it. (Double click is ignored.)
+#       If FTConfig.stopOnError is True, then processing will stop after
+#       any module that outputs an error message.
 #
 #   Copyright Craig Farrow, 2010 - 2022
 #
