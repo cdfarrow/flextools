@@ -434,6 +434,10 @@ class FTMainForm (Form):
             FTConfig.currentCollection = "Examples"
         if FTConfig.warnOnModify == None:
             FTConfig.warnOnModify = True
+        if FTConfig.stopOnError == None:
+            FTConfig.stopOnError = False
+        if FTConfig.simplifiedRunOps == None:
+            FTConfig.simplifiedRunOps = False
         if FTConfig.disableDoubleClick == None:
             FTConfig.disableDoubleClick = False
 
