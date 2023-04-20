@@ -133,7 +133,9 @@ class ModulesList(ListBox):
                                                        str(itemInfo[FTM_Version]),
                                                        itemInfo[FTM_Synopsis])
                 if itemInfo[FTM_ModifiesDB]:
-                    composedString += "\nNote: Can modify the project. (Use the 'Run (Modify)' buttons to make changes.) "
+                    composedString += "\nNote: Can modify the project. "
+                    if not FTConfig.simplifiedRunOps:
+                        composedString += "(Use the 'Run (Modify)' buttons to make changes.) "
                 if itemInfo[FTM_HasConfig]:
                     composedString += "\nNote: This module has configurable parameters"
             else:

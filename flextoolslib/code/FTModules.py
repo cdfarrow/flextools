@@ -169,6 +169,10 @@ class ModuleManager (object):
             return self.__modules[module_name].GetDocs()
         except KeyError:
             return None
+            
+    def CanModify(self, module_name):
+        docs = self.GetDocs(module_name)
+        return docs[FTM_ModifiesDB] if docs else False
 
     def GetConfigurables(self, module_name):
         try:
@@ -195,17 +199,23 @@ class ModuleManager (object):
             return False
 
         for moduleName in moduleList:
-            if not self.GetDocs(moduleName):
+            docs = self.GetDocs(moduleName)
+            if not docs:
                 reporter.Warning("Module %s missing or failed to import." % moduleName)
                 continue
 
             reporter.Blank()
+
             # Issue #20 - only display the base name of the module 
             # in the main UI.
             displayName = moduleName.split(".", 1)[1]
             reporter.Info("Running %s (version %s)..." %
                           (displayName,
-                           str(self.__modules[moduleName].docs[FTM_Version])))
+                           str(docs[FTM_Version])))
+            
+            # In simplified mode, we always allow mods if the module does.
+            if FTConfig.simplifiedRunOps:
+                modifyAllowed = docs[FTM_ModifiesDB]
 
             try:
                 self.__modules[moduleName].Run(self.project,

@@ -6,6 +6,16 @@
 #   Main FlexTools UI:
 #    - A split panel with Collections list above and Report results below.
 #
+#   Configuration:
+#       If FTConfig.simplifiedRunOps is True, then the Dry-run/Preview 
+#       buttons and menu items are not shown. All Run actions behave as 
+#       "Run Modify".
+#       (This option can't be changed dynamically at runtime.)
+#       If FTConfig.warnOnModify is False, then no warning dialog is shown
+#       when running with changes enabled. This is independent of 
+#       simplifiedRunOps.
+#       If FTConfig.disableDoubleClick is True, then double-clicking a 
+#       module will not run it. (Double click is ignored.)
 #
 #   Copyright Craig Farrow, 2010 - 2022
 #
@@ -62,7 +72,7 @@ class FTPanel(Panel):
     def __InitToolBar(self):
 
         # (Handler, Text, Image, Tooltip)
-        ButtonList = [
+        ButtonListA = [
                       (self.__ChooseProject,
                        "Choose Project",
                        "FLEX",
@@ -80,25 +90,41 @@ class FTPanel(Panel):
                       # "applications",
                       # "Edit configuration parameters for this module"),
                       None, # Separator
-                      (self.RunOne,
-                       "Run",
-                       "arrow-forward",
-                       "Run selected module in dry-run mode"),
-                      (self.RunAll,
-                       "Run All",
-                       "arrow-forward-double",
-                       "Run all modules in dry-run mode"),
-                      (self.RunOneModify,
-                       "Run (Modify)",
-                       "arrow-forward-!",
-                       "Run the selected module allowing changes to the project"),
-                      (self.RunAllModify,
-                       "Run All (Modify)",
-                       "arrow-forward-double-!",
-                       "Run all modules allowing changes to the project")
-                       ]
+                      ]
+            
+        if FTConfig.simplifiedRunOps:
+            ButtonListB = [
+                          (self.RunOneModify,
+                           "Run",
+                           "arrow-forward-!",
+                           "Run the selected module"),
+                          (self.RunAllModify,
+                           "Run All",
+                           "arrow-forward-double-!",
+                           "Run all the modules")
+                           ]
+        else:
+            ButtonListB = [
+                          (self.RunOne,
+                           "Run",
+                           "arrow-forward",
+                           "Run the selected module in preview mode"),
+                          (self.RunAll,
+                           "Run All",
+                           "arrow-forward-double",
+                           "Run all the modules in preview mode"),
+                          (self.RunOneModify,
+                           "Run (Modify)",
+                           "arrow-forward-!",
+                           "Run the selected module and allow changes to the project"),
+                          (self.RunAllModify,
+                           "Run All (Modify)",
+                           "arrow-forward-double-!",
+                           "Run all the modules and allow changes to the project")
+                           ]
+            
 
-        return CustomToolBar(ButtonList,
+        return CustomToolBar(ButtonListA + ButtonListB,
                              UIGlobal.ToolbarIconParams)
 
     def __init__(self, 
@@ -122,7 +148,10 @@ class FTPanel(Panel):
 
         self.modulesList = UIModulesList.ModulesList(self.moduleManager,
                                                      self.listOfModules)
-        self.modulesList.SetActivatedHandler(self.RunOne)
+        if FTConfig.simplifiedRunOps:
+            self.modulesList.SetActivatedHandler(self.RunOneModify)
+        else:
+            self.modulesList.SetActivatedHandler(self.RunOne)
 
         self.reportWindow = UIReport.ReportWindow()
 
@@ -189,13 +218,16 @@ class FTPanel(Panel):
             self.reportWindow.Reporter.Error("No project selected! Use the Choose Project button in the toolbar.")
             return
 
+        self.reportWindow.Clear()
+        
+        # The Shift key activates Modify for Enter key and double click.
         if not modifyAllowed:
             modifyAllowed = (Control.ModifierKeys == Keys.Shift)
 
-        self.reportWindow.Clear()
-
         if modifyAllowed:
-            if (FTConfig.warnOnModify):
+            # Only warn if some of the module(s) actually make modifications
+            if FTConfig.warnOnModify and \
+               any([self.moduleManager.CanModify(m) for m in modules]):
                 dlgmsg = "Are you sure you want to make changes to the '%s' project? "\
                           "Please back up the project first."
                 title = "Allow changes?"
@@ -204,8 +236,8 @@ class FTPanel(Panel):
                                          MessageBoxIcon.Question)
                 if (result == DialogResult.No):
                     return
-
-            message += " (Changes enabled)"
+            if not FTConfig.simplifiedRunOps:
+                message += " (Changes enabled)"
 
         self.reportWindow.Reporter.Info(message)
         self.reportWindow.Refresh()
@@ -301,23 +333,34 @@ class FTMainForm (Form):
                           "Re-import all modules"),
                          ## (TODO, "Preferences", Shortcut.CtrlP, None),
                          (self.Exit,  "Exit", Shortcut.CtrlQ, None)]
-
-        RunMenu =       [(self.RunOne,
-                          "Run Module",
-                          Shortcut.CtrlR,
-                          "Run the selected module"),
-                         (self.RunOneModify,
-                          "Run Module (Modify Enabled)",
-                          Shortcut.CtrlShiftR,
-                          "Run the selected module allowing changes to the project"),
-                         (self.RunAll,
-                          "Run All Modules",
-                          Shortcut.CtrlA,
-                          "Run all modules"),
-                         (self.RunAllModify,
-                          "Run All Modules (Modify Enabled)",
-                          Shortcut.CtrlShiftA,
-                          "Run all modules allowing changes to the project"),]
+        if FTConfig.simplifiedRunOps:
+            RunMenu = [(self.RunOneModify,
+                        "Run Module",
+                        Shortcut.CtrlR,
+                        "Run the selected module"),
+                       (self.RunAllModify,
+                        "Run All Modules",
+                        Shortcut.CtrlA,
+                        "Run all the modules"),
+                       ]
+        else:
+            RunMenu = [(self.RunOne,
+                        "Run Module",
+                        Shortcut.CtrlR,
+                        "Run the selected module"),
+                       (self.RunOneModify,
+                        "Run Module (Modify Enabled)",
+                        Shortcut.CtrlShiftR,
+                        "Run the selected module and allow changes to the project"),
+                       (self.RunAll,
+                        "Run All Modules",
+                        Shortcut.CtrlA,
+                        "Run all the modules"),
+                       (self.RunAllModify,
+                        "Run All Modules (Modify Enabled)",
+                        Shortcut.CtrlShiftA,
+                        "Run all the modules and allow changes to the project"),
+                       ]
 
         ReportMenu =    [(self.CopyToClipboard, 
                           "Copy to Clipboard", 
