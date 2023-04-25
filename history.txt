@@ -18,9 +18,17 @@ FLExTools History
     + New LexiconClearField() method
     + LexiconSetFieldText(), LexiconGetFieldText() & GetCustomFieldValue()
         now support Multi Strings, and a writing system parameter.
-+ Added support for apps to define status bar text
-+ New configuration option:
-    + DisableDoubleClick
++ Added support for apps to define status bar text.
++ New configuration options (set in flextools.ini):
+    + WarnOnModify       - Set to False to disable the "Are you sure?" 
+                           message when running in modify mode.
+    + StopOnError        - Set to True to stop running any more modules
+                           if a module reports an error.
+    + SimplifiedRunOps   - Set to True to hide the dry-run/preview buttons
+                           and always run with changes enabled.
+                           Can be used with or without WarnOnModify = False.
+    + DisableDoubleClick - Set to True so that double-clicking a module 
+                           doesn't run it.
 
 
 2.2.1_2023.03.16
