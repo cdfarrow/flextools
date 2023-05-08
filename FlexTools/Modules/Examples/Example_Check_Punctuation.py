@@ -93,18 +93,17 @@ def MainFunction(project, report, modifyAllowed):
         lexeme = project.LexiconGetLexemeForm(entry)
         for sense in entry.SensesOS:
             for example in sense.ExamplesOS:
-                if project.LexiconGetExample(example) == None:
+                exampleSentence = project.LexiconGetExample(example) 
+                if not exampleSentence:
                     report.Warning("Blank example: " + lexeme, project.BuildGotoURL(entry))
                     continue
                 for test in TestSuite:
                     funcOrRegex, result, message = test
                     if type (funcOrRegex) is not FunctionType:
-                        if (funcOrRegex.search(project.LexiconGetExample(example)) != None) \
+                        if (funcOrRegex.search(exampleSentence) != None) \
                           == result:
                            report.Warning(lexeme + ": " + message, project.BuildGotoURL(entry))
                            if AddReportToField:
-                               #oldtag = project.LexiconGetFieldText(sense, flagsField)
-                               #project.LexiconSetFieldText(sense, flagsField, "")
                                project.LexiconAddTagToField(sense, flagsField, message)
            
         if limit > 0:
