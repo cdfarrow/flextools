@@ -47,6 +47,7 @@ from System import (
     )
 
 
+INVALID_CHARS = set(r':\/*?"<>|')
 # ------------------------------------------------------------------
 class CollectionsToolbar(ToolBar):
     """
@@ -321,24 +322,33 @@ class CollectionsManagerUI(Panel):
         self.modulesList.UpdateList(self.collections.ListOfModules(itemName))
 
     def __OnCollectionRenamed(self, sender, event):
-        # Determine if label is changed by checking for null.
+        # Determine if the label is changed by checking for null.
         if not event.Label:
             return
-        # Don't bother if user didn't acutally change the name.
+        # Don't bother if the user didn't acutally change the name.
         if self.currentCollection != event.Label:
-            try:
-                self.collections.Rename(self.currentCollection, event.Label)
-            except (FTCollections.FTC_NameError,
-                    FTCollections.FTC_ExistsError,
-                    FTCollections.FTC_BadNameError) as e:
-                # Cancel the event and return the label to its original state.
-                event.CancelEdit = True
-                MessageBox.Show (e.message, "Renaming error",
-                                 MessageBoxButtons.OK,
-                                 MessageBoxIcon.Error)
+            errorMsg = None
+            # Guard against invalid file/path characters in the name.
+            if INVALID_CHARS.intersection(event.Label):
+                errorMsg = "A collection name cannot include any of these symbols: "\
+                            + " ".join(INVALID_CHARS)
             else:
+                try:
+                    self.collections.Rename(self.currentCollection, event.Label)
+                except (FTCollections.FTC_NameError,
+                        FTCollections.FTC_ExistsError,
+                        FTCollections.FTC_BadNameError) as e:
+                    errorMsg = e.message
+                    
+            if not errorMsg:
                 self.currentCollection = event.Label
                 event.Name = event.Label # Update for Find() function
+            else:
+                # Cancel the event and return the label to its original state.
+                event.CancelEdit = True
+                MessageBox.Show (errorMsg, "Renaming error",
+                                 MessageBoxButtons.OK,
+                                 MessageBoxIcon.Error)
         return
 
 
