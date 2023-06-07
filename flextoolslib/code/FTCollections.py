@@ -1,26 +1,25 @@
-
 #
 #   Project: FlexTools
 #   Module:  FTCollections
 #
 #   Manages user-defined collections of modules.
 #    - Loads and saves configuration from disk.
-#    - Provides interface for UI manipulation of collections.
+#    - Provides an interface for UI manipulation of collections.
 #
 #   Craig Farrow
-#   Oct 2009
-#   v0.01
+#   2009-2023
 #
-
-from __future__ import unicode_literals
-from builtins import str
 
 import os
 
-from configparser import ConfigParser
+from configparser import ConfigParser, NoOptionError
 
 from .FTConfig import FTConfig
 COLLECTIONS_PATH = FTConfig.CollectionsPath
+
+import logging
+logger = logging.getLogger(__name__)
+
 
 # ---- Exceptions ----
 
@@ -69,71 +68,78 @@ class CollectionsManager(object):
     assert(len(COLLECTIONS_SUFFIX) == 4)
 
     def __init__(self):
+    
+        def __sortedModulesList(cp):
+            # This function bridges between the old style ini file, where
+            # an _Order option was used to specify the order of the modules.
+            # If _Order doesn't exist, then it is the new style.
+            # DELETE THIS SPECIAL HANDLING AFTER DEC2023 GIVING TIME FOR 
+            # USERS' INI FILES TO BE UPDATED TO THE NEW FORMAT.
+            # ALSO, ONLY CALL WriteAll() IF CHANGES ARE MADE.
+            
+            try:
+                mods = [(cp.getint(m, self.ORDER_OPTION), m) for m in cp.sections()]
+            except NoOptionError:
+                return cp.sections()
+                
+            # Sort the modules according to the _Order option value. 
+            # This handles cases where there are gaps in the sequence 
+            # (such as when the FlexTrans installer removes the Settings
+            # module from users' Tools.ini file).
+            sortedModules = [m for i, m in sorted(mods)]
+            return sortedModules
+               
+         
         # Load all the collection info
 
-        # If the path to os.listdir is unicode, then the file names will
-        # be correctly decoded and returned as unicode.
         collectionNames = [f for f in os.listdir(COLLECTIONS_PATH)
                                     if f.endswith(self.COLLECTIONS_SUFFIX)]
 
-        self.collectionsConfig = {}
+        self.collections = {}
 
         for collectionName in collectionNames:
             cp = ConfigParser(interpolation=None)
             if cp.read(os.path.join(COLLECTIONS_PATH, collectionName)):
-                self.collectionsConfig[collectionName[:-4]] = cp # Strip '.ini'
+                modules = __sortedModulesList(cp)
+                # Strip '.ini' for the collection name
+                self.collections[collectionName[:-4]] = modules
             else:
-                print("Failed to read", collectionName)
+                logger.warning(f"CollectionsManager init: Failed to read {collectionName}")
 
     # ---- Access ----
 
     def Names(self):
-        return (list(self.collectionsConfig.keys()))
+        return (list(self.collections.keys()))
 
     def ListOfModules(self, collectionName):
-        if collectionName not in self.collectionsConfig:
-            raise FTC_NameError("Bad collection name '%s'" % collectionName)
-        cp = self.collectionsConfig[collectionName]
-        modules = cp.sections()
-        sortedModules = [0] * len(modules)
-        for moduleName in modules:
-            try:
-                order = cp.getint(moduleName, self.ORDER_OPTION)
-            except:
-                # Error in collections file; skip this entry
-                continue
-            sortedModules[order-1] = moduleName
-        return (sortedModules)
-
-    def ModuleConfiguration(self, collectionName, moduleName):
-        return (self.collectionsConfig[collectionName].options(moduleName))
+        if collectionName not in self.collections:
+            raise FTC_NameError(f"Bad collection name '{collectionName}'")
+        return self.collections[collectionName]
 
     # ---- Creating and Modifying ----
 
     def Add(self, collectionName):
-        if collectionName in self.collectionsConfig:
+        if collectionName in self.collections:
             raise FTC_ExistsError(collectionName + " already exists.")
-        cp = ConfigParser(interpolation=None)
-        self.collectionsConfig[collectionName] = cp
-        self.WriteOne(collectionName, cp)
-        return
+        self.collections[collectionName] = []
+        self.WriteOne(collectionName, [])
 
     def Delete(self, collectionName):
-        if collectionName not in self.collectionsConfig:
+        if collectionName not in self.collections:
             raise FTC_NameError("Collection not found.")
+            
         try:
             os.remove(os.path.join(COLLECTIONS_PATH,
                                    collectionName + self.COLLECTIONS_SUFFIX))
         except:
             pass
-        del(self.collectionsConfig[collectionName])
-        return
+        self.collections.pop(collectionName)
 
     def Rename(self, collectionName, newName):
-        if collectionName not in self.collectionsConfig:
+        if collectionName not in self.collections:
             raise FTC_NameError("Collection not found.")
-        if newName in self.collectionsConfig:
-            raise FTC_ExistsError("'" + newName + "' already exists.")
+        if newName.lower() in [c.lower() for c in self.collections]:
+            raise FTC_ExistsError(f"'{newName}' already exists.")
 
         try:
             os.rename(os.path.join(COLLECTIONS_PATH,
@@ -141,59 +147,48 @@ class CollectionsManager(object):
                       os.path.join(COLLECTIONS_PATH,
                                    newName + self.COLLECTIONS_SUFFIX))
         except:
-            raise FTC_BadNameError("Error occured renaming collection file. Check that the name is a valid file name.")
+            raise FTC_BadNameError("An error occured renaming the collection. The name must be a valid filename.")
         else:
-            self.collectionsConfig[newName] = self.collectionsConfig.pop(collectionName)
+            self.collections[newName] = self.collections.pop(collectionName)
 
-
-    def AddModule(self, collectionName, moduleName, configuration=[]):
-        cp = self.collectionsConfig[collectionName]
-        if cp.has_section(moduleName):
+    def AddModule(self, collectionName, moduleName):
+        modules = self.collections[collectionName]
+        if moduleName in modules:
             raise FTC_ExistsError(moduleName + " already exists.")
-        cp.add_section(moduleName)
-        cp.set(moduleName, self.ORDER_OPTION, str(len(cp.sections())))
-        for configItem in configuration:
-            cp.set(moduleName, configItem.Name, configItem.Default)
-        return
+        modules.append(moduleName)
 
     def RemoveModule(self, collectionName, moduleName):
-        cp = self.collectionsConfig[collectionName]
-        order = cp.getint(moduleName, self.ORDER_OPTION)
-        cp.remove_section(moduleName)
-        for m in cp.sections():
-            this_order = cp.getint(m, self.ORDER_OPTION)
-            if  this_order > order:
-                cp.set(m, self.ORDER_OPTION, str(this_order - 1))
+        modules = self.collections[collectionName]
+        try:
+            modules.remove(moduleName)
+        except ValueError:
+            pass
 
     def MoveModuleUp(self, collectionName, moduleName):
-        cp = self.collectionsConfig[collectionName]
-        order = cp.getint(moduleName, self.ORDER_OPTION)
-        if order > 1:
-            for m in cp.sections():
-                this_order = cp.getint(m, self.ORDER_OPTION)
-                if this_order == order - 1:
-                    cp.set(m, self.ORDER_OPTION, str(order))
-            cp.set(moduleName, self.ORDER_OPTION, str(order - 1))
+        modules = self.collections[collectionName]
+        i = modules.index(moduleName)
+        if i > 0:
+            modules.insert(i - 1, modules.pop(i))
 
     def MoveModuleDown(self, collectionName, moduleName):
-        cp = self.collectionsConfig[collectionName]
-        order = cp.getint(moduleName, self.ORDER_OPTION)
-        if order < len(cp.sections()):
-            for m in cp.sections():
-                this_order = cp.getint(m, self.ORDER_OPTION)
-                if this_order == order + 1:
-                    cp.set(m, self.ORDER_OPTION, str(order))
-            cp.set(moduleName, self.ORDER_OPTION, str(order + 1))
+        modules = self.collections[collectionName]
+        i = modules.index(moduleName)
+        if i < len(modules) - 1:
+            modules.insert(i + 1, modules.pop(i))
 
     # ---------
 
     def WriteAll(self):
-        for (name, cp) in self.collectionsConfig.items():
-            self.WriteOne(name, cp)
+        for (name, modules) in self.collections.items():
+            self.WriteOne(name, modules)
 
-    def WriteOne(self, name, cp):
-        #print "Writing:", name, cp.sections()
-        f = open(os.path.join(COLLECTIONS_PATH,
-                              name + self.COLLECTIONS_SUFFIX), "w")
-        cp.write(f)
-        f.close()
+    def WriteOne(self, name, modules):
+        # Create an empty section for each module. ConfigParser preserves 
+        # the order.
+        cp = ConfigParser(interpolation=None)
+        cp.read_dict({m : {} for m in modules})
+            
+        with open(os.path.join(COLLECTIONS_PATH,
+                               name + self.COLLECTIONS_SUFFIX), 'w') as f:
+            cp.write(f)
+  
