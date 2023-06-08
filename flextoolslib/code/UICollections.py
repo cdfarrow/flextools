@@ -13,10 +13,9 @@
 #
 #   TODO:
 #    -  4 Nov 09: Get the collection list to sort after renaming an item
-#    -  5 Nov 09: Highlight the whole row in both lists
 #
 #   Craig Farrow
-#   Oct 2009
+#   2009-2023
 #
 
 from . import UIGlobal
@@ -36,10 +35,11 @@ from System.Windows.Forms import (Application, BorderStyle, Button,
     DockStyle, Orientation, View, SortOrder,
     TreeView, TreeViewAction,
     ListView, ListViewItem,
+    ColumnHeaderStyle,
     ToolTip,
     TabControl, TabPage, TabAlignment,
     ToolBar, ToolBarButton, ToolBarButtonStyle, ToolBarAppearance,
-    HorizontalAlignment, ImageList,
+    ImageList,
     RichTextBox, HtmlDocument, SplitContainer )
 
 from System import (
@@ -135,17 +135,23 @@ class CollectionsList(ListView):
 
         self.Dock = DockStyle.Fill
 
-        # behaviour
+        # Behaviour
         self.LabelEdit = True # allow renaming
         self.Sorting = SortOrder.Ascending
         self.MultiSelect = False
 
-        # appearance
-        self.View = View.SmallIcon
-        self.ShowLines = True
-        self.TabIndex = 0
-        self.BackColor = UIGlobal.leftPanelColor
+        # Appearance: Full-width, single column display of the list
+        #   View = Details
+        #   Needs a Column for it to display; -2 means auto-size
+        #   HeaderStyle = ColumnHeaderStyle.None (0) to hide the header
+        self.View = View.Details
+        self.Columns.Add("", -2)
+        self.HeaderStyle  = 0
+        
+        self.FullRowSelect = True
         self.HideSelection = False    # Keep selected item grey when lost focus
+
+        self.BackColor = UIGlobal.leftPanelColor
 
         tooltip = ToolTip()
         tooltip.IsBalloon = True
@@ -184,22 +190,33 @@ class CollectionsList(ListView):
         item.Name = collectionName  # Add key for using Find()
         return item
 
-
-
 # ------------------------------------------------------------------
 
 class CollectionsModuleList(ListView):
     def __init__(self):
         ListView.__init__(self)
         self.Dock = DockStyle.Fill
-        self.BackColor = UIGlobal.rightPanelColor
+        
+        # Behaviour
         self.LabelEdit = False
         self.Sorting = getattr(SortOrder, "None")
-        self.View = View.List
         self.MultiSelect = False
 
+        # Appearance: Full-width, single column display of the list
+        #   View = Details
+        #   Needs a Column for it to display; -2 means auto-size
+        #   HeaderStyle = ColumnHeaderStyle.None (0) to hide the header
+        self.View = View.Details
+        self.Columns.Add("", -2)
+        self.HeaderStyle  = 0
+        
+        self.FullRowSelect = True
+        self.HideSelection = False    # Keep selected item grey when lost focus
+        
+        self.BackColor = UIGlobal.rightPanelColor
+        
     def UpdateList(self, moduleList):
-        self.Clear()
+        self.Items.Clear()
         for m in moduleList:
             i = self.Items.Add(m)
             i.Name = m          # Name is required for Find()
@@ -310,8 +327,8 @@ class CollectionsManagerUI(Panel):
                 self.collections.AddModule(self.currentCollection,
                                            moduleName)
             except FTCollections.FTC_ExistsError:
-                MessageBox.Show("This module is already in the current collection",
-                                "Duplicate Module",
+                MessageBox.Show("This module is already in the current collection.",
+                                "Duplicate module",
                                 MessageBoxButtons.OK,
                                 MessageBoxIcon.Information)
             else:
@@ -360,7 +377,6 @@ class CollectionsManagerUI(Panel):
                 items = self.collectionsList.Items.Find(name, False)
                 if len(items) > 0:
                     c = items[0]
-                #print("Find returned:", c)
             else:
                 self.collections.Add(name)
                 c = self.collectionsList.AddCollection(name)
@@ -382,7 +398,7 @@ class CollectionsManagerUI(Panel):
                     # No collection is selected at this point, so just
                     # clear the modules List.
                     self.currentCollection = None
-                    self.modulesList.Clear()
+                    self.modulesList.Items.Clear()
 
         elif event.Button.Text == "Rename":
             selection = self.collectionsList.SelectedItems
