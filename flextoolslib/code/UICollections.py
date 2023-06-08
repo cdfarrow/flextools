@@ -182,7 +182,7 @@ class CollectionsList(ListView):
             if activate:
                 try:
                     self.__ActivatedHandler(sender.SelectedItems[0].Text)
-                except ArgumentOutOfRangeException:
+                except IndexError:
                     pass # No item selected; ignore
 
     def AddCollection(self, collectionName):
@@ -333,13 +333,14 @@ class CollectionsManagerUI(Panel):
                                 MessageBoxIcon.Information)
             else:
                 self.modulesList.Items.Add(moduleName)
+                self.modulesList.EnsureVisible(self.modulesList.Items.Count-1) 
 
     def __OnCollectionSelected(self, collectionName):
         self.currentCollection = collectionName
         self.modulesList.UpdateList(self.collections.ListOfModules(collectionName))
 
     def __OnCollectionRenamed(self, sender, event):
-        # Determine if the label is changed by checking for null.
+        # Determine if the label has been changed by checking for null.
         if not event.Label:
             return
         # Don't bother if the user didn't acutally change the name.
@@ -359,7 +360,8 @@ class CollectionsManagerUI(Panel):
                     
             if not errorMsg:
                 self.currentCollection = event.Label
-                event.Name = event.Label # Update for Find() function
+                # Update the Name for Find() to work
+                self.collectionsList.Items[event.Item].Name = event.Label 
             else:
                 # Cancel the event and return the label to its original state.
                 event.CancelEdit = True
@@ -374,67 +376,83 @@ class CollectionsManagerUI(Panel):
             name = "New collection"
             # If this name still exists, then just go to that and rename it.
             if name in self.collections.Names():
-                items = self.collectionsList.Items.Find(name, False)
-                if len(items) > 0:
-                    c = items[0]
+                try:
+                    item = self.collectionsList.Items.Find(name, False)[0]
+                except IndexError:
+                    return      # This is an error if the item can't be found.
             else:
                 self.collections.Add(name)
-                c = self.collectionsList.AddCollection(name)
-            c.BeginEdit()
+                item = self.collectionsList.AddCollection(name)
+            item.BeginEdit()
 
         elif event.Button.Text == "Delete":
-            selection = self.collectionsList.SelectedItems
-            if selection.Count > 0:
-                message = "Are you sure you want to delete collection '" +\
-                          selection[0].Text +"'?"
-                caption = "Confirm delete"
-                result = MessageBox.Show(message, caption,
-                                         MessageBoxButtons.YesNo,
-                                         MessageBoxIcon.Question)
+            try:
+                itemToDelete = self.collectionsList.SelectedItems[0]
+            except IndexError:
+                return          # There is nothing selected
+                
+            moduleName = itemToDelete.Text
+            message = f"Are you sure you want to delete collection '{moduleName}'?"
+            caption = "Confirm delete"
+            result = MessageBox.Show(message, caption,
+                                     MessageBoxButtons.YesNo,
+                                     MessageBoxIcon.Question)
 
-                if result == DialogResult.Yes:
-                    self.collections.Delete(selection[0].Text)
-                    selection[0].Remove()
-                    # No collection is selected at this point, so just
-                    # clear the modules List.
-                    self.currentCollection = None
-                    self.modulesList.Items.Clear()
+            if result == DialogResult.Yes:
+                self.collections.Delete(moduleName)
+                itemToDelete.Remove()
+                # No collection is selected at this point, so just
+                # clear the modules List.
+                self.currentCollection = None
+                self.modulesList.Items.Clear()
 
         elif event.Button.Text == "Rename":
-            selection = self.collectionsList.SelectedItems
-            if selection.Count > 0:
-                selection[0].BeginEdit()
+            try:
+                item = self.collectionsList.SelectedItems[0]
+            except IndexError:
+                return          # There is nothing selected
 
-        elif event.Button.Text == "Move Up":
-            selection = self.modulesList.SelectedItems
-            if selection.Count > 0:
-                moduleName = selection[0].Text
-                self.collections.MoveModuleUp(self.currentCollection,
-                                              moduleName)
-                # Re-create the list and select the same item
-                self.__OnCollectionSelected(self.currentCollection)
-                items = self.modulesList.Items.Find(moduleName, False)
-                if len(items) > 0:
-                    items[0].Selected = True
+            item.BeginEdit()
 
-        elif event.Button.Text == "Move Down":
-            selection = self.modulesList.SelectedItems
-            if selection.Count > 0:
-                moduleName = selection[0].Text
-                self.collections.MoveModuleDown(self.currentCollection,
-                                                moduleName)
-                # Re-create the list and select the same item
-                self.__OnCollectionSelected(self.currentCollection)
-                items = self.modulesList.Items.Find(moduleName, False)
-                if len(items) > 0:
-                    items[0].Selected = True
-
+        elif event.Button.Text == "Move Up" \
+            or event.Button.Text == "Move Down":
+            try:
+                itemToMove = self.modulesList.SelectedItems[0]
+            except IndexError:
+                return          # There is nothing selected
+                
+            if event.Button.Text == "Move Up":
+                if itemToMove.Index < 1:
+                    return
+                else:
+                    newIndex = itemToMove.Index - 1
+                collectionsMoveFunc = self.collections.MoveModuleUp
+            else:                   # Down
+                if itemToMove.Index >= self.modulesList.Items.Count - 1:
+                    return
+                else:
+                    newIndex = itemToMove.Index + 1
+                collectionsMoveFunc = self.collections.MoveModuleDown
+                    
+            self.modulesList.BeginUpdate()
+            self.modulesList.Items.Remove(itemToMove)
+            self.modulesList.Items.Insert(newIndex, itemToMove)
+            self.modulesList.FocusedItem = itemToMove 
+            self.modulesList.EnsureVisible(newIndex) 
+            self.modulesList.EndUpdate()
+            
+            collectionsMoveFunc(self.currentCollection,
+                                itemToMove.Text)
+                        
         elif event.Button.Text == "Remove":
-            selection = self.modulesList.SelectedItems
-            if selection.Count > 0:
-                self.collections.RemoveModule(self.currentCollection,
-                                              selection[0].Text)
-                selection[0].Remove()
+            try:
+                itemToRemove = self.modulesList.SelectedItems[0]
+            except IndexError:
+                return          # There is nothing selected
+            
+            self.collections.RemoveModule(self.currentCollection,
+                                          itemToRemove.Text)
+            itemToRemove.Remove()
 
         elif event.Button.Text == "Add Module":
             if self.moduleBrowser.selectedNode:
