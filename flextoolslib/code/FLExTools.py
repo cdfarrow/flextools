@@ -18,7 +18,7 @@
 #   Copyright Craig Farrow, 2010 - 2022
 #
 
-import sys
+from sys import argv
 import os
 import traceback
 
@@ -49,9 +49,8 @@ from System.Windows.Forms import (
 
 import logging
 
-if (sys.argv[-1].lower() == "debug"):
+if "DEBUG" in argv[1:]:
     loggingLevel = logging.DEBUG
-    sys.argv.pop(-1)
 else:
     loggingLevel = logging.INFO
 
