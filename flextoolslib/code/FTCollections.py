@@ -138,8 +138,11 @@ class CollectionsManager(object):
     def Rename(self, collectionName, newName):
         if collectionName not in self.collections:
             raise FTC_NameError("Collection not found.")
-        if newName.lower() in [c.lower() for c in self.collections]:
-            raise FTC_ExistsError(f"'{newName}' already exists.")
+            
+        # Prevent duplicate names, but allow change of case
+        if newName.lower() != collectionName.lower():
+            if newName.lower() in [c.lower() for c in self.collections]:
+                raise FTC_ExistsError(f"'{newName}' already exists.")
 
         try:
             os.rename(os.path.join(COLLECTIONS_PATH,
