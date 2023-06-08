@@ -16,7 +16,9 @@ clr.AddReference("System.Windows.Forms")
 import os
 import System
 from System.Drawing import (Color,
+                            Size,
                             Font, FontStyle, FontFamily)
+from sys import argv
 
 # Icon path details
 
@@ -36,10 +38,26 @@ ReportIconParams  = (ICON_PATH2, ICON_SUFFIX2)
 
 SPLITTER_WIDTH = 4
 
-# Font styles
-smallFont   = Font(FontFamily.GenericSansSerif, 8.0)
-normalFont  = Font(FontFamily.GenericSansSerif, 10.0)
-headingFont = Font(FontFamily.GenericSansSerif, 11.0)
+if "DEMO" in argv[1:]:
+    # Font styles
+    smallFont   = Font(FontFamily.GenericSansSerif, 12.0)
+    normalFont  = Font(FontFamily.GenericSansSerif, 15.0)
+    headingFont = Font(FontFamily.GenericSansSerif, 16.5)
+
+    # Window sizes
+    mainWindowSize = Size(900, 500)
+    collectionsWindowSize = Size (800,500)
+
+else:
+    # Font styles
+    smallFont   = Font(FontFamily.GenericSansSerif, 8.0)
+    normalFont  = Font(FontFamily.GenericSansSerif, 10.0)
+    headingFont = Font(FontFamily.GenericSansSerif, 11.0)
+
+    # Window sizes
+    mainWindowSize = Size(700, 500)
+    collectionsWindowSize = Size (600,500)
+
 
 # Colours
 leftPanelColor  = Color.FromArgb(0xFA, 0xF8, 0xF0) # Light wheat

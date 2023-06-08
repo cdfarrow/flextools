@@ -423,7 +423,7 @@ class FTMainForm (Form):
 
     def __init__(self, appTitle=None, appMenu=None, appStatusbar=None):
         Form.__init__(self)
-        self.ClientSize = Size(700, 500)
+        self.ClientSize = UIGlobal.mainWindowSize
         if appTitle:
             self.Text = appTitle
         else:

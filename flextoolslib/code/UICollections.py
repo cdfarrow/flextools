@@ -334,9 +334,9 @@ class CollectionsManagerUI(Panel):
             else:
                 self.modulesList.Items.Add(moduleName)
 
-    def __OnCollectionSelected(self, itemName):
-        self.currentCollection = itemName
-        self.modulesList.UpdateList(self.collections.ListOfModules(itemName))
+    def __OnCollectionSelected(self, collectionName):
+        self.currentCollection = collectionName
+        self.modulesList.UpdateList(self.collections.ListOfModules(collectionName))
 
     def __OnCollectionRenamed(self, sender, event):
         # Determine if the label is changed by checking for null.
@@ -458,7 +458,7 @@ class CollectionsManagerUI(Panel):
 class CollectionsDialog(Form):
     def __init__(self, cm, mm, currentCollection):
         Form.__init__(self)
-        self.ClientSize = Size(600, 600)
+        self.ClientSize = UIGlobal.collectionsWindowSize
         self.Text = "Collections Manager"
         self.Icon = Icon(UIGlobal.ApplicationIcon)
 
