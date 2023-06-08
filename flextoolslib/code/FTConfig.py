@@ -36,14 +36,14 @@ INI_FILENAME = "flextools.ini"
 # A custom location for flextools.ini can be provided on the command
 # line, otherwise we assume the current working directory.
 
-if (argv[-1].endswith(INI_FILENAME)):
-    logger.debug(f"Setting CWD: {argv[-1]}")
-    INI_PATH = abspath(argv[-1])
-    BASE_PATH = dirname(INI_PATH)
-    chdir(BASE_PATH)
-    argv.pop(-1)
-else:
-    BASE_PATH = getcwd()
+BASE_PATH = getcwd()
+for a in argv[1:]:
+    if (a.endswith(INI_FILENAME)):
+        logger.debug(f"Setting CWD: {a}")
+        INI_PATH = abspath(a)
+        BASE_PATH = dirname(INI_PATH)
+        chdir(BASE_PATH)
+        break
 
 logger.info(f"Current working directory: {BASE_PATH}")
 
