@@ -177,7 +177,7 @@ def MakeSortString(py, stroke_count, strokes):
     # The Stroke count is represented as letters to make it distinguishable
     # from the tone number. '@' is used for zero.
     ssmap = ['@','A','B','C','D','E','F','G','H','I']
-    stroke_count = ssmap[stroke_count / 10] + ssmap[stroke_count % 10]
+    stroke_count = ssmap[stroke_count // 10] + ssmap[stroke_count % 10]
     # The default ICU sort in Fieldworks ignores punctuation, so
     # we change ':' to '9' so '5' < u-diaresis < 'a'
     # E.g. lu4 < lu94 < luan
