@@ -505,7 +505,7 @@ class FTMainForm (Form):
                 self.UpdateStatusBar()
             return
 
-        newPercent = (val * 100) / max          # val = [0...max]
+        newPercent = (val * 100) // max          # val = [0...max]
         refresh = False
         if msg != self.progressMessage:
             refresh = True

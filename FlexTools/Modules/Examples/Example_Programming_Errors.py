@@ -46,10 +46,10 @@ def MainFunction(project, report, modifyAllowed):
     report.Info("%d coffee shops" % numEntries)
 
     report.Info("Division by zero error...")
-    report.Info("%d coffee beans per coffee shop" % (10000 / coffeeShops))
+    report.Info("%d coffee beans per coffee shop" % (10000 // coffeeShops))
 
     report.Info("Type error...")
-    report.Info("%d coffee beans per coffee shop" % 10000 / coffeeShops)
+    report.Info("%d coffee beans per coffee shop" % 10000 // coffeeShops)
 
     
              

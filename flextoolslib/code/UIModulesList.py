@@ -85,8 +85,8 @@ class ModulesList(ListBox):
         imageRect = myBounds.MemberwiseClone()
         imageRect.Inflate(-1,-1)
         imageRect.Width = self.icon.Width
-        imageRect.X += (self.ICON_SPACE - self.icon.Width) / 2
-        imageRect.Y += (imageRect.Height - self.icon.Height) / 2
+        imageRect.X += (self.ICON_SPACE - self.icon.Width) // 2
+        imageRect.Y += (imageRect.Height - self.icon.Height) // 2
         imageRect.Height = self.icon.Height
 
         textRect = myBounds.MemberwiseClone()

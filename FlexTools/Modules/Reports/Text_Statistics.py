@@ -53,14 +53,14 @@ def MainFunction(project, report, modifyAllowed):
     if numSentences > 0:
         report.Info("%d words (average of %.1f per sentence; %.1f per text.)" %
                     (numWords,
-                     float(numWords) / numSentences,
-                     float(numWords) / numTexts))
+                     numWords / numSentences,
+                     numWords / numTexts))
     if numParagraphs > 0:
         report.Info("%d sentences (average of %.1f per paragraph.)" %
-                    (numSentences, float(numSentences) / numParagraphs))
+                    (numSentences, numSentences / numParagraphs))
     if numTexts > 0:
         report.Info("%d paragraphs (average of %.1f per text.)" %
-                    (numParagraphs, float(numParagraphs) / numTexts))
+                    (numParagraphs, numParagraphs / numTexts))
 
          
 #----------------------------------------------------------------
