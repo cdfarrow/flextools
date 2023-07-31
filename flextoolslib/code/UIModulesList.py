@@ -16,12 +16,16 @@ from . import UIGlobal
 from .FTConfig import FTConfig
 from .FTModuleClass import *
 
+from System import String
+
+from System.Collections.Generic import List
+
 from System.Drawing import (Color, SystemColors, Point, PointF, Rectangle,
                             Size, Bitmap, Image, Icon, SystemIcons,
                             SolidBrush, Pens, Font, FontStyle, FontFamily)
 
 from System.Windows.Forms import (
-    ListBox, DrawMode,
+    ListBox, SelectionMode, DrawMode,
     Button,
     DockStyle, Orientation, View, SortOrder,
     HorizontalAlignment, ImageList,
@@ -120,7 +124,8 @@ class ModulesList(ListBox):
         if keepSelection:
             currentSelection = self.SelectedIndex
 
-        formattedItems = []
+        # ListBox requires a .NET List; initialise to contain String types.
+        formattedItems = List[String]()
         self.DataSource = None
 
         for moduleFullName in contents:
@@ -141,7 +146,7 @@ class ModulesList(ListBox):
             else:
                 composedString = "\nModule '%s' missing or failed to import!\n" \
                                   % moduleFullName
-            formattedItems.append(composedString)
+            formattedItems.Add(composedString)
         self.DataSource = formattedItems
 
         if keepSelection:
