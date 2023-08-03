@@ -143,10 +143,10 @@ class CollectionsList(ListView):
         # Appearance: Full-width, single column display of the list
         #   View = Details
         #   Needs a Column for it to display; -2 means auto-size
-        #   HeaderStyle = ColumnHeaderStyle.None (0) to hide the header
+        #   HeaderStyle = ColumnHeaderStyle.None to hide the header
         self.View = View.Details
         self.Columns.Add("", -2)
-        self.HeaderStyle  = 0
+        self.HeaderStyle  = getattr(ColumnHeaderStyle, "None")
         
         self.FullRowSelect = True
         self.HideSelection = False    # Keep selected item grey when lost focus
@@ -205,10 +205,10 @@ class CollectionsModuleList(ListView):
         # Appearance: Full-width, single column display of the list
         #   View = Details
         #   Needs a Column for it to display; -2 means auto-size
-        #   HeaderStyle = ColumnHeaderStyle.None (0) to hide the header
+        #   HeaderStyle = ColumnHeaderStyle.None to hide the header
         self.View = View.Details
         self.Columns.Add("", -2)
-        self.HeaderStyle  = 0
+        self.HeaderStyle  = getattr(ColumnHeaderStyle, "None")
         
         self.FullRowSelect = True
         self.HideSelection = False    # Keep selected item grey when lost focus
