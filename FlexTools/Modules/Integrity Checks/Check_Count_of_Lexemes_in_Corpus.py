@@ -16,7 +16,7 @@
 
 from flextoolslib import *
 
-from SIL.LCModel import *
+from SIL.LCModel import ISegmentRepository
 
 from collections import defaultdict
 
