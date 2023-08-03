@@ -11,7 +11,7 @@
 
 from flextoolslib import *
 
-from SIL.LCModel import *
+from SIL.LCModel import ISegmentRepository
 from SIL.LCModel.Core.KernelInterfaces import ITsString, ITsStrBldr
 
 from collections import defaultdict

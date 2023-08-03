@@ -15,7 +15,7 @@
 
 from flextoolslib import *
 
-from SIL.LCModel import *
+from SIL.LCModel import IWfiWordformRepository
 from SIL.LCModel.Core.KernelInterfaces import ITsString, ITsStrBldr   
 from SIL.LCModel import SpellingStatusStates
 
@@ -52,12 +52,12 @@ def MainFunction(project, report, modifyAllowed):
         report.Info("Run with project changes allowed to actually change the status.")
     
     for w in project.ObjectsIn(IWfiWordformRepository):
-        if w.SpellingStatus == SpellingStatusStates.undecided:
+        if SpellingStatusStates(w.SpellingStatus) == SpellingStatusStates.undecided:
             form = ITsString(w.Form.BestVernacularAlternative).Text
             if NumberFormRegEx.match(form):
                 report.Info(form, project.BuildGotoURL(w))
                 if modifyAllowed:
-                    w.SpellingStatus = SpellingStatusStates.correct
+                    w.SpellingStatus = int(SpellingStatusStates.correct)
 
 #----------------------------------------------------------------
 # The name 'FlexToolsModule' must be defined like this:
