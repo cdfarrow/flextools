@@ -4,12 +4,12 @@
 #               FieldWorks Language Explorer projects.
 #----------------------------------------------------------------------------
 
-version = "2023.4.25"
+version = "2023.8.9"
 
 # Minimum and maximum supported versions of Fieldworks
 # (Later versions should work if the LCM interface hasn't changed.)
 MinFWVersion = "9.0.4"
-MaxFWVersion = "9.1.20"
+MaxFWVersion = "9.1.21"
 
 
 #----------------------------------------------------------------------------
