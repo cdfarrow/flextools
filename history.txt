@@ -9,7 +9,17 @@ FLExTools History
 
 ====== History =======
 
-2.2.2_2023.04.TBD
+2.2.3_2023.08.09
+----------------
+
++ Issue #32: Handles missing entries in a collections .ini file.
++ Added a command-line option DEMO, which uses larger fonts and windows
+    for doing presentations.
++ Minor improvements and bug fixes to the lists in the Collections Manager.
++ First-pass on fixes to support pythonnet library v3.0.1
+
+
+2.2.2_2023.04.25
 ----------------
 
 + New Module:
