@@ -32,6 +32,7 @@ docs = {FTM_Name        : "Find Duplicate Definitions",
         FTM_Version     : 1,
         FTM_ModifiesDB  : True,
         FTM_Synopsis    : "Finds entries with duplicate definitions.",
+        FTM_Help        : "Merging Duplicates Help.htm",
         FTM_Description :
 """
 This module scans each lexical entry and reports if there are any duplicate
