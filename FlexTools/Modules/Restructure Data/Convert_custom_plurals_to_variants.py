@@ -28,7 +28,7 @@ from SIL.LCModel.Core.Cellar import CellarPropertyType
 # Documentation that the user sees:
 
 docs = {FTM_Name       : "Convert Custom Plurals",
-        FTM_Version    : 1,
+        FTM_Version    : 2,
         FTM_ModifiesDB : True,
         FTM_Synopsis   : "Convert the data in custom fields named 'Plural' into variants of type Plural.",
         FTM_Help       : None,
@@ -88,17 +88,12 @@ def ConvertPlurals(project, report, modifyAllowed):
     numEntries = project.LexiconNumberOfEntries()
     report.Info(f"Scanning {numEntries} entries for plural conversions...")
     report.ProgressStart(numEntries)
-    
-    mdcAccessor = project.project.MetaDataCacheAccessor
-    
+
     pluralCustomFieldID = project.LexiconGetEntryCustomFieldNamed("Plural")
     if not pluralCustomFieldID:
         report.Error("Plural custom field doesn't exist at entry level")
     else:
-        pluralFieldType = mdcAccessor.GetFieldType(pluralCustomFieldID)
-        if pluralFieldType not in (CellarPropertyType.String, 
-                                   CellarPropertyType.MultiString,
-                                   CellarPropertyType.MultiUnicode):
+        if not project.LexiconFieldIsAnyStringType(pluralCustomFieldID):
             # not a field type we can handle
             report.Error("Plural custom field is not a field type we can handle")
             pluralCustomFieldID = None
@@ -153,7 +148,7 @@ def ConvertPlurals(project, report, modifyAllowed):
                 addPluralVariant = False
         
         # create a new variant from the data in the plural custom field
-        if pluralFieldType == CellarPropertyType.String:
+        if project.LexiconFieldIsStringType(pluralCustomFieldID):
             # the plural type is a simple string
             # create a TsString with the plural form
             tssVariantLexemeForm = TsStringUtils.MakeString(pluralStr,
