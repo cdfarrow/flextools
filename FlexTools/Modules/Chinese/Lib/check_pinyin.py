@@ -39,7 +39,7 @@ def get_tonenum_dict(fname):
     @return: list of Chinese lexemes with pronunciations
     @rtype: list of tuples
     """
-    word_file = open(fname)
+    word_file = open(fname, encoding="utf-8")
     line_num = 0
     word_tonenum = list()
     digits = set('123456789')
@@ -47,7 +47,7 @@ def get_tonenum_dict(fname):
     #char_prons = get_xhc_char_prons()
     for line in word_file:
         line_num += 1
-        line = line.decode('utf8').strip()
+        line = line.strip()
         fields = line.split('\t')
         if len(fields) != 2:
             logger.error("line %d: num of fields != 2" %  line_num)
@@ -65,7 +65,6 @@ def get_tonenum_dict(fname):
                 # include with erhua
                 word_tonenum += ((chinese.replace('（儿）', '儿'), tonenum),)
                 # and without erhua
-                tonenum 
                 word_tonenum += ((chinese.replace('（儿）', ''),
                                   removeR.sub("", tonenum)),)
             else:

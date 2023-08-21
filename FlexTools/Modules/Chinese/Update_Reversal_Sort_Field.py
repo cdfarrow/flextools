@@ -13,9 +13,6 @@
 #   Platforms: Python .NET and IronPython
 #
 
-from __future__ import unicode_literals
-from builtins import str
-
 from flextoolslib import *
 
 import site
