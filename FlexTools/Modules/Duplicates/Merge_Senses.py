@@ -13,7 +13,6 @@
 
 from flextoolslib import *
 
-from SIL.LCModel import *
 from SIL.LCModel.Core.KernelInterfaces import ITsString, ITsStrBldr   
 
 from __DuplicatesConfig import *
@@ -95,11 +94,13 @@ def MergeSenses(project, report, modifyAllowed):
                 else:
                     msg = "   Merging %s [%s]: senses %s"
 
-                senseNumbers = " & ".join([", ".join([s.SenseNumber for s in senses[:-1]]),
-                                            senses[-1].SenseNumber])
+                senseNumbers = [project.LexiconGetSenseNumber(s) for s in senses]
+                formattedNumbers = " & ".join(
+                                         [", ".join(senseNumbers[:-1]),
+                                          senseNumbers[-1]])
                 report.Info(msg % (entry.HomographForm,
                                    senses[0].ShortName,
-                                   senseNumbers),
+                                   formattedNumbers),
                             project.BuildGotoURL(entry))
 
                 if DoMerge:
