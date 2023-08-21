@@ -3,6 +3,7 @@ FlexTools/Modules-*
 FlexTools/Collections-*
 
 flextools.ini
+FlexTools/Collections/*
 
 # Temp files
 *.tmp
