@@ -8,12 +8,6 @@
 #   using the Sort string database to check for consistency between
 #   the two databases.
 
-from __future__ import unicode_literals
-from __future__ import print_function
-
-import sys, codecs
-sys.stdout = codecs.getwriter("utf-8")(sys.stdout)
-
 import site
 site.addsitedir("..\Lib")
 

@@ -226,17 +226,10 @@ class SortStringDB(dict):
             self[c] = {l: l}            # Sort string is itself for punctuation
 
     def __load(self):
-        # This stack-frame code is all that I've found to work for
-        # getting the current path from Idle, command-line AND
-        # FlexTools (where it is used by a custom-imported module.)
-        # (Use of __file__ failed for Idle)
-        mypath = os.path.dirname(sys._getframe().f_code.co_filename)
-        fname = os.path.join(mypath, self.FileName)
-
-        if fname[-4:] == ".pkl":
-            self.__loadFromPickle(fname)
+        if self.FileName.endswith(".pkl"):
+            self.__loadFromPickle(self.FileName)
         else:
-            self.__loadFromTextFile(fname)
+            self.__loadFromTextFile(self.FileName)
         self.__loadPunctuation()
 
     def Lookup(self, hz, py):
