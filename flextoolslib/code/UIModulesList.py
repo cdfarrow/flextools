@@ -9,9 +9,6 @@
 #   Copyright Craig Farrow, 2010 - 2022
 #
 
-from __future__ import unicode_literals
-from builtins import str
-
 from . import UIGlobal
 from .FTConfig import FTConfig
 from .FTModuleClass import *

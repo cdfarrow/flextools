@@ -4,9 +4,6 @@
 #   Reads char_dat.pkl and writes out a fresh ch2sort.txt from it.
 #   
 
-from __future__ import unicode_literals
-from __future__ import print_function
-
 import site
 site.addsitedir("..\Lib")
 

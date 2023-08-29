@@ -10,9 +10,6 @@
 #   Platforms: Python .NET and IronPython
 #
 
-from __future__ import unicode_literals
-from builtins import str
-
 import unicodedata
 
 from flextoolslib import *
@@ -49,9 +46,6 @@ See Chinese Utilities Help.pdf for detailed information on configuration and usa
 #----------------------------------------------------------------
 # The main processing function
 
-UpdatedSenses = 0
-UpdatedReversals = 0
-
 def UpdatePinyinFields(project, report, modifyAllowed=False):
 
     def __CalcNewPinyin(project, tonenum, pinyin):
@@ -78,7 +72,9 @@ def UpdatePinyinFields(project, report, modifyAllowed=False):
         return (unicodedata.normalize('NFD', newPinyin), msg)
 
     def __WriteSensePinyin(project, sense, entry):
+        global NumWarnings
         global UpdatedSenses
+        
         tonenum = project.LexiconGetSenseGloss(sense, ChineseTonenumWS)
         pinyin  = project.LexiconGetSenseGloss(sense, ChinesePinyinWS)
         headword = project.LexiconGetHeadword(entry)
@@ -87,6 +83,7 @@ def UpdatePinyinFields(project, report, modifyAllowed=False):
         if msg:
             report.Warning("    %s: %s" % (headword, msg),
                            project.BuildGotoURL(entry))
+            NumWarnings += 1
         if newPinyin != pinyin:
             report.Info(("    Updating '%s': %s > %s" if modifyAllowed else
                          "    '%s' needs updating: %s > %s") \
@@ -100,7 +97,9 @@ def UpdatePinyinFields(project, report, modifyAllowed=False):
             __WriteSensePinyin(project, se, entry)
 
     def __WriteReversalPinyin(project, entry):
+        global NumWarnings
         global UpdatedReversals
+        
         tonenum = project.ReversalGetForm(entry, ChineseTonenumWS)
         pinyin  = project.ReversalGetForm(entry, ChinesePinyinWS)
         reversalForm  = project.ReversalGetForm(entry, ChineseWS)
@@ -109,6 +108,7 @@ def UpdatePinyinFields(project, report, modifyAllowed=False):
         if msg:
             report.Warning("    %s: %s" % (reversalForm, msg),
                            project.BuildGotoURL(entry))
+            NumWarnings += 1
         if newPinyin != pinyin:
             report.Info(("    Updating '%s': %s > %s" if modifyAllowed else
                          "    '%s' needs updating: %s > %s") \
@@ -126,6 +126,9 @@ def UpdatePinyinFields(project, report, modifyAllowed=False):
         for se in subentries:
             __WriteReversalPinyin(project, se)
 
+    global NumWarnings 
+    global UpdatedSenses
+    global UpdatedReversals
 
     # Find the Chinese writing systems
 
@@ -146,11 +149,17 @@ def UpdatePinyinFields(project, report, modifyAllowed=False):
     report.Info("Updating Pinyin for all lexical entries")
     report.ProgressStart(project.LexiconNumberOfEntries(), "Lexicon")
 
+    NumWarnings = 0
+    UpdatedSenses = 0
+
     for entryNumber, entry in enumerate(project.LexiconAllEntries()):
         report.ProgressUpdate(entryNumber)
         for sense in entry.SensesOS:
             __WriteSensePinyin(project, sense, entry)
 
+    if NumWarnings > 0:
+        report.Info("  %d warnings" % NumWarnings)
+        
     report.Info(("  %d %s updated" if modifyAllowed else
                  "  %d %s to update") \
                  % (UpdatedSenses, "sense" if (UpdatedSenses==1) else "senses"))
@@ -160,6 +169,8 @@ def UpdatePinyinFields(project, report, modifyAllowed=False):
     if ChineseWS:
         index = project.ReversalIndex(ChineseWS)
         if index:
+            NumWarnings = 0
+            UpdatedReversals = 0
             report.ProgressStart(index.AllEntries.Count, "Reversal index")
             report.Info("Updating Pinyin for '%s' reversal index"
                         % project.WSUIName(ChineseWS))
@@ -167,9 +178,12 @@ def UpdatePinyinFields(project, report, modifyAllowed=False):
                 report.ProgressUpdate(entryNumber)
                 __WriteReversalPinyin(project, entry)
                 
-    report.Info(("  %d %s updated" if modifyAllowed else
-                 "  %d %s to update") \
-                 % (UpdatedReversals, "entry" if (UpdatedReversals==1) else "entries"))
+            if NumWarnings > 0:
+                report.Info("  %d warnings" % NumWarnings)
+
+            report.Info(("  %d %s updated" if modifyAllowed else
+                         "  %d %s to update") \
+                         % (UpdatedReversals, "entry" if (UpdatedReversals==1) else "entries"))
 
 
 #----------------------------------------------------------------

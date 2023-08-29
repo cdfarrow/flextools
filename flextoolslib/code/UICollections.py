@@ -378,7 +378,7 @@ class CollectionsManagerUI(Panel):
             if name in self.collections.Names():
                 try:
                     item = self.collectionsList.Items.Find(name, False)[0]
-                except IndexError:
+                except ArgumentOutOfRangeException:
                     return      # This is an error if the item can't be found.
             else:
                 self.collections.Add(name)
@@ -388,7 +388,7 @@ class CollectionsManagerUI(Panel):
         elif event.Button.Text == "Delete":
             try:
                 itemToDelete = self.collectionsList.SelectedItems[0]
-            except IndexError:
+            except ArgumentOutOfRangeException:
                 return          # There is nothing selected
                 
             moduleName = itemToDelete.Text
@@ -409,7 +409,7 @@ class CollectionsManagerUI(Panel):
         elif event.Button.Text == "Rename":
             try:
                 item = self.collectionsList.SelectedItems[0]
-            except IndexError:
+            except ArgumentOutOfRangeException:
                 return          # There is nothing selected
 
             item.BeginEdit()
@@ -418,7 +418,7 @@ class CollectionsManagerUI(Panel):
             or event.Button.Text == "Move Down":
             try:
                 itemToMove = self.modulesList.SelectedItems[0]
-            except IndexError:
+            except ArgumentOutOfRangeException:
                 return          # There is nothing selected
                 
             if event.Button.Text == "Move Up":
@@ -447,7 +447,7 @@ class CollectionsManagerUI(Panel):
         elif event.Button.Text == "Remove":
             try:
                 itemToRemove = self.modulesList.SelectedItems[0]
-            except IndexError:
+            except ArgumentOutOfRangeException:
                 return          # There is nothing selected
             
             self.collections.RemoveModule(self.currentCollection,

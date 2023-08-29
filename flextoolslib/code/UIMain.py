@@ -61,7 +61,8 @@ from .. import version
 from . import UIGlobal
 from .FTConfig import FTConfig
 from . import UICollections, FTCollections
-from . import UIModulesList, UIReport, UIModuleBrowser
+from . import UIModulesList, UIReport
+from .UIModuleInfo import ModuleInfoDialog
 from .UIProjectChooser import ProjectChooser
 from . import FTModules
 from . import Help
@@ -294,7 +295,7 @@ class FTPanel(Panel):
             module = self.listOfModules[self.modulesList.SelectedIndex]
             moduleDocs = self.moduleManager.GetDocs(module)
             if moduleDocs:
-                infoDialog = UIModuleBrowser.ModuleInfoDialog(moduleDocs)
+                infoDialog = ModuleInfoDialog(moduleDocs)
                 infoDialog.ShowDialog()
 
 

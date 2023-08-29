@@ -17,13 +17,11 @@ SortPickle = os.path.join(datapath, "char_dat.pkl")
 
 
 def loadSortData(fname=SortPickle):
-    pkl=file(fname, 'r')
-    SortData = pickle.load(pkl)
-    pkl.close()
+    with open(fname, 'rb') as file:
+        SortData = pickle.load(file)
     return SortData
 
 def saveSortData(SortData, fname=SortPickle):
-    pkl=file(fname,'w')
-    pickle.dump(SortData, pkl)
-    pkl.close()
-
+    with open(fname, 'wb') as file:
+        pickle.dump(SortData, file)
+    

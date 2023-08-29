@@ -75,8 +75,11 @@ def MainFunction(project, report, modifyAllowed):
         senseUsageField = project.LexiconGetSenseCustomFieldNamed("Sense Frequency")
     
         if not (entryUsageField or senseUsageField):
-            report.Warning("Usage custom fields don't exist. Please read the instructions.")
+            report.Warning("Usage custom fields don't exist. Please read the module information for instructions.")
 
+    if not modifyAllowed:
+        report.Info("(Run with Modify to write the counts into custom fields. Please refer to the module information for instructions.)")
+    
     report.Info("Lexeme Usage:")
 
     numLexemes = project.LexiconNumberOfEntries()
@@ -88,7 +91,7 @@ def MainFunction(project, report, modifyAllowed):
         lexeme = project.LexiconGetHeadword(entry)
         entryTotal = 0
         for sense in entry.SensesOS:
-            senseCount = sense.SenseAnalysesCount
+            senseCount = project.LexiconSenseAnalysesCount(sense)
             if senseCount:
                 report.Info("%s (%s), %d" % (lexeme,
                                              project.LexiconGetSenseGloss(sense),
