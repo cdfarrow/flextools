@@ -34,6 +34,10 @@ FOR %%C IN ("Init"
     
     @REM Build the main FlexTools zip file
     %PYTHON% makezip.py
+    
+    @REM Check for package errors
+    %PYTHON% -m twine check .\dist\flextoolslib*
+    
     echo The distribution files are in dist\:
     dir dist /b
     goto :End
