@@ -182,7 +182,7 @@ class CollectionsList(ListView):
             if activate:
                 try:
                     self.__ActivatedHandler(sender.SelectedItems[0].Text)
-                except ArgumentOutOfRangeException:
+                except IndexError:
                     pass # No item selected; ignore
 
     def AddCollection(self, collectionName):
