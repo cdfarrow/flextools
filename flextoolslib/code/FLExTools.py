@@ -37,8 +37,8 @@ import clr
 import System
 
 clr.AddReference("System.Windows.Forms")
-from System.Windows.Forms import Application
 from System.Windows.Forms import (
+        Application,
         MessageBox, 
         MessageBoxButtons, 
         MessageBoxIcon)
@@ -80,9 +80,10 @@ try:
     from flexlibs import FLExInitialize, FLExCleanup
 
 except Exception as e:
-    msg = f"There was an issue during initialisation.\n{e}\n" \
-          f"(This version of FLExTools has been tested with Fieldworks versions {MinFWVersion} - {MaxFWVersion}.)\n" \
-          f"See flextools.log for more details."
+    msg = f"There was a fatal error during initialisation, which might be because of a newer version of Fieldworks.\n" \
+          f"(This version of FLExTools has been tested with Fieldworks versions {MinFWVersion} - {MaxFWVersion}.)\n"\
+          f"Details: {e}\n"\
+          f"See flextools.log for more information."
     logger.error(msg)
     MessageBox.Show(msg,
                     "FLExTools: Fatal Error",
