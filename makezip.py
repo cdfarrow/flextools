@@ -29,7 +29,11 @@ PATH_PATTERNS = (
     "*.vbs",
     "scripts/*",
     "Modules/**/*",     # "**" = recursive
-    "Collections/*",
+    "Collections/Chinese processors.ini",
+    "Collections/Duplicates.ini",
+    "Collections/Examples.ini",
+    "Collections/Exporters.ini",
+    "Collections/Reports.ini",
     )
     
 FILTERED_SUFFIXES = (".pyd", ".pyc", ".bak", ".log", ".doc", ".tmp")
