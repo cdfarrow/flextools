@@ -25,7 +25,7 @@ ScriptsDir = FSO.GetParentFolderName(WScript.ScriptFullName)
 
 Q = """"
 
-PYTHON = "py -3.8"
+PYTHON = "py"
 
 FLEXTOOLS = PYTHON & " " & Q & FSO.BuildPath(ScriptsDir, "RunFlexTools.py") & Q
 

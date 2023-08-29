@@ -4,12 +4,13 @@
 #               FieldWorks Language Explorer projects.
 #----------------------------------------------------------------------------
 
-version = "2023.8.9"
+# We use the date of release for the version number: YYYY.MM.DD
+version = "2023.08.29"
 
 # Minimum and maximum supported versions of Fieldworks
 # (Later versions should work if the LCM interface hasn't changed.)
 MinFWVersion = "9.0.4"
-MaxFWVersion = "9.1.21"
+MaxFWVersion = "9.1.22"
 
 
 #----------------------------------------------------------------------------

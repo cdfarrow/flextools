@@ -9,6 +9,16 @@ FLExTools History
 
 ====== History =======
 
+2.3.0_2023.08.29
+----------------
+
++ Supports Python 3.6 - 3.11
++ Supports Fieldworks 9.0.4 - 9.1.22
+
++ Renamed Dump_* modules to Export_*
++ Fixes and cleanups to Chinese utilities
+
+
 2.2.3_2023.08.09
 ----------------
 
