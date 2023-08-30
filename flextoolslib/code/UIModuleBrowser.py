@@ -109,6 +109,7 @@ class ModuleBrowser(Panel):
         for m in self.modules.ListOfNames():
             self.moduleTree.AddModuleName(m)
         self.moduleTree.ExpandAll()
+        self.selectedNode = ""
         self.moduleTree.SetSelectedHandler(self.TreeNodeSelected)
                         
         self.splitContainer1 = SplitContainer()
