@@ -1,7 +1,8 @@
 @ECHO OFF
 REM Simple build commands for flextools
 
-set PYTHON=py -3.8
+REM Build with the default Python version
+set PYTHON=py
 
 REM Check that the argument is a valid command, and do it. /I ignores case.
 FOR %%C IN ("Init"
