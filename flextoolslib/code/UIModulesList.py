@@ -125,24 +125,29 @@ class ModulesList(ListBox):
         formattedItems = List[String]()
         self.DataSource = None
 
-        for moduleFullName in contents:
-            itemInfo = self.moduleManager.GetDocs(moduleFullName)
-            if itemInfo:
+        for moduleName in contents:
+            docs = self.moduleManager.GetDocs(moduleName)
+            if docs:
                 # Issue #20 - only display the base name of the module 
                 # in the main UI.
-                displayName = moduleFullName.split(".", 1)[1]
+                try:
+                    displayName = moduleName.split(".", 1)[1]
+                except IndexError:
+                    # It is a top-level module with no '<library>.' prefix.
+                    displayName = moduleName
+
                 composedString = "%s, version %s\n%s" %(displayName,
-                                                       str(itemInfo[FTM_Version]),
-                                                       itemInfo[FTM_Synopsis])
-                if itemInfo[FTM_ModifiesDB]:
+                                                       str(docs[FTM_Version]),
+                                                       docs[FTM_Synopsis])
+                if docs[FTM_ModifiesDB]:
                     composedString += "\nNote: Can modify the project. "
                     if not FTConfig.simplifiedRunOps:
                         composedString += "(Use the 'Run (Modify)' buttons to make changes.) "
-                if itemInfo[FTM_HasConfig]:
+                if docs[FTM_HasConfig]:
                     composedString += "\nNote: This module has configurable parameters"
             else:
                 composedString = "\nModule '%s' missing or failed to import!\n" \
-                                  % moduleFullName
+                                  % moduleName
             formattedItems.Add(composedString)
         self.DataSource = formattedItems
 

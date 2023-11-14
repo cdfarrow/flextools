@@ -15,7 +15,7 @@
 
 import os
 import sys
-import imp
+import importlib
 import traceback
 
 import System
@@ -44,28 +44,29 @@ logger = logging.getLogger(__name__)
 
 class ModuleManager (object):
 
-    def __always_import(self, path, name):
-        # This code is from Python 2.5 Help section 29.1.1, but skipping
-        # the check for the module already being in sys.modules.
-        # This allows us to have more than one .py Module file with the same
-        # name, but in different directories.
+    def __importModule(self, moduleName, modulePath):
+        # Manually import the Python module.
+        # moduleName is the name of the module in Python namespace.
+        # modulePath is the full path+filename of the module.
 
-        fp, pathname, description = imp.find_module(name, [path])
-
+        spec = importlib.util.spec_from_file_location(moduleName, modulePath)
+        if spec is None:
+            self.__errors.append(f"{modulePath} not found.")
+            return None
+            
+        logger.debug(f"Attempting import of {modulePath}")
         try:
-            return imp.load_module(name, fp, pathname, description)
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            return mod
         except FTM_ModuleError as e:
-            msg = "%s\\%s:\n%s" % (path, name, e.message)
+            msg = f"{modulePath}:\n{e.message}"
             self.__errors.append(msg)
             return None
         except:
-            msg = "Module error: %s\n %s" % (pathname, traceback.format_exc())
+            msg = f"Module error: {modulePath}\n {traceback.format_exc()}"
             self.__errors.append(msg)
             return None
-        finally:
-            # Since we may exit via an exception, close fp explicitly.
-            if fp:
-                fp.close()
 
     def __openProject(self, projectName, modifyAllowed):
         #logger.debug("__openProject %s" % projectName)
@@ -106,6 +107,10 @@ class ModuleManager (object):
     # --- Public methods ---
 
     def LoadAll(self):
+        # Loads all the FlexTools modules from the Modules folder.
+        # Returns a list of error messages about duplicate module names.
+        # An empty list means there were no errors.
+        
         self.project = None
         self.__modules = {}
         self.__errors = []
@@ -117,8 +122,8 @@ class ModuleManager (object):
         for library in libNames:
             libPath = os.path.join(MODULES_PATH, library)
 
-            modNames = [m[:-3] for m in os.listdir(libPath)
-                                        if m.endswith(".py")]
+            modNames = [m for m in os.listdir(libPath)
+                            if m.endswith(".py")]
             logger.info("From library %s: %s" % (library, repr(modNames)))
 
             for moduleFileName in modNames:
@@ -127,33 +132,35 @@ class ModuleManager (object):
                 if moduleFileName.startswith("__"):
                     continue
 
-                # Import named Python module from libPath
-                module = self.__always_import(libPath, moduleFileName)
+                moduleFullPath = os.path.join(libPath, moduleFileName)
+                moduleName = os.path.splitext(moduleFileName)[0]
+                
+                # Import the Python module
+                module = self.__importModule(moduleName, moduleFullPath)
 
                 if not module:
-                    logger.warning("Warning: FlexToolsModule import failure %s." % moduleFileName)
+                    logger.warning(f"Warning: FlexToolsModule import failure - {moduleFullPath}")
                     continue
+
                 try:
                     ftm = module.FlexToolsModule
                 except AttributeError:
-                    logger.warning("Warning: FlexToolsModule not found in %s." % moduleFileName)
+                    logger.warning(f"Warning: FlexToolsModule not found in {moduleFullPath}")
                     continue
 
                 if library:
                     moduleFullName = ".".join([library, ftm.GetDocs()[FTM_Name]])
-                    modulePath = os.path.join(MODULES_PATH, library, moduleFileName)
                 else:
                     moduleFullName = ftm.GetDocs()[FTM_Name]
-                    modulePath = os.path.join(MODULES_PATH, moduleFileName)
 
                 if moduleFullName in self.__modules:
                     otherModule = self.__modules[moduleFullName].docs[FTM_Path]
                     errString = "Duplicate module names found in these files (using the first one):\n"\
-                                "\t%s \n\t%s" % (otherModule, modulePath)
+                                "\t%s \n\t%s" % (otherModule, moduleFullPath)
                     self.__errors.append(errString)
                     continue
 
-                ftm.docs[FTM_Path] = modulePath
+                ftm.docs[FTM_Path] = moduleFullPath
                 self.__modules[moduleFullName] = ftm
 
         return self.__errors
@@ -206,7 +213,12 @@ class ModuleManager (object):
 
             # Issue #20 - only display the base name of the module 
             # in the main UI.
-            displayName = moduleName.split(".", 1)[1]
+            try:
+                displayName = moduleName.split(".", 1)[1]
+            except IndexError:
+                # It is a top-level module with no '<library>.' prefix.
+                displayName = moduleName
+
             reporter.Info("Running %s (version %s)..." %
                           (displayName,
                            str(docs[FTM_Version])))

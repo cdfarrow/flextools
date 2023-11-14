@@ -7,8 +7,8 @@
 
 import os
 import sys
-import imp
-# import importlib - TODO: switch to using importlib
+import importlib
+
 import traceback
 
 import logging
@@ -28,49 +28,42 @@ from ..code.FTReport import FTReporter
 
 def __ImportModule(moduleFolderAndName):
     #
-    # Import the module
+    # Import the module given the full path and file name.
     #
 
-    modulePath, moduleName = os.path.split(moduleFolderAndName)
-    absPath = os.path.abspath(moduleFolderAndName)
-    moduleName, _ = os.path.splitext(moduleName)
-    libPath, _ = os.path.split(absPath)
-
-    logger.debug(absPath)
+    modulePath = os.path.abspath(moduleFolderAndName)
+    moduleName = os.path.split(moduleFolderAndName)[1]
+    moduleName = os.path.splitext(moduleName)[0]
+  
+    libPath = os.path.split(modulePath)[0]
 
     # Append the local path in case there are local dependencies
     sys.path.append(libPath)
 
     logger.info(f"Importing {libPath}::{moduleName}")
 
-    try:
-        fp, pathname, description = imp.find_module(moduleName, [libPath])
-    except ImportError as e:
-        logger.error(f"Can't find module '{moduleFolderAndName}'!")
-        return None
+    # Manually import the Python module.
+    # moduleName is the name of the module in Python namespace.
+    # modulePath is the full path+filename of the module.
 
+    spec = importlib.util.spec_from_file_location(moduleName, modulePath)
+    if spec is None:
+        logger.error(f"{modulePath} not found.")
+        return None
+        
+    logger.debug(f"Attempting import of {modulePath}")
     try:
-        module = imp.load_module(moduleName, fp, pathname, description)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        return mod
     except FTM_ModuleError as e:
-        msg = f"{moduleFolderAndName}:\n{e.message}"
-        logger.error(msg)
-        return None
+        msg = f"{modulePath}:\n{e.message}"
     except:
-        msg = f"\nException importing module {pathname}\n{traceback.format_exc()}"
+        msg = f"Module error: {modulePath}\n {traceback.format_exc()}"
+        
+    if msg:
         logger.error(msg)
-        return None
-    finally:
-        # Since we may exit via an exception, close fp explicitly.
-        if fp:
-            fp.close()
-
-    try:
-        ftm = module.FlexToolsModule
-    except AttributeError:
-        logger.error (f"FlexToolsModule object not found in {moduleFolderAndName}.")
-        return None
-    
-    return ftm
+    return None
 
 
 #----------------------------------------------------------------
@@ -78,8 +71,15 @@ def __ImportModule(moduleFolderAndName):
 def __RunModule(module, project):
 
     # --- Import the module ---
-    ftm = __ImportModule(module)
-    if not ftm:
+    mod = __ImportModule(module)
+    
+    if not mod:
+        return False
+
+    try:
+        ftm = mod.FlexToolsModule
+    except AttributeError:
+        logger.warning(f"Warning: FlexToolsModule not found in {module}")
         return False
 
     logger.info (f"Module info:\n{ftm.Help()}")
