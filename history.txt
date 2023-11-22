@@ -11,8 +11,8 @@ FLExTools History
 2.3.0_2023.11.22
 ----------------
 
-+ Added support for Python 3.12 (via flexlibs 1.2.2).
-+ Removed Python 3.7 & 3.8 from compatibility list due to use of 3.9+ language features (viz. assignment expressions).
++ Added support for Python 3.12.
++ Removed Python 3.6 & 3.7 from compatibility list due to use of 3.8+ language features (viz. assignment expressions).
 + Supports Fieldworks 9.0.4 - 9.1.24 (later versions will likely work, but are untested)
 
 
