@@ -41,6 +41,7 @@ from System.Windows.Forms import (
     TabControl, TabPage, TabAlignment,
     ToolBar, ToolBarButton, ToolBarButtonStyle, ToolBarAppearance,
     ImageList,
+    ColorDepth,
     RichTextBox, HtmlDocument, SplitContainer)
 
 from System import (
@@ -100,6 +101,7 @@ Toolbar has New, Rename, Delete | MoveUp, MoveDown | Add Module
         self.Dock = DockStyle.Top
 
         self.ImageList = ImageList()
+        self.ImageList.ColorDepth = ColorDepth.Depth32Bit
 
         for b in self.ButtonList:
             self.__buttonBuilder(b)
