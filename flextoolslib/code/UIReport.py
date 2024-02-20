@@ -21,7 +21,8 @@ from System.Drawing import (
 from System.Windows.Forms import (
     DockStyle, Orientation, View, SortOrder,
     ListView, ListViewItem, DrawItemState, ColumnHeaderStyle,
-    HorizontalAlignment, ImageList,
+    HorizontalAlignment, 
+    ImageList, ColorDepth,
     Clipboard,
     )
 
@@ -53,6 +54,7 @@ class ReportWindow(ListView):
 
         # Configure icons
         self.SmallImageList = ImageList()
+        self.SmallImageList.ColorDepth = ColorDepth.Depth32Bit
         images = ("information", "exclamation", "cross_circle")
         for i in images:
             self.SmallImageList.Images.Add(
