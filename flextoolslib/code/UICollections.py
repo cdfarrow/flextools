@@ -27,7 +27,8 @@ from . import FTModules
 from System.Drawing import (Color, SystemColors, Point, Rectangle, Size, Bitmap,
                             Image, Icon,
                             Font, FontStyle, FontFamily)
-from System.Windows.Forms import (Application, BorderStyle, Button,
+from System.Windows.Forms import (
+    Application, BorderStyle, Button,
     Form, FormBorderStyle, Label,
     Panel, Screen, FixedPanel, Padding,
     KeyEventArgs, KeyPressEventArgs, Keys,
@@ -40,14 +41,15 @@ from System.Windows.Forms import (Application, BorderStyle, Button,
     TabControl, TabPage, TabAlignment,
     ToolBar, ToolBarButton, ToolBarButtonStyle, ToolBarAppearance,
     ImageList,
-    RichTextBox, HtmlDocument, SplitContainer )
+    RichTextBox, HtmlDocument, SplitContainer)
 
 from System import (
     ArgumentOutOfRangeException
     )
 
-
+# Set of characters prohibited from collection names
 INVALID_CHARS = set(r':\/*?"<>|')
+
 # ------------------------------------------------------------------
 class CollectionsToolbar(ToolBar):
     """
@@ -76,11 +78,11 @@ Toolbar has New, Rename, Delete | MoveUp, MoveDown | Add Module
                   ["Delete",
                    True, False, False,
                    "delete", "Delete the selected collection"],
-                  None, # Separator
+                  None,     # Separator
                   ["Add Module",
                    False, True, False,
                    "add", "Add a module to the current module collection"],
-                  None, # Separator
+                  None,     # Separator
                   ["Move Up",
                    False, False, True,
                    "arrow-up", "Move the selected module up"],
@@ -90,7 +92,7 @@ Toolbar has New, Rename, Delete | MoveUp, MoveDown | Add Module
                   ["Remove",
                    False, False, True,
                    "delete", "Remove the selected module"],
-                   ]
+                  ]
 
     def __init__(self):
         ToolBar.__init__(self)
@@ -146,7 +148,7 @@ class CollectionsList(ListView):
         #   HeaderStyle = ColumnHeaderStyle.None to hide the header
         self.View = View.Details
         self.Columns.Add("", -2)
-        self.HeaderStyle  = getattr(ColumnHeaderStyle, "None")
+        self.HeaderStyle = getattr(ColumnHeaderStyle, "None")
         
         self.FullRowSelect = True
         self.HideSelection = False    # Keep selected item grey when lost focus
@@ -157,6 +159,8 @@ class CollectionsList(ListView):
         tooltip.IsBalloon = True
         tooltip.SetToolTip(self, "Double-click a collection to select it.")
 
+        self.__SelectedHandler = None
+        self.__ActivatedHandler = None
 
     def SetSelectedHandler(self, handler):
         self.__SelectedHandler = handler
@@ -183,7 +187,7 @@ class CollectionsList(ListView):
                 try:
                     self.__ActivatedHandler(sender.SelectedItems[0].Text)
                 except ArgumentOutOfRangeException:
-                    pass # No item selected; ignore
+                    pass    # No item selected; ignore
 
     def AddCollection(self, collectionName):
         item = self.Items.Add(collectionName)
@@ -208,7 +212,7 @@ class CollectionsModuleList(ListView):
         #   HeaderStyle = ColumnHeaderStyle.None to hide the header
         self.View = View.Details
         self.Columns.Add("", -2)
-        self.HeaderStyle  = getattr(ColumnHeaderStyle, "None")
+        self.HeaderStyle = getattr(ColumnHeaderStyle, "None")
         
         self.FullRowSelect = True
         self.HideSelection = False    # Keep selected item grey when lost focus
@@ -299,15 +303,15 @@ class CollectionsManagerUI(Panel):
         self.splitContainer2.Panel1.Controls.Add(self.collectionsTabControl)
         self.splitContainer2.Panel2.Controls.Add(self.modulesTabControl)
 
-        ## Add the main SplitContainer control to the panel.
+        # Add the main SplitContainer control to the panel.
         self.Controls.Add(self.splitContainer2)
-        self.Controls.Add(self.toolbar) # Last in takes space priority
+        self.Controls.Add(self.toolbar)     # Last in takes space priority
 
     # -- Exported methods
 
     def SetFocusOnCurrentCollection(self):
-        ## Setting the focus during initialisation doesn't work
-        ## - it needs to be set during the Form Load handler.
+        # Setting the focus during initialisation doesn't work
+        # - it needs to be set during the Form Load handler.
         if self.itemToSetAsSelected:
             self.itemToSetAsSelected.Focused = True
             self.itemToSetAsSelected.Selected = True
@@ -343,7 +347,7 @@ class CollectionsManagerUI(Panel):
         # Determine if the label has been changed by checking for null.
         if not event.Label:
             return
-        # Don't bother if the user didn't acutally change the name.
+        # Don't bother if the user didn't actually change the name.
         if self.currentCollection != event.Label:
             errorMsg = None
             # Guard against invalid file/path characters in the name.
@@ -365,9 +369,9 @@ class CollectionsManagerUI(Panel):
             else:
                 # Cancel the event and return the label to its original state.
                 event.CancelEdit = True
-                MessageBox.Show (errorMsg, "Renaming error",
-                                 MessageBoxButtons.OK,
-                                 MessageBoxIcon.Error)
+                MessageBox.Show(errorMsg, "Renaming error",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error)
         return
 
 
@@ -457,8 +461,6 @@ class CollectionsManagerUI(Panel):
         elif event.Button.Text == "Add Module":
             if self.moduleBrowser.selectedNode:
                 self.__OnModuleActivated(self.moduleBrowser.selectedNode)
-
-
 
     def __ChangeOfFocusHandler(self, sender, event):
         if self.collectionsList.Focused:
