@@ -24,9 +24,11 @@ from . import FTCollections
 from . import FTModules
 
 
-from System.Drawing import (Color, SystemColors, Point, Rectangle, Size, Bitmap,
-                            Image, Icon,
-                            Font, FontStyle, FontFamily)
+from System.Drawing import (
+    Color, SystemColors, 
+    Point, Rectangle, Size, 
+    Bitmap, Image, Icon,
+    Font, FontStyle, FontFamily)
 from System.Windows.Forms import (
     Application, BorderStyle, Button,
     Form, FormBorderStyle, Label,
@@ -48,91 +50,12 @@ from System import (
     ArgumentOutOfRangeException
     )
 
+from cdfutils.DotNet import CustomToolBar
+
 # Set of characters prohibited from collection names
 INVALID_CHARS = set(r':\/*?"<>|')
 
 # ------------------------------------------------------------------
-class CollectionsToolbar(ToolBar):
-    """
-Toolbar has New, Rename, Delete | MoveUp, MoveDown | Add Module
-    """
-
-    # The toolbar buttons are enabled/disabled according to where the
-    # UI focus is. These values are indices into the ButtonList parameters.
-    INFOCUS_Nothing = 0
-    INFOCUS_Collections = 1
-    INFOCUS_ModuleLibrary = 2
-    INFOCUS_CollectionModules = 3
-    __BUTTON_Text = 0
-    __BUTTON_Image = 4
-    __BUTTON_Tooltip = 5
-
-    # [Text,
-    #  EnabledInCollections, EnabledInModules, EnabledInModuleLibrary,
-    #  Image name, Tool tip]
-    ButtonList = [["New",
-                   True, False, False,
-                   "documents", "Create a new module collection"],
-                  ["Rename",
-                   True, False, False,
-                   "copy", "Rename the selected collection"],
-                  ["Delete",
-                   True, False, False,
-                   "delete", "Delete the selected collection"],
-                  None,     # Separator
-                  ["Add Module",
-                   False, True, False,
-                   "add", "Add a module to the current module collection"],
-                  None,     # Separator
-                  ["Move Up",
-                   False, False, True,
-                   "arrow-up", "Move the selected module up"],
-                  ["Move Down",
-                   False, False, True,
-                   "arrow-down", "Move the selected module down"],
-                  ["Remove",
-                   False, False, True,
-                   "delete", "Remove the selected module"],
-                  ]
-
-    def __init__(self):
-        ToolBar.__init__(self)
-        self.Appearance = ToolBarAppearance.Flat
-        self.Dock = DockStyle.Top
-
-        self.ImageList = ImageList()
-        self.ImageList.ColorDepth = ColorDepth.Depth32Bit
-
-        for b in self.ButtonList:
-            self.__buttonBuilder(b)
-
-    def __buttonBuilder(self, buttonDetails):
-        button = ToolBarButton()
-        if buttonDetails:
-            button.Text = buttonDetails[self.__BUTTON_Text]
-            button.ToolTipText = buttonDetails[self.__BUTTON_Tooltip]
-            self.ImageList.Images.Add(
-                Bitmap.FromFile(buttonDetails[self.__BUTTON_Image].join(
-                                    UIGlobal.ToolbarIconParams)))
-            button.ImageIndex = self.ImageList.Images.Count-1
-            button.Tag = buttonDetails
-        else:
-            button.Style = ToolBarButtonStyle.Separator
-        self.Buttons.Add(button)
-
-    def SetEnabledStates(self, inFocus):
-        if inFocus == self.INFOCUS_Nothing:
-            for b in self.Buttons:
-                if b.Tag:
-                    b.Enabled = False
-        else:
-            for b in self.Buttons:
-                if b.Tag:
-                    b.Enabled = b.Tag[inFocus] # Values 1,2,3
-
-
-# ------------------------------------------------------------------
-
 class CollectionsList(ListView):
     def __init__(self):
         ListView.__init__(self)
@@ -140,7 +63,7 @@ class CollectionsList(ListView):
         self.Dock = DockStyle.Fill
 
         # Behaviour
-        self.LabelEdit = True # allow renaming
+        self.LabelEdit = True   # Allow renaming
         self.Sorting = SortOrder.Ascending
         self.MultiSelect = False
 
@@ -173,7 +96,6 @@ class CollectionsList(ListView):
             if self.__SelectedHandler:
                 self.__SelectedHandler(event.Item.Text)
 
-
     def SetActivatedHandler(self, handler):
         if handler:
             self.__ActivatedHandler = handler
@@ -197,7 +119,6 @@ class CollectionsList(ListView):
         return item
 
 # ------------------------------------------------------------------
-
 class CollectionsModuleList(ListView):
     def __init__(self):
         ListView.__init__(self)
@@ -228,8 +149,95 @@ class CollectionsModuleList(ListView):
             i.Name = m          # Name is required for Find()
 
 # ------------------------------------------------------------------
-
 class CollectionsManagerUI(Panel):
+
+    def __InitialiseToolBar(self):
+
+        # The Collections toolbar buttons are:
+        #   New, Rename, Delete | Add Module | MoveUp, MoveDown, Remove
+        #
+        # [Handler,
+        #  Caption,
+        #  Image file name, 
+        #  Tool tip]
+        ButtonList = [
+            [
+             self.__ToolbarNewHandler,
+             "New",
+             "documents", 
+             "Create a new module collection",
+            ],
+            [
+             self.__ToolbarRenameHandler,
+             "Rename",
+             "copy", 
+             "Rename the selected collection",
+            ],
+            [
+             self.__ToolbarDeleteHandler,
+             "Delete",
+             "delete", 
+             "Delete the selected collection",
+            ],
+            None,   # Separator
+            [
+             self.__ToolbarAddHandler,
+             "Add Module",
+             "add", 
+             "Add a module to the current module collection",
+            ],
+            None,   # Separator
+            [
+             self.__ToolbarMoveUpHandler,
+             "Move Up",
+             "arrow-up", 
+             "Move the selected module up",
+            ],
+            [
+             self.__ToolbarMoveDownHandler,
+             "Move Down",
+             "arrow-down", 
+             "Move the selected module down",
+            ],
+            [
+             self.__ToolbarRemoveHandler,
+             "Remove",
+             "delete", 
+             "Remove the selected module",
+            ],
+            ]
+            
+        return CustomToolBar(ButtonList, 
+                             UIGlobal.ToolbarIconParams)
+
+    # The toolbar buttons are enabled/disabled according to where the
+    # UI focus is. These values are indices into the ButtonList parameters.
+    INFOCUS_Nothing = -1
+    INFOCUS_Collections = 0
+    INFOCUS_ModuleLibrary = 1
+    INFOCUS_CollectionModules = 2
+
+    ButtonEnableStates = [
+       # InCollections, InModules, InModuleLibrary,
+       [True, False, False],    # New
+       [True, False, False],    # Rename
+       [True, False, False],    # Delete
+       None,
+       [False, True, False],    # Add
+       None,
+       [False, False, True],    # Up
+       [False, False, True],    # Down
+       [False, False, True],    # Remove
+       ]
+
+    def __SetEnabledStates(self, inFocus):
+        for i, button in enumerate(self.toolbar.Buttons):
+            if inFocus == self.INFOCUS_Nothing:
+                button.Enabled = False
+            else:
+                if self.ButtonEnableStates[i]:   # Skip separators
+                    button.Enabled = self.ButtonEnableStates[i][inFocus]
+
     def __init__(self, collectionsManager, moduleManager, currentCollection):
         Panel.__init__(self)
         self.collections = collectionsManager
@@ -258,8 +266,7 @@ class CollectionsManagerUI(Panel):
         self.moduleBrowser.SetActivatedHandler(self.__OnModuleActivated)
 
         # -- Toolbar
-        self.toolbar = CollectionsToolbar()
-        self.toolbar.ButtonClick += self.__ToolbarButtonHandler
+        self.toolbar = self.__InitialiseToolBar()
 
         self.collectionsList.GotFocus += self.__ChangeOfFocusHandler
         self.collectionsList.LostFocus += self.__ChangeOfFocusHandler
@@ -376,114 +383,120 @@ class CollectionsManagerUI(Panel):
                                 MessageBoxIcon.Error)
         return
 
-
-    def __ToolbarButtonHandler(self, sender, event):
-        if event.Button.Text == "New":
-            name = "New collection"
-            # If this name still exists, then just go to that and rename it.
-            if name in self.collections.Names():
-                try:
-                    item = self.collectionsList.Items.Find(name, False)[0]
-                except ArgumentOutOfRangeException:
-                    return      # This is an error if the item can't be found.
-            else:
-                self.collections.Add(name)
-                item = self.collectionsList.AddCollection(name)
-            item.BeginEdit()
-
-        elif event.Button.Text == "Delete":
+    # -- Toolbar button handlers
+    
+    def __ToolbarNewHandler(self):
+        name = "New collection"
+        # If this name still exists, then just go to that and rename it.
+        if name in self.collections.Names():
             try:
-                itemToDelete = self.collectionsList.SelectedItems[0]
+                item = self.collectionsList.Items.Find(name, False)[0]
             except ArgumentOutOfRangeException:
-                return          # There is nothing selected
-                
-            moduleName = itemToDelete.Text
-            message = f"Are you sure you want to delete collection '{moduleName}'?"
-            caption = "Confirm delete"
-            result = MessageBox.Show(message, caption,
-                                     MessageBoxButtons.YesNo,
-                                     MessageBoxIcon.Question)
+                return      # This is an error if the item can't be found.
+        else:
+            self.collections.Add(name)
+            item = self.collectionsList.AddCollection(name)
+        item.BeginEdit()
 
-            if result == DialogResult.Yes:
-                self.collections.Delete(moduleName)
-                itemToDelete.Remove()
-                # No collection is selected at this point, so just
-                # clear the modules List.
-                self.currentCollection = None
-                self.modulesList.Items.Clear()
-
-        elif event.Button.Text == "Rename":
-            try:
-                item = self.collectionsList.SelectedItems[0]
-            except ArgumentOutOfRangeException:
-                return          # There is nothing selected
-
-            item.BeginEdit()
-
-        elif event.Button.Text == "Move Up" \
-            or event.Button.Text == "Move Down":
-            try:
-                itemToMove = self.modulesList.SelectedItems[0]
-            except ArgumentOutOfRangeException:
-                return          # There is nothing selected
-                
-            if event.Button.Text == "Move Up":
-                if itemToMove.Index < 1:
-                    return
-                else:
-                    newIndex = itemToMove.Index - 1
-                collectionsMoveFunc = self.collections.MoveModuleUp
-            else:                   # Down
-                if itemToMove.Index >= self.modulesList.Items.Count - 1:
-                    return
-                else:
-                    newIndex = itemToMove.Index + 1
-                collectionsMoveFunc = self.collections.MoveModuleDown
-                    
-            self.modulesList.BeginUpdate()
-            self.modulesList.Items.Remove(itemToMove)
-            self.modulesList.Items.Insert(newIndex, itemToMove)
-            self.modulesList.FocusedItem = itemToMove 
-            self.modulesList.EnsureVisible(newIndex) 
-            self.modulesList.EndUpdate()
+    def __ToolbarDeleteHandler(self):
+        try:
+            itemToDelete = self.collectionsList.SelectedItems[0]
+        except ArgumentOutOfRangeException:
+            return          # There is nothing selected
             
-            collectionsMoveFunc(self.currentCollection,
-                                itemToMove.Text)
+        moduleName = itemToDelete.Text
+        message = f"Are you sure you want to delete collection '{moduleName}'?"
+        caption = "Confirm delete"
+        result = MessageBox.Show(message, caption,
+                                 MessageBoxButtons.YesNo,
+                                 MessageBoxIcon.Question)
+
+        if result == DialogResult.Yes:
+            self.collections.Delete(moduleName)
+            itemToDelete.Remove()
+            # No collection is selected at this point, so just
+            # clear the modules List.
+            self.currentCollection = None
+            self.modulesList.Items.Clear()
+
+    def __ToolbarRenameHandler(self):
+        try:
+            item = self.collectionsList.SelectedItems[0]
+        except ArgumentOutOfRangeException:
+            return          # There is nothing selected
+
+        item.BeginEdit()
+            
+    def __ToolbarAddHandler(self):
+        if self.moduleBrowser.selectedNode:
+            self.__OnModuleActivated(self.moduleBrowser.selectedNode)
+
+    def ___MoveItemInList(self, item, newIndex):
+        self.modulesList.BeginUpdate()
+        self.modulesList.Items.Remove(item)
+        self.modulesList.Items.Insert(newIndex, item)
+        self.modulesList.FocusedItem = item
+        self.modulesList.EnsureVisible(newIndex) 
+        self.modulesList.EndUpdate()
+
+    def __ToolbarMoveUpHandler(self):
+        try:
+            itemToMove = self.modulesList.SelectedItems[0]
+        except ArgumentOutOfRangeException:
+            return          # There is nothing selected
+            
+        if itemToMove.Index < 1:
+            return
+        
+        newIndex = itemToMove.Index - 1
+
+        self.___MoveItemInList(itemToMove, newIndex)
+        self.collections.MoveModuleUp(self.currentCollection,
+                                      itemToMove.Text)
+
+    def __ToolbarMoveDownHandler(self):
+        try:
+            itemToMove = self.modulesList.SelectedItems[0]
+        except ArgumentOutOfRangeException:
+            return          # There is nothing selected
+            
+        if itemToMove.Index >= self.modulesList.Items.Count - 1:
+            return
+        
+        newIndex = itemToMove.Index + 1
+                
+        self.___MoveItemInList(itemToMove, newIndex)
+        self.collections.MoveModuleDown(self.currentCollection,
+                                        itemToMove.Text)
                         
-        elif event.Button.Text == "Remove":
-            try:
-                itemToRemove = self.modulesList.SelectedItems[0]
-            except ArgumentOutOfRangeException:
-                return          # There is nothing selected
-            
-            self.collections.RemoveModule(self.currentCollection,
-                                          itemToRemove.Text)
-            itemToRemove.Remove()
-
-        elif event.Button.Text == "Add Module":
-            if self.moduleBrowser.selectedNode:
-                self.__OnModuleActivated(self.moduleBrowser.selectedNode)
+    def __ToolbarRemoveHandler(self):
+        try:
+            itemToRemove = self.modulesList.SelectedItems[0]
+        except ArgumentOutOfRangeException:
+            return          # There is nothing selected
+        
+        self.collections.RemoveModule(self.currentCollection,
+                                      itemToRemove.Text)
+        itemToRemove.Remove()
 
     def __ChangeOfFocusHandler(self, sender, event):
         if self.collectionsList.Focused:
-            focus = self.toolbar.INFOCUS_Collections
+            focus = self.INFOCUS_Collections
         elif self.modulesList.Focused:
-            focus = self.toolbar.INFOCUS_CollectionModules
+            focus = self.INFOCUS_CollectionModules
         elif self.moduleBrowser.ContainsFocus:
-            focus = self.toolbar.INFOCUS_ModuleLibrary
+            focus = self.INFOCUS_ModuleLibrary
         else:
-            focus = self.toolbar.INFOCUS_Nothing
-        self.toolbar.SetEnabledStates(focus)
+            focus = self.INFOCUS_Nothing
+        self.__SetEnabledStates(focus)
 
 # ------------------------------------------------------------------
-
 class CollectionsDialog(Form):
     def __init__(self, cm, mm, currentCollection):
         Form.__init__(self)
         self.ClientSize = UIGlobal.collectionsWindowSize
         self.Text = "Collections Manager"
         self.Icon = Icon(UIGlobal.ApplicationIcon)
-
 
         self.activatedCollection = None
 
@@ -494,7 +507,6 @@ class CollectionsDialog(Form):
 
         self.Controls.Add(self.cmPanel)
         self.FormClosing += self.__OnFormClosing
-
 
     def __OnLoad(self, sender, event):
         self.cmPanel.SetFocusOnCurrentCollection()
@@ -507,7 +519,6 @@ class CollectionsDialog(Form):
     def __OnFormClosing(self, sender, event):
         self.activatedCollection = self.cmPanel.currentCollection
         self.cmPanel.SaveAll()
-
 
 # ------------------------------------------------------------------
 if __name__ == "__main__":
