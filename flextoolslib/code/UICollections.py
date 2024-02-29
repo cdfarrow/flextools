@@ -15,7 +15,7 @@
 #    -  4 Nov 09: Get the collection list to sort after renaming an item
 #
 #   Craig Farrow
-#   2009-2023
+#   2009-2024
 #
 
 from . import UIGlobal
@@ -165,7 +165,7 @@ class CollectionsManagerUI(Panel):
              self.__ToolbarNewHandler,
              "New",
              "documents", 
-             "Create a new module collection",
+             "Create a new collection",
             ],
             [
              self.__ToolbarRenameHandler,
@@ -176,15 +176,21 @@ class CollectionsManagerUI(Panel):
             [
              self.__ToolbarDeleteHandler,
              "Delete",
-             "delete", 
+             "trash", 
              "Delete the selected collection",
             ],
+            [
+             self.__ToolbarSelectAndCloseHandler,
+             "Select",
+             "folder-closed", 
+             "Close this dialog",
+            ],            
             None,   # Separator
             [
              self.__ToolbarAddHandler,
              "Add Module",
              "add", 
-             "Add a module to the current module collection",
+             "Add a module to the current collection",
             ],
             None,   # Separator
             [
@@ -222,6 +228,7 @@ class CollectionsManagerUI(Panel):
        [True, False, False],    # New
        [True, False, False],    # Rename
        [True, False, False],    # Delete
+       [True, False, False],    # Close
        None,
        [False, True, False],    # Add
        None,
@@ -478,6 +485,9 @@ class CollectionsManagerUI(Panel):
         self.collections.RemoveModule(self.currentCollection,
                                       itemToRemove.Text)
         itemToRemove.Remove()
+
+    def __ToolbarSelectAndCloseHandler(self):
+        self.Parent.Close()
 
     def __ChangeOfFocusHandler(self, sender, event):
         if self.collectionsList.Focused:

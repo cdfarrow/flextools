@@ -84,7 +84,7 @@ from cdfutils.DotNet import (
 MESSAGE_Welcome = \
     "Welcome to FLExTools!"
 MESSAGE_SelectProject = \
-    "Select a project by clicking the Select project button in the toolbar."
+    "Select a project by clicking the Select Project button in the toolbar."
 MESSAGE_SelectOrCreateCollection = \
     "Select or create a collection by using the FlexTools | Manage collections menu, or pressing Ctrl-L."
 
@@ -95,12 +95,12 @@ class FTPanel(Panel):
         # (Handler, Text, Image, Tooltip)
         ButtonListA = [
                       (self.__ChooseProject,
-                       "Select project",
+                       "Select Project",
                        "FLEX",
                        "Select the FieldWorks project to operate on"),
                       (self.__ManageCollections,
                        "Collections",
-                       "copy",
+                       "folder-open",
                        "Manage and select a collection of modules"),
                       (self.ModuleInfo,
                        "Module Info",
