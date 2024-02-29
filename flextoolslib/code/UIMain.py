@@ -85,13 +85,18 @@ MESSAGE_Welcome = \
     "Welcome to FLExTools!"
 MESSAGE_SelectProject = \
     "Select a project by clicking the Select Project button in the toolbar."
-MESSAGE_SelectOrCreateCollection = \
+MESSAGE_SelectCollection = ""
+MESSAGE_SelectCollectionToolbar = \
+    "Select or create a collection by clicking the Collections button in the toolbar."
+MESSAGE_SelectCollectionMenu = \
     "Select or create a collection by using the FlexTools | Manage collections menu, or pressing Ctrl-L."
 
 # ------------------------------------------------------------------
 class FTPanel(Panel):
     def __InitToolBar(self):
 
+        global MESSAGE_SelectCollection
+        
         # (Handler, Text, Image, Tooltip)
         ButtonListA = [
                       (self.__ChooseProject,
@@ -144,6 +149,12 @@ class FTPanel(Panel):
                            "Run all the modules and allow changes to the project")
                            ]
             
+        if FTConfig.hideCollectionsButton:
+            ButtonListA.pop(1)
+            MESSAGE_SelectCollection = MESSAGE_SelectCollectionMenu
+        else:
+            MESSAGE_SelectCollection = MESSAGE_SelectCollectionToolbar
+        
 
         return CustomToolBar(ButtonListA + ButtonListB,
                              UIGlobal.ToolbarIconParams)
@@ -189,7 +200,7 @@ class FTPanel(Panel):
             startupTips.append(msg)
 
         if not self.listOfModules:
-            msg = MESSAGE_SelectOrCreateCollection
+            msg = MESSAGE_SelectCollection
             startupTips.append(msg)
 
         for msg in startupTips:
@@ -374,7 +385,7 @@ class FTPanel(Panel):
         if FTConfig.currentCollection:
             self.reportWindow.Report("Collection '%s' selected." % FTConfig.currentCollection)
         else:
-            self.reportWindow.Report(MESSAGE_SelectOrCreateCollection)
+            self.reportWindow.Report(MESSAGE_SelectCollection)
 
     def UpdateProjectName(self):
         if self.startupToolTip:
@@ -566,6 +577,8 @@ class FTMainForm (Form):
             FTConfig.simplifiedRunOps = False
         if FTConfig.disableDoubleClick == None:
             FTConfig.disableDoubleClick = False
+        if FTConfig.hideCollectionsButton == None:
+            FTConfig.hideCollectionsButton = True
 
         self.collectionsManager = FTCollections.CollectionsManager()
 
