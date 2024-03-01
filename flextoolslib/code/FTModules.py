@@ -119,12 +119,19 @@ class ModuleManager (object):
                        if os.path.isdir(os.path.join(MODULES_PATH,l))] \
                    + [""]
 
+        try:
+            libNames.remove("__pycache__")
+        except ValueError:
+            pass
+        
+        logger.info("Module libraries found: %s" % libNames)
+        
         for library in libNames:
             libPath = os.path.join(MODULES_PATH, library)
 
             modNames = [m for m in os.listdir(libPath)
                             if m.endswith(".py")]
-            logger.info("From library %s: %s" % (library, repr(modNames)))
+            logger.info("From library '%s': %s" % (library, repr(modNames)))
 
             for moduleFileName in modNames:
                 # Don't try to directly import python files starting with
