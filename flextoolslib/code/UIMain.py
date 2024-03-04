@@ -22,10 +22,8 @@
 #   Copyright Craig Farrow, 2010 - 2024
 #
 
-
 import logging
 logger = logging.getLogger(__name__)
-
 
 import clr
 import System
@@ -85,11 +83,17 @@ MESSAGE_Welcome = \
     "Welcome to FLExTools!"
 MESSAGE_SelectProject = \
     "Select a project by clicking the Select Project button in the toolbar."
+MESSAGE_ProjectSelected = \
+    "Project '%s' selected."
+MESSAGE_CollectionSelected = \
+    "Collection '%s' selected."
 MESSAGE_SelectCollection = ""
 MESSAGE_SelectCollectionToolbar = \
     "Select or create a collection by clicking the Collections button in the toolbar."
 MESSAGE_SelectCollectionMenu = \
-    "Select or create a collection by using the FlexTools | Manage collections menu, or pressing Ctrl-L."
+    "Select or create a collection by using the FlexTools | Manage Collections menu, or pressing Ctrl-L."
+MESSAGE_RunButtons = \
+    "Use the Run buttons to run modules."
 
 # ------------------------------------------------------------------
 class FTPanel(Panel):
@@ -172,7 +176,7 @@ class FTPanel(Panel):
 
         # -- Toolbar
         self.toolbar = self.__InitToolBar()
-        
+
         self.__ManageCollectionsHandler = None
 
         # -- Module list and Report window
@@ -189,34 +193,29 @@ class FTPanel(Panel):
             self.modulesList.SetActivatedHandler(self.RunOne)
 
         self.reportWindow = UIReport.ReportWindow()
+        self.reportWindow.Reporter.RegisterProgressHandler(progressFunction)
 
+        # -- Startup messages and getting started hint.
+        self.reportWindow.Report(MESSAGE_Welcome)
+        
         self.startupToolTip = None
-
-        startupTips = [MESSAGE_Welcome]
         if FTConfig.currentProject:
             self.UpdateProjectName()
         else:
-            msg = MESSAGE_SelectProject
-            startupTips.append(msg)
+            self.reportWindow.Report(MESSAGE_SelectProject)
 
-        if not self.listOfModules:
-            msg = MESSAGE_SelectCollection
-            startupTips.append(msg)
+            startupTips = [MESSAGE_Welcome]
+            startupTips.append(MESSAGE_SelectProject)
+            startupTips.append(MESSAGE_SelectCollection)
+            startupTips.append(MESSAGE_RunButtons)
 
-        for msg in startupTips:
-            self.reportWindow.Report(msg)
-
-        self.reportWindow.Report("Use the Run buttons to run modules.")
-
-        if startupTips:
             self.startupToolTip = ToolTip()
             self.startupToolTip.IsBalloon = True
             self.startupToolTip.ToolTipTitle = "Getting started"
             self.startupToolTip.InitialDelay = 0
             self.startupToolTip.AutoPopDelay = 20000
-            self.startupToolTip.SetToolTip(self.modulesList, "\n".join(startupTips))
-
-        self.reportWindow.Reporter.RegisterProgressHandler(progressFunction)
+            self.startupToolTip.SetToolTip(self.modulesList, 
+                                           "\n".join(startupTips))
 
         # -- The collection tabs 
         self.collectionsTabControl = TabControl()
@@ -233,6 +232,8 @@ class FTPanel(Panel):
         
         self.UpdateCollectionTabs()
         
+        self.reportWindow.Report(MESSAGE_RunButtons)
+
         # -- Put it all together
         self.splitContainer1 = SplitContainer()
         self.splitContainer1.Dock = DockStyle.Fill
@@ -383,14 +384,16 @@ class FTPanel(Panel):
         self.ignoreTabChange = False
 
         if FTConfig.currentCollection:
-            self.reportWindow.Report("Collection '%s' selected." % FTConfig.currentCollection)
+            self.reportWindow.Report(MESSAGE_CollectionSelected \
+                                     % FTConfig.currentCollection)
         else:
             self.reportWindow.Report(MESSAGE_SelectCollection)
 
     def UpdateProjectName(self):
         if self.startupToolTip:
             self.startupToolTip.RemoveAll()
-        self.reportWindow.Report("Project '%s' selected." % FTConfig.currentProject)
+        self.reportWindow.Report(MESSAGE_ProjectSelected % \
+                                 FTConfig.currentProject)
         self.toolbar.UpdateButtonText(0, FTConfig.currentProject)
         
     def ModuleInfo(self):
@@ -423,7 +426,7 @@ class FTMainForm (Form):
                           Shortcut.CtrlP,
                           "Select the FieldWorks project to operate on"),
                          (self.ManageCollections,
-                          "Manage collections...",
+                          "Manage Collections...",
                           Shortcut.CtrlL,
                           "Manage and select a collection of modules"),
                          (self.ModuleInfo,
@@ -521,6 +524,35 @@ class FTMainForm (Form):
         if hasattr(self, "UIPanel"):
             self.UIPanel.RefreshModules()
             
+    def __EnsureTabsConsistent(self):
+        # Several things could happen behind our backs (at startup
+        # or after the user has used the Collections manager):
+        #   - the current collection may not be in the tab list;
+        #   - the tab list may contain out-dated collections
+        #     (e.g. they may have been renamed or deleted)
+        #   - the current collection may no longer exist;
+        
+        # Add the current collection in case it isn't in the tab list
+        newTabs = set(FTConfig.collectionTabs + [FTConfig.currentCollection])
+        # Filter out non-existing collections
+        newList = sorted(newTabs.intersection(self.collectionsManager.Names()))
+                          
+        FTConfig.collectionTabs = newList
+        logger.debug(f"Updated tab list: {newList}")
+        
+        # Check if the current collection is valid
+        if FTConfig.currentCollection in FTConfig.collectionTabs:
+            logger.debug(f"--> Collection: {FTConfig.currentCollection}")
+        else:
+            if FTConfig.collectionTabs:
+                # Default to the first in the tab list
+                FTConfig.currentCollection = FTConfig.collectionTabs[0]
+                logger.debug(f"--> Current collection invalid: choosing first tab ({FTConfig.currentCollection})")
+            else:
+                # There's nothing to select
+                FTConfig.currentCollection = None
+                logger.debug(f"--> Current collection invalid and tab list is empty.")
+            
     def __ChangeCollection(self, newCollection):
         # Called after editing collections in the Collections Manager
         # and when a new collections tab is selected in the UIPanel.
@@ -528,20 +560,16 @@ class FTMainForm (Form):
         FTConfig.currentCollection = newCollection
         
         if newCollection:
-            # If the user selected/created a collection that is not in the
-            # current tab list, then add it.
-            if newCollection not in FTConfig.collectionTabs:
-                newList = FTConfig.collectionTabs + [newCollection]
-                FTConfig.collectionTabs = sorted(newList)
-            
-            # Refresh the list of modules
-            try:
+            # Update the collection tabs list according to any 
+            # selection/renaming/deletion
+            self.__EnsureTabsConsistent()
+
+            # Refresh the list of modules if currentCollection is still 
+            # set.
+            if FTConfig.currentCollection:
                 listOfModules = self.collectionsManager.ListOfModules(
                                         FTConfig.currentCollection)
-            except FTCollections.FTC_NameError:
-                # The configuration value is bad... so reset everything.
-                FTConfig.currentCollection = None
-                FTConfig.collectionTabs = []
+            else:
                 listOfModules = []
         else:
             FTConfig.collectionTabs = []
@@ -564,11 +592,8 @@ class FTMainForm (Form):
         if not FTConfig.currentCollection:
             FTConfig.currentCollection = "Examples"
         if not FTConfig.collectionTabs:
-            FTConfig.collectionTabs = list((FTConfig.currentCollection,))
-        elif FTConfig.currentCollection not in FTConfig.collectionTabs:
-            newList = FTConfig.collectionTabs + [FTConfig.currentCollection]
-            FTConfig.collectionTabs = sorted(newList)
-            
+            FTConfig.collectionTabs = [FTConfig.currentCollection]
+
         if FTConfig.warnOnModify == None:
             FTConfig.warnOnModify = True
         if FTConfig.stopOnError == None:
@@ -582,6 +607,8 @@ class FTMainForm (Form):
 
         self.collectionsManager = FTCollections.CollectionsManager()
 
+        self.__EnsureTabsConsistent()
+        
         self.__LoadModules()
 
         try:
