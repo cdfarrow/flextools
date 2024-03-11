@@ -365,7 +365,7 @@ class FTPanel(Panel):
         
     def UpdateCollectionTabs(self):
         self.ignoreTabChange = True     # Avoid nested TabChanged events
-        
+
         # Clear out any old pages...
         self.collectionsTabControl.TabPages.Clear()
         
@@ -380,7 +380,7 @@ class FTPanel(Panel):
             currentTab.Controls.Add(self.modulesList)
             currentTab.Focus()      # Removes dotted focus box from tab itself
             self.collectionsTabControl.SelectedTab = currentTab
-        
+
         self.ignoreTabChange = False
 
         if FTConfig.currentCollection:
@@ -547,7 +547,7 @@ class FTMainForm (Form):
             if FTConfig.collectionTabs:
                 # Default to the first in the tab list
                 FTConfig.currentCollection = FTConfig.collectionTabs[0]
-                logger.debug(f"--> Current collection invalid: choosing first tab ({FTConfig.currentCollection})")
+                logger.debug(f"--> Current collection invalid: selecting first tab ({FTConfig.currentCollection})")
             else:
                 # There's nothing to select
                 FTConfig.currentCollection = None
@@ -596,13 +596,13 @@ class FTMainForm (Form):
 
         if FTConfig.warnOnModify == None:
             FTConfig.warnOnModify = True
-        if FTConfig.stopOnError == None:
+        if FTConfig.stopOnError is None:
             FTConfig.stopOnError = False
-        if FTConfig.simplifiedRunOps == None:
+        if FTConfig.simplifiedRunOps is None:
             FTConfig.simplifiedRunOps = False
-        if FTConfig.disableDoubleClick == None:
+        if FTConfig.disableDoubleClick is None:
             FTConfig.disableDoubleClick = False
-        if FTConfig.hideCollectionsButton == None:
+        if FTConfig.hideCollectionsButton is None:
             FTConfig.hideCollectionsButton = True
 
         self.collectionsManager = FTCollections.CollectionsManager()
