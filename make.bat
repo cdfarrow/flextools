@@ -30,7 +30,7 @@ FOR %%C IN ("Init"
     goto :End
     
 :DoBuild
-    @REM Build the wheel for flextoolslibs with setuptools
+    @REM Build the wheel for flextoolslib with setuptools
     %PYTHON% -m build -w
     
     @REM Build the main FlexTools zip file
@@ -44,7 +44,7 @@ FOR %%C IN ("Init"
     goto :End
     
 :DoPublish
-    echo Publishing wheel to PyPI
+    echo Publishing flextoolslib to PyPI
     %PYTHON% -m twine upload .\dist\flextoolslib*
     goto :End
 
