@@ -72,7 +72,6 @@ from . import Help
 from cdfutils.DotNet import (
     CustomMainMenu, 
     CustomToolBar, 
-    ContextChecklist,
     SimpleContextMenu,
     )
 
@@ -368,12 +367,13 @@ class FTPanel(Panel):
 
         # Clear out any old pages...
         self.collectionsTabControl.TabPages.Clear()
-        
+
         if FTConfig.currentCollection:
-            # ...and create them afresh           
+            # ...and create them afresh
             pages = [TabPage(name) for name in FTConfig.collectionTabs]
+
             self.collectionsTabControl.TabPages.AddRange(pages)
-            
+
             # Activate the selected tab
             index = FTConfig.collectionTabs.index(FTConfig.currentCollection)
             currentTab = self.collectionsTabControl.TabPages[index]
