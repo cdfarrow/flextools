@@ -8,6 +8,14 @@ FLExTools History
 
 ====== History =======
 
+2.3.0_2024.3.13
+---------------
+
++ Added collection tabs for quick switching between collections
++ Added a Select button to the Collections Manager
++ Fixed icon resolution problem with recent versions of Windows 11
+
+
 2.3.0_2023.11.22
 ----------------
 
