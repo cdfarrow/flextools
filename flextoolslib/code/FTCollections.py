@@ -12,7 +12,7 @@
 
 import os
 
-from configparser import ConfigParser, NoOptionError
+from configparser import ConfigParser, NoOptionError, DEFAULTSECT
 
 from .FTConfig import FTConfig
 COLLECTIONS_PATH = FTConfig.CollectionsPath
@@ -60,12 +60,23 @@ class FTC_BadNameError(Error):
 
     def __init__(self, message):
         self.message = message
+
+# ---------------------------------------------------------------------
+class CollectionsInfo(list):
+    """
+    A wrapper class for the collections list of modules, with an extra
+    property, "disableRunAll".
+    """
+    def __init__(self, iterable):
+        list.__init__(self, iterable)
+        self.disableRunAll = False
+
 # ---------------------------------------------------------------------
 class CollectionsManager(object):
 
     ORDER_OPTION = "_Order"
+    DISABLERUNALL = "DisableRunAll"
     COLLECTIONS_SUFFIX = ".ini"
-    assert(len(COLLECTIONS_SUFFIX) == 4)
 
     def __init__(self):
     
@@ -80,13 +91,13 @@ class CollectionsManager(object):
             try:
                 mods = [(cp.getint(m, self.ORDER_OPTION), m) for m in cp.sections()]
             except NoOptionError:
-                return cp.sections()
+                return CollectionsInfo(cp.sections())
                 
             # Sort the modules according to the _Order option value. 
             # This handles cases where there are gaps in the sequence 
             # (such as when the FlexTrans installer removes the Settings
             # module from users' Tools.ini file).
-            sortedModules = [m for i, m in sorted(mods)]
+            sortedModules = CollectionsInfo(m for i, m in sorted(mods))
             return sortedModules
                
          
@@ -100,9 +111,13 @@ class CollectionsManager(object):
         for collectionName in collectionNames:
             cp = ConfigParser(interpolation=None)
             if cp.read(os.path.join(COLLECTIONS_PATH, collectionName)):
-                modules = __sortedModulesList(cp)
+                collectionsInfo = __sortedModulesList(cp)
+                if cp.has_option(DEFAULTSECT, self.DISABLERUNALL):
+                    collectionsInfo.disableRunAll = True
+
                 # Strip '.ini' for the collection name
-                self.collections[collectionName[:-4]] = modules
+                name = os.path.splitext(collectionName)[0]
+                self.collections[name] = collectionsInfo
             else:
                 logger.warning(f"CollectionsManager init: Failed to read {collectionName}")
 
@@ -121,8 +136,9 @@ class CollectionsManager(object):
     def Add(self, collectionName):
         if collectionName in self.collections:
             raise FTC_ExistsError(collectionName + " already exists.")
-        self.collections[collectionName] = []
-        self.WriteOne(collectionName, [])
+        newCollection = CollectionsInfo()
+        self.collections[collectionName] = newCollection
+        self.WriteOne(collectionName, newCollection)
 
     def Delete(self, collectionName):
         if collectionName not in self.collections:
@@ -155,43 +171,45 @@ class CollectionsManager(object):
             self.collections[newName] = self.collections.pop(collectionName)
 
     def AddModule(self, collectionName, moduleName):
-        modules = self.collections[collectionName]
-        if moduleName in modules:
+        collectionsInfo = self.collections[collectionName]
+        if moduleName in collectionsInfo:
             raise FTC_ExistsError(moduleName + " already exists.")
-        modules.append(moduleName)
+        collectionsInfo.append(moduleName)
 
     def RemoveModule(self, collectionName, moduleName):
-        modules = self.collections[collectionName]
+        collectionsInfo = self.collections[collectionName]
         try:
-            modules.remove(moduleName)
+            collectionsInfo.remove(moduleName)
         except ValueError:
             pass
 
     def MoveModuleUp(self, collectionName, moduleName):
-        modules = self.collections[collectionName]
-        i = modules.index(moduleName)
+        collectionsInfo = self.collections[collectionName]
+        i = collectionsInfo.index(moduleName)
         if i > 0:
-            modules.insert(i - 1, modules.pop(i))
+            collectionsInfo.insert(i - 1, collectionsInfo.pop(i))
 
     def MoveModuleDown(self, collectionName, moduleName):
-        modules = self.collections[collectionName]
-        i = modules.index(moduleName)
-        if i < len(modules) - 1:
-            modules.insert(i + 1, modules.pop(i))
+        collectionsInfo = self.collections[collectionName]
+        i = collectionsInfo.index(moduleName)
+        if i < len(collectionsInfo) - 1:
+            collectionsInfo.insert(i + 1, collectionsInfo.pop(i))
 
     # ---------
 
     def WriteAll(self):
-        for (name, modules) in self.collections.items():
-            self.WriteOne(name, modules)
+        for (name, collectionsInfo) in self.collections.items():
+            self.WriteOne(name, collectionsInfo)
 
-    def WriteOne(self, name, modules):
+    def WriteOne(self, name, collectionsInfo):
         # Create an empty section for each module. ConfigParser preserves 
         # the order.
         cp = ConfigParser(interpolation=None)
-        cp.read_dict({m : {} for m in modules})
+        cp.read_dict({m : {} for m in collectionsInfo})
+
+        if collectionsInfo.disableRunAll:
+            cp[DEFAULTSECT][self.DISABLERUNALL] = repr(True)
             
         with open(os.path.join(COLLECTIONS_PATH,
                                name + self.COLLECTIONS_SUFFIX), 'w') as f:
             cp.write(f)
-  

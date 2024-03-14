@@ -158,8 +158,14 @@ class FTPanel(Panel):
         else:
             MESSAGE_SelectCollection = MESSAGE_SelectCollectionToolbar
         
+        ButtonList = ButtonListA + ButtonListB
 
-        return CustomToolBar(ButtonListA + ButtonListB,
+        # Save the indices of the RunAll buttons for enabling/disabling based
+        # on a collection's disableRunAll setting.
+        self.RunAllButtons = [i for i, b in enumerate(ButtonList)
+                              if b and b[0] in (self.RunAll, self.RunAllModify)]
+
+        return CustomToolBar(ButtonList,
                              UIGlobal.ToolbarIconParams)
 
     def __init__(self, 
@@ -181,6 +187,8 @@ class FTPanel(Panel):
         # -- Module list and Report window
         self.moduleManager = moduleManager
         self.listOfModules = listOfModules
+        for i in self.RunAllButtons:
+            self.toolbar.Buttons[i].Enabled = not listOfModules.disableRunAll
         self.reloadFunction = reloadFunction
         self.changeCollectionFunction = changeCollectionFunction
 
@@ -360,6 +368,8 @@ class FTPanel(Panel):
         if self.startupToolTip:
             self.startupToolTip.RemoveAll()
         self.listOfModules = listOfModules
+        for i in self.RunAllButtons:
+            self.toolbar.Buttons[i].Enabled = not listOfModules.disableRunAll
         self.modulesList.UpdateAllItems(self.listOfModules)
         
     def UpdateCollectionTabs(self):
