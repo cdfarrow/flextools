@@ -12,7 +12,12 @@
 
 import os
 
-from configparser import ConfigParser, NoOptionError, DEFAULTSECT
+from configparser import (
+    ConfigParser,
+    DEFAULTSECT,
+    NoOptionError,
+    MissingSectionHeaderError,
+    )
 
 from .FTConfig import FTConfig
 COLLECTIONS_PATH = FTConfig.CollectionsPath
@@ -110,7 +115,12 @@ class CollectionsManager(object):
 
         for collectionName in collectionNames:
             cp = ConfigParser(interpolation=None)
-            if cp.read(os.path.join(COLLECTIONS_PATH, collectionName)):
+            try:
+                result = cp.read(os.path.join(COLLECTIONS_PATH, collectionName))
+            except MissingSectionHeaderError:
+                logger.warning(f"CollectionsManager init: Missing DEFAULT section in {collectionName}")
+                continue
+            if result:
                 collectionsInfo = __sortedModulesList(cp)
                 if cp.has_option(DEFAULTSECT, self.DISABLERUNALL):
                     collectionsInfo.disableRunAll = True
