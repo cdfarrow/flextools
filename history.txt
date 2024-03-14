@@ -8,12 +8,26 @@ FLExTools History
 
 ====== History =======
 
+2.3.0_2024.3.TODO
+---------------
+
++ Issue #31: Added DisableRunAll option for collections. Set this in
+        the collection's .ini file by adding these two lines:
+            [DEFAULT]
+            DisableRunAll = True
+
+
 2.3.0_2024.3.13
 ---------------
 
-+ Added collection tabs for quick switching between collections
-+ Added a Select button to the Collections Manager
-+ Fixed icon resolution problem with recent versions of Windows 11
++ Issue #25: Added collection tabs for quick switching between collections
++ Issue #15: Added a Select button to the Collections Manager
++ Issue #26: Fixed icon resolution problem with recent versions of Windows 11
++ Added the following configuration option:
+    + HideCollectionsButton   - Set to True to remove the Collections 
+                                button from the toolbar. The Collections 
+                                Manager can still be accessed from the 
+                                menu, or with Ctrl-L.
 
 
 2.3.0_2023.11.22
