@@ -160,13 +160,15 @@ class FTPanel(Panel):
         
         ButtonList = ButtonListA + ButtonListB
 
-        # Save the indices of the RunAll buttons for enabling/disabling based
-        # on a collection's disableRunAll setting.
-        self.RunAllButtons = [i for i, b in enumerate(ButtonList)
-                              if b and b[0] in (self.RunAll, self.RunAllModify)]
+        self.toolbar = CustomToolBar(ButtonList,
+                                     UIGlobal.ToolbarIconParams)
 
-        return CustomToolBar(ButtonList,
-                             UIGlobal.ToolbarIconParams)
+        # Pre-calculate the menu items to disable when DisableRunAll is defined
+        # for a collection.
+        runallIndices = [i for i, b in enumerate(ButtonList)
+                         if b and b[0] in (self.RunAll, self.RunAllModify)]
+        self.runallButtons = [self.toolbar.Buttons[i]
+                              for i in runallIndices]
 
     def __init__(self, 
                  moduleManager, 
@@ -180,15 +182,15 @@ class FTPanel(Panel):
         self.Font = UIGlobal.normalFont
 
         # -- Toolbar
-        self.toolbar = self.__InitToolBar()
+        self.__InitToolBar()
 
         self.__ManageCollectionsHandler = None
 
         # -- Module list and Report window
         self.moduleManager = moduleManager
         self.listOfModules = listOfModules
-        for i in self.RunAllButtons:
-            self.toolbar.Buttons[i].Enabled = not listOfModules.disableRunAll
+        for button in self.runallButtons:
+            button.Enabled = not listOfModules.disableRunAll
         self.reloadFunction = reloadFunction
         self.changeCollectionFunction = changeCollectionFunction
 
@@ -304,9 +306,10 @@ class FTPanel(Panel):
         self.reportWindow.Reporter.ProgressStop()
 
     def RunAll(self, modifyAllowed=False):
-        self.__Run("Running all modules...",
-                   self.listOfModules,
-                   modifyAllowed)
+        if len(self.listOfModules) > 0:
+            self.__Run("Running all modules...",
+                       self.listOfModules,
+                       modifyAllowed)
 
     def RunOne(self, modifyAllowed=False):
         if self.modulesList.SelectedIndex >= 0:
@@ -368,8 +371,8 @@ class FTPanel(Panel):
         if self.startupToolTip:
             self.startupToolTip.RemoveAll()
         self.listOfModules = listOfModules
-        for i in self.RunAllButtons:
-            self.toolbar.Buttons[i].Enabled = not listOfModules.disableRunAll
+        for button in self.runallButtons:
+            button.Enabled = not listOfModules.disableRunAll
         self.modulesList.UpdateAllItems(self.listOfModules)
         
     def UpdateCollectionTabs(self):
@@ -523,6 +526,12 @@ class FTMainForm (Form):
 
         self.Menu = CustomMainMenu(MenuList)
 
+        # Pre-calculate the menu items to disable when DisableRunAll is defined
+        # for a collection.
+        runallIndices = [i for i, m in enumerate(RunMenu)
+                         if m[0] in (self.RunAll, self.RunAllModify)]
+        self.runallMenuItems = [self.Menu.MenuItems[1].MenuItems[i]
+                                for i in runallIndices]
 
     def __LoadModules(self):
         logger.debug("Loading modules")
@@ -586,6 +595,8 @@ class FTMainForm (Form):
             listOfModules = []
 
         self.UpdateStatusBar()
+        self.UpdateMenuEnabledStates(False if not listOfModules else
+                                     listOfModules.disableRunAll)
 
         self.UIPanel.UpdateModuleList(listOfModules)
         self.UIPanel.UpdateCollectionTabs()
@@ -633,6 +644,8 @@ class FTMainForm (Form):
         self.Icon = Icon(UIGlobal.ApplicationIcon)
 
         self.InitMainMenu(appMenu)
+        self.UpdateMenuEnabledStates(False if not listOfModules else
+                                     listOfModules.disableRunAll)
 
         self.progressPercent = -1
         self.progressMessage = None
@@ -674,6 +687,10 @@ class FTMainForm (Form):
         
         if self.StatusBar.Text != newText:
             self.StatusBar.Text = newText
+
+    def UpdateMenuEnabledStates(self, disableRunAll):
+        for menu in self.runallMenuItems:
+            menu.Enabled = not disableRunAll
 
     def __ProgressBar(self, val, max, msg=None):
         if max == 0: # Clear progress bar
