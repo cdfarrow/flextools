@@ -72,8 +72,8 @@ class CollectionsInfo(list):
     A wrapper class for the collections list of modules, with an extra
     property, "disableRunAll".
     """
-    def __init__(self, iterable):
-        list.__init__(self, iterable)
+    def __init__(self, *args):
+        list.__init__(self, *args)
         self.disableRunAll = False
 
 # ---------------------------------------------------------------------
