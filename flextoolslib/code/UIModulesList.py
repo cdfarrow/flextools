@@ -154,16 +154,6 @@ class ModulesList(ListBox):
             for i in range(len(self.DataSource)):
                 self.SetSelected(i, i in currentSelection)
 
-
-    def SetSelectedHandler(self, handler):
-        self.__SelectedHandler = handler
-        self.ItemSelectionChanged += self.__ItemSelectedHandler
-
-    def __ItemSelectedHandler(self, sender, event):
-        if event.IsSelected:
-            if self.__SelectedHandler:
-                self.__SelectedHandler(event.Item.Text)
-
     def SetActivatedHandler(self, handler):
         if handler:
             self.__ActivatedHandler = handler
