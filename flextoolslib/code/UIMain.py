@@ -123,10 +123,10 @@ class FTPanel(Panel):
             
         if FTConfig.simplifiedRunOps:
             ButtonListB = [
-                          (self.RunOneModify,
+                          (self.RunModify,
                            "Run",
                            "arrow-forward-!",
-                           "Run the selected module"),
+                           "Run the selected module(s)"),
                           (self.RunAllModify,
                            "Run All",
                            "arrow-forward-double-!",
@@ -134,18 +134,18 @@ class FTPanel(Panel):
                            ]
         else:
             ButtonListB = [
-                          (self.RunOne,
+                          (self.Run,
                            "Run",
                            "arrow-forward",
-                           "Run the selected module in preview mode"),
+                           "Run the selected module(s) in preview mode"),
                           (self.RunAll,
                            "Run All",
                            "arrow-forward-double",
                            "Run all the modules in preview mode"),
-                          (self.RunOneModify,
+                          (self.RunModify,
                            "Run (Modify)",
                            "arrow-forward-!",
-                           "Run the selected module and allow changes to the project"),
+                           "Run the selected module(s) and allow changes to the project"),
                           (self.RunAllModify,
                            "Run All (Modify)",
                            "arrow-forward-double-!",
@@ -197,9 +197,9 @@ class FTPanel(Panel):
         self.modulesList = UIModulesList.ModulesList(self.moduleManager,
                                                      self.listOfModules)
         if FTConfig.simplifiedRunOps:
-            self.modulesList.SetActivatedHandler(self.RunOneModify)
+            self.modulesList.SetActivatedHandler(self.RunModify)
         else:
-            self.modulesList.SetActivatedHandler(self.RunOne)
+            self.modulesList.SetActivatedHandler(self.Run)
 
         self.reportWindow = UIReport.ReportWindow()
         self.reportWindow.Reporter.RegisterProgressHandler(progressFunction)
@@ -311,17 +311,24 @@ class FTPanel(Panel):
                        self.listOfModules,
                        modifyAllowed)
 
-    def RunOne(self, modifyAllowed=False):
-        if self.modulesList.SelectedIndex >= 0:
-            self.__Run("Running single module...",
-                       [self.listOfModules[self.modulesList.SelectedIndex]],
+    def Run(self, modifyAllowed=False):
+        selectedModules = list(self.modulesList.SelectedIndices)
+        if len(selectedModules) > 0:
+            if len(selectedModules) == 1:
+                msg = "Running single module..."
+            else:
+                msg = "Running selected modules..."
+
+            modulesToRun = [m for i, m in enumerate(self.listOfModules) if i in selectedModules]
+            self.__Run(msg,
+                       modulesToRun,
                        modifyAllowed)
 
     def RunAllModify(self):
         self.RunAll(True)
 
-    def RunOneModify(self):
-        self.RunOne(True)
+    def RunModify(self):
+        self.Run(True)
 
     # ---- Collections Tab handlers ----
     
@@ -453,7 +460,7 @@ class FTMainForm (Form):
                          ## (TODO, "Preferences", Shortcut.CtrlP, None),
                          (self.Exit,  "Exit", Shortcut.CtrlQ, None)]
         if FTConfig.simplifiedRunOps:
-            RunMenu = [(self.RunOneModify,
+            RunMenu = [(self.RunModify,
                         "Run Module",
                         Shortcut.CtrlR,
                         "Run the selected module"),
@@ -463,14 +470,14 @@ class FTMainForm (Form):
                         "Run all the modules"),
                        ]
         else:
-            RunMenu = [(self.RunOne,
-                        "Run Module",
+            RunMenu = [(self.Run,
+                        "Run Module(s)",
                         Shortcut.CtrlR,
-                        "Run the selected module"),
-                       (self.RunOneModify,
-                        "Run Module (Modify Enabled)",
+                        "Run the selected module(s)"),
+                       (self.RunModify,
+                        "Run Module(s) (Modify Enabled)",
                         Shortcut.CtrlShiftR,
-                        "Run the selected module and allow changes to the project"),
+                        "Run the selected module(s) and allow changes to the project"),
                        (self.RunAll,
                         "Run All Modules",
                         Shortcut.CtrlA,
@@ -749,17 +756,14 @@ class FTMainForm (Form):
     def ReloadModules(self, sender, event):
         self.__LoadModules()
 
-    def RunOne(self, sender, event):
-        self.UIPanel.RunOne()
+    def Run(self, sender, event):
+        self.UIPanel.Run()
         
-    def RunOneModify(self, sender, event):
-        self.UIPanel.RunOneModify()
+    def RunModify(self, sender, event):
+        self.UIPanel.RunModify()
         
     def RunAll(self, sender, event):
         self.UIPanel.RunAll()
         
     def RunAllModify(self, sender, event):
         self.UIPanel.RunAllModify()
-
-
-

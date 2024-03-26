@@ -44,7 +44,7 @@ class ModulesList(ListBox):
 
         # behaviour
         self.LabelEdit = False
-        self.MultiSelect = False
+        self.SelectionMode = SelectionMode.MultiExtended
 
         # appearance
         self.Dock = DockStyle.Fill
@@ -113,13 +113,12 @@ class ModulesList(ListBox):
         g.DrawLine(Pens.LightGray,
                    Point(e.Bounds.Left,e.Bounds.Bottom-1),
                    Point(e.Bounds.Right,e.Bounds.Bottom-1))
-        e.DrawFocusRectangle()
 
     # ---------------------------------
 
     def UpdateAllItems(self, contents, keepSelection=False):
         if keepSelection:
-            currentSelection = self.SelectedIndex
+            currentSelection = list(self.SelectedIndices)
 
         # ListBox requires a .NET List; initialise to contain String types.
         formattedItems = List[String]()
@@ -152,7 +151,8 @@ class ModulesList(ListBox):
         self.DataSource = formattedItems
 
         if keepSelection:
-            self.SelectedIndex = currentSelection
+            for i in range(len(self.DataSource)):
+                self.SetSelected(i, i in currentSelection)
 
 
     def SetSelectedHandler(self, handler):
@@ -167,7 +167,7 @@ class ModulesList(ListBox):
     def SetActivatedHandler(self, handler):
         if handler:
             self.__ActivatedHandler = handler
-            # Double-click and Enter will Run this module
+            # Double-click and Enter will run this module
             if not FTConfig.disableDoubleClick:
                 self.DoubleClick += self.__ItemActivatedHandler
             self.KeyDown += self.__ItemActivatedHandler
