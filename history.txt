@@ -11,10 +11,14 @@ FLExTools History
 2.3.0_2024.3.TODO
 ---------------
 
-+ Issue #31: Added DisableRunAll option for collections. Set this in
-        the collection's .ini file by adding these two lines:
-            [DEFAULT]
-            DisableRunAll = True
++ Issue #13: Enabled multi-selection of modules so that a subset of the
+             current collection can be run.
++ Issue #31: Added a DisableRunAll option for collections, which prevents
+             users from using the Run All button on a per-collection basis.
+             Configure this by adding the following two lines to the top
+             of the collection's .ini file:
+                [DEFAULT]
+                DisableRunAll = True
 
 
 2.3.0_2024.3.13
