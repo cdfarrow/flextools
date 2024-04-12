@@ -20,6 +20,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+# 2024-06-12 cdf
+# removed unicode_2 flag and future imports
 # 2008-3-21 gna
 # added licence
 # removed unicodedata import
@@ -28,14 +30,10 @@
 # added unicode_2_0 global for the Arial Unicode MS font
 # added {low,mid,high}_vowels variables to simplify regular expressions
 
-from __future__ import unicode_literals
-from __future__ import print_function
-
 import re
 
 __all__ = ["tonenum_pinyin"]
 
-unicode_2_0 = False
 
 tones = {}
 
@@ -167,12 +165,6 @@ tones[('N', '3')] = '\N{LATIN CAPITAL LETTER N WITH CARON}'
 tones[('N', '4')] = '\N{LATIN CAPITAL LETTER N WITH GRAVE}'
 tones[('N', '5')] = 'N'
 
-if unicode_2_0:
-    # the graphs used above were introduced in Unicode 3.0
-    # use these as substitutes for earlier versions
-    # Microsoft's Arial Unicode MS font implements Unicode 2.0
-    tones[('n', '4')] = 'n\N{COMBINING GRAVE ACCENT}'
-    tones[('N', '4')] = 'N\N{COMBINING GRAVE ACCENT}'
     
 low_vowels = 'a'
 mid_vowels = 'eo' \
