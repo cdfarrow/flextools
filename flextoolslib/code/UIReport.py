@@ -56,9 +56,10 @@ class ReportWindow(ListView):
         self.SmallImageList = ImageList()
         self.SmallImageList.ColorDepth = ColorDepth.Depth32Bit
         images = ("information", "exclamation", "cross_circle")
+        path, suffix = UIGlobal.ReportIconParams
         for i in images:
             self.SmallImageList.Images.Add(
-                Bitmap.FromFile(i.join(UIGlobal.ReportIconParams)))
+                Bitmap.FromFile(os.path.join(path, i+suffix)))
         self.ResumeLayout(False)
 
     def __OnResize(self, sender, event):

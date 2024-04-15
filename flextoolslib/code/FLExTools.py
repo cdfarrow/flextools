@@ -80,8 +80,8 @@ try:
     from flexlibs import FLExInitialize, FLExCleanup
 
 except Exception as e:
-    msg = f"There was a fatal error during initialisation, which might be because of a newer version of Fieldworks.\n" \
-          f"(This version of FLExTools has been tested with Fieldworks versions {MinFWVersion} - {MaxFWVersion}.)\n"\
+    msg = f"There was a fatal error during initialisation, which might be because of a newer version of FieldWorks.\n" \
+          f"(This version of FLExTools has been tested with FieldWorks versions {MinFWVersion} - {MaxFWVersion}.)\n"\
           f"Details: {e}\n"\
           f"See flextools.log for more information."
     logger.error(msg)

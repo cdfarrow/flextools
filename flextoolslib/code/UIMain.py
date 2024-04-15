@@ -104,7 +104,7 @@ class FTPanel(Panel):
         ButtonListA = [
                       (self.__ChooseProject,
                        "Select Project",
-                       "FLEX",
+                       "Flex",
                        "Select the FieldWorks project to operate on"),
                       (self.__ManageCollections,
                        "Collections",
@@ -513,9 +513,9 @@ class FTMainForm (Form):
                             "Help on the Programming Interface"),
                          None,     # Separator
                          (Help.LaunchLCMBrowser,
-                            "Launch Fieldworks LCMBrowser",
+                            "Launch FieldWorks LCMBrowser",
                             None,
-                            "Open the Fieldworks LCMBrowser application"),
+                            "Open the FieldWorks LCMBrowser application"),
                          None,     # Separator
                          (Help.About,
                             "About",
