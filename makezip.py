@@ -27,7 +27,9 @@ ZIPFILE_NAME = f"dist\\FlexTools_{Version}.zip"
 
 PATH_PATTERNS = (
     "../LICENSE.txt",
+    "../history.txt",
     "*.vbs",
+    "*.sh",
     "scripts/*",
     "Modules/**/*",     # "**" = recursive
     "Collections/Chinese processors.ini",
