@@ -15,7 +15,7 @@
 
 import os
 import sys
-import importlib
+import importlib.util
 import traceback
 
 import System
