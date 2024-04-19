@@ -8,7 +8,7 @@ FLExTools History
 
 ====== History =======
 
-2.3.0_2024.3.TODO
+2.3.1_2024.4.19
 ---------------
 
 + Issue #13: Enabled multi-selection of modules so that a subset of the
@@ -19,6 +19,7 @@ FLExTools History
              of the collection's .ini file:
                 [DEFAULT]
                 DisableRunAll = True
++ Supports Fieldworks 9.0.17 - 9.1.25 (later versions will likely work, but are untested)
 
 
 2.3.0_2024.3.13
@@ -50,6 +51,11 @@ FLExTools History
 
 + Renamed Dump_* modules to Export_*
 + Fixes and cleanups to Chinese utilities
++ New API functions:
+    + LexiconFieldIsMultiType()
+    + LexiconFieldIsAnyStringType()
+    + LexiconGetSenseNumber()
+    + LexiconSenseAnalysesCount()
 
 
 2.2.3_2023.08.09
