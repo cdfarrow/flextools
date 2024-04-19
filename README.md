@@ -12,4 +12,4 @@ Python 3.8 - 3.12.
 
 [Python for .NET](https://github.com/pythonnet/pythonnet/wiki) 3.0.3.
 
-FieldWorks Language Explorer 9.0.17 - 9.1.24.
+FieldWorks Language Explorer 9.0.17 - 9.1.25.
