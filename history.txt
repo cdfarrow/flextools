@@ -8,7 +8,7 @@ FLExTools History
 
 ====== History =======
 
-2.3.1_2024.4.19
+2.3.1_2024.4.23
 ---------------
 
 + Issue #13: Enabled multi-selection of modules so that a subset of the

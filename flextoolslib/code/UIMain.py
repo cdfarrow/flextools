@@ -631,7 +631,7 @@ class FTMainForm (Form):
         if FTConfig.disableDoubleClick is None:
             FTConfig.disableDoubleClick = False
         if FTConfig.hideCollectionsButton is None:
-            FTConfig.hideCollectionsButton = True
+            FTConfig.hideCollectionsButton = False
 
         self.collectionsManager = FTCollections.CollectionsManager()
 
