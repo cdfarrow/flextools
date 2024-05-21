@@ -5,12 +5,12 @@
 #----------------------------------------------------------------------------
 
 # We use the date of release for the version number: YYYY.MM.DD
-version = "2024.4.17"
+version = "2024.4.23"
 
 # Minimum and maximum supported versions of Fieldworks
 # (Later versions should work if the LCM interface hasn't changed.)
-MinFWVersion = "9.0.4"
-MaxFWVersion = "9.1.24"
+MinFWVersion = "9.0.17"
+MaxFWVersion = "9.1.25"
 
 
 #----------------------------------------------------------------------------
