@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 #   Lexeme_Usage_In_Corpus
 #    - A FlexTools Module -
@@ -119,4 +118,4 @@ FlexToolsModule = FlexToolsModuleClass(runFunction = MainFunction,
 
 #----------------------------------------------------------------
 if __name__ == '__main__':
-    FlexToolsModule.Help()
+    print(FlexToolsModule.Help())

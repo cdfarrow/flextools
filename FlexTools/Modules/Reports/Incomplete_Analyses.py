@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 #   Incomplete_Analyses
 #    - A FlexTools Module -
@@ -52,4 +51,4 @@ FlexToolsModule = FlexToolsModuleClass(runFunction = FTModule,
 
 #----------------------------------------------------------------
 if __name__ == '__main__':
-    FlexToolsModule.Help()
+    print(FlexToolsModule.Help())

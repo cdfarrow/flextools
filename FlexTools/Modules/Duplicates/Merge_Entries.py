@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 #   Duplicates.Merge Entries
 #    - A FlexTools Module
@@ -238,4 +237,4 @@ FlexToolsModule = FlexToolsModuleClass(runFunction = MergeEntries,
 
 #----------------------------------------------------------------
 if __name__ == '__main__':
-    FlexToolsModule.Help()
+    print(FlexToolsModule.Help())

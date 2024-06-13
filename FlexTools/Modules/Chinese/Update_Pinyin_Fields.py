@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 #   Chinese.Update Pinyin Fields
 #    - A FlexTools Module -
@@ -194,4 +193,4 @@ FlexToolsModule = FlexToolsModuleClass(runFunction = UpdatePinyinFields,
 
 #----------------------------------------------------------------
 if __name__ == '__main__':
-    FlexToolsModule.Help()
+    print(FlexToolsModule.Help())

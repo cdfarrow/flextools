@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 #   Chinese.Update Tonenumber Fields
 #    - A FlexTools Module -
@@ -170,4 +169,4 @@ FlexToolsModule = FlexToolsModuleClass(runFunction = UpdateTonenumberFields,
 
 #----------------------------------------------------------------
 if __name__ == '__main__':
-    FlexToolsModule.Help()
+    print(FlexToolsModule.Help())

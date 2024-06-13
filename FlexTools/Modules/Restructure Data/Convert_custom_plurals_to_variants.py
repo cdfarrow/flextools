@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 #   Restructure Data.Convert_custom_plurals_to_variants
 #    - A FlexTools Module
@@ -206,4 +205,4 @@ FlexToolsModule = FlexToolsModuleClass(runFunction = ConvertPlurals,
 
 #----------------------------------------------------------------
 if __name__ == '__main__':
-    FlexToolsModule.Help()
+    print(FlexToolsModule.Help())

@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 #
 #   Export.Export_All_Headwords_To_File
 #    - A FlexTools Module -
 #
-#   Export all Headwords in a FLEx project to a file.
+#   Export all headwords in a FLEx project to a file.
 #
 #   Kien-Wei Tseng
 #   April 2016
@@ -55,5 +54,5 @@ FlexToolsModule = FlexToolsModuleClass(runFunction = MainFunction,
             
 #----------------------------------------------------------------
 if __name__ == '__main__':
-    FlexToolsModule.Help()
+    print(FlexToolsModule.Help())
     

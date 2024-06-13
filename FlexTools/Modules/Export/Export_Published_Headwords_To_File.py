@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 #
 #   Export.Export_Published_Headwords_To_File
 #    - A FlexTools Module -
 #
-#   Export all Headwords in a FLEx project to a file.
+#   Export all published headwords in a FLEx project to a file.
 #
 #   Kien-Wei Tseng
 #   April 2016
@@ -23,8 +22,8 @@ docs = {FTM_Name        : "Export Published Headwords To File",
         FTM_Synopsis    : "Export published headwords to file.",
         FTM_Description :
 """
-Export all headwords to a file if they are marked to be published (PublishIn field has at least
-one value.)
+Export all headwords to a file if they are marked to be published 
+(PublishIn field has at least one value.)
 """ }
                  
 #----------------------------------------------------------------
@@ -56,5 +55,5 @@ FlexToolsModule = FlexToolsModuleClass(runFunction = MainFunction,
             
 #----------------------------------------------------------------
 if __name__ == '__main__':
-    FlexToolsModule.Help()
+    print(FlexToolsModule.Help())
     

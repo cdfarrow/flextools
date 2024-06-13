@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 #   Reports.Lexicon_Statistics
 #    - A FlexTools Module -
@@ -84,4 +83,4 @@ FlexToolsModule = FlexToolsModuleClass(runFunction = MainFunction,
             
 #----------------------------------------------------------------
 if __name__ == '__main__':
-    FlexToolsModule.Help()
+    print(FlexToolsModule.Help())

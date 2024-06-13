@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 #   <Module name>
 #
@@ -6,8 +5,6 @@
 #
 #   <Author>
 #   <Date>
-#
-#   Platforms: Python .NET and IronPython
 #
 
 from flextoolslib import *
@@ -46,3 +43,6 @@ def MainFunction(project, report, modifyAllowed):
 FlexToolsModule = FlexToolsModuleClass(runFunction = MainFunction,
                                        docs = docs)
 
+#----------------------------------------------------------------
+if __name__ == '__main__':
+    print(FlexToolsModule.Help())

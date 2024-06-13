@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 #   Utilities.Approve_Spelling_of_Numbers
 #    - A FlexTools Module
@@ -67,4 +66,4 @@ FlexToolsModule = FlexToolsModuleClass(runFunction = MainFunction,
 
 #----------------------------------------------------------------
 if __name__ == '__main__':
-    FlexToolsModule.Help()
+    print(FlexToolsModule.Help())

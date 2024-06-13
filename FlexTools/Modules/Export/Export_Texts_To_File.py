@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 #
 #   Export.Export_Texts_To_File
 #    - A FlexTools Module -
 #
-#   Export all Texts in a FLEx project to a file.
+#   Export all texts in a FLEx project to a file.
 #
 #   Kien-Wei Tseng
 #   March 2016
@@ -52,4 +51,4 @@ FlexToolsModule = FlexToolsModuleClass(runFunction = MainFunction,
             
 #----------------------------------------------------------------
 if __name__ == '__main__':
-    FlexToolsModule.Help()
+    print(FlexToolsModule.Help())

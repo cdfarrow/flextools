@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 #   Duplicates.Merge Senses
 #    - A FlexTools Module
@@ -138,4 +137,4 @@ FlexToolsModule = FlexToolsModuleClass(runFunction = MergeSenses,
 
 #----------------------------------------------------------------
 if __name__ == '__main__':
-    FlexToolsModule.Help()
+    print(FlexToolsModule.Help())
