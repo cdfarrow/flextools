@@ -98,10 +98,14 @@ def MainFunction(project, report, modifyAllowed):
                 entryTotal += senseCount
                 
             if senseUsageField:
-                project.LexiconSetFieldInteger(sense.Hvo, senseUsageField, senseCount)
+                project.LexiconSetFieldInteger(sense.Hvo, 
+                                               senseUsageField,
+                                               senseCount)
 
         if entryUsageField:
-            project.LexiconSetFieldInteger(entry.Hvo, entryUsageField, entryTotal)
+            project.LexiconSetFieldInteger(entry.Hvo, 
+                                           entryUsageField,
+                                           entryTotal)
             
         if entryTotal > 0:
             numAttested += 1

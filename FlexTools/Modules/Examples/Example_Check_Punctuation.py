@@ -30,7 +30,6 @@ TestNumberOfEntries  = -1   # -1 for whole project; else no. of lexical entries 
 TestSuite = [
        (re.compile(r"[?!\.]{1}$"), False, "ERR:no-ending-punc"),
        (re.compile(r"[?!\.]{2,}$"), True, "ERR:too-much-punc")
-
        ]
 
 #----------------------------------------------------------------
@@ -55,7 +54,7 @@ Writing System.'
 #----------------------------------------------------------------
 # The main processing function
 
-def MainFunction(project, report, modifyAllowed):
+def Main(project, report, modifyAllowed):
     """
     This is the main processing function.
 
@@ -67,8 +66,6 @@ def MainFunction(project, report, modifyAllowed):
     
     """
     report.Info("Beginning Punctuation Check")
-    #report.Warning("The sky is falling!")
-    #report.Error("Failed to ...")
     
     limit = TestNumberOfEntries
 
@@ -76,9 +73,9 @@ def MainFunction(project, report, modifyAllowed):
         report.Warning("TEST: Scanning first %i entries..." % limit)
         report.ProgressStart(limit)
     else:
-        numberEntries = project.LexiconNumberOfEntries()
-        report.Info("Scanning %i entries..." % numberEntries)
-        report.ProgressStart(numberEntries)
+        numEntries = project.LexiconNumberOfEntries()
+        report.Info("Scanning %i entries..." % numEntries)
+        report.ProgressStart(numEntries)
 
     AddReportToField = modifyAllowed
 
@@ -94,14 +91,16 @@ def MainFunction(project, report, modifyAllowed):
             for example in sense.ExamplesOS:
                 exampleSentence = project.LexiconGetExample(example) 
                 if not exampleSentence:
-                    report.Warning("Blank example: " + lexeme, project.BuildGotoURL(entry))
+                    report.Warning("Blank example: " + lexeme, 
+                                   project.BuildGotoURL(entry))
                     continue
                 for test in TestSuite:
                     funcOrRegex, result, message = test
                     if type (funcOrRegex) is not FunctionType:
                         if (funcOrRegex.search(exampleSentence) != None) \
                           == result:
-                           report.Warning(lexeme + ": " + message, project.BuildGotoURL(entry))
+                           report.Warning(lexeme + ": " + message, 
+                                          project.BuildGotoURL(entry))
                            if AddReportToField:
                                project.LexiconAddTagToField(sense, flagsField, message)
            
@@ -114,7 +113,7 @@ def MainFunction(project, report, modifyAllowed):
 #----------------------------------------------------------------
 # The name 'FlexToolsModule' must be defined like this:
 
-FlexToolsModule = FlexToolsModuleClass(runFunction = MainFunction,
+FlexToolsModule = FlexToolsModuleClass(runFunction = Main,
                                        docs = docs)
 
 #----------------------------------------------------------------

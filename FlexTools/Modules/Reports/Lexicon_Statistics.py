@@ -34,7 +34,7 @@ number of senses with definitions and examples.
 #----------------------------------------------------------------
 # The main processing function
 
-def MainFunction(project, report, modifyAllowed):
+def Main(project, report, modifyAllowed):
     
     global numSenses
     global numWithDefinitions
@@ -76,9 +76,8 @@ def MainFunction(project, report, modifyAllowed):
                     (numWithExamples, numWithExamples*100/numSenses))
 
 #----------------------------------------------------------------
-# The name 'FlexToolsModule' must be defined like this:
 
-FlexToolsModule = FlexToolsModuleClass(runFunction = MainFunction,
+FlexToolsModule = FlexToolsModuleClass(runFunction = Main,
                                        docs = docs)
             
 #----------------------------------------------------------------

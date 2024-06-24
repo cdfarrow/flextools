@@ -27,7 +27,7 @@ docs = {FTM_Name       : "<Module name>",
 #----------------------------------------------------------------
 # The main processing function
 
-def MainFunction(project, report, modifyAllowed):
+def Main(project, report, modifyAllowed):
     """
     This is the main processing function.
     
@@ -40,7 +40,7 @@ def MainFunction(project, report, modifyAllowed):
 #----------------------------------------------------------------
 # The name 'FlexToolsModule' must be defined like this:
 
-FlexToolsModule = FlexToolsModuleClass(runFunction = MainFunction,
+FlexToolsModule = FlexToolsModuleClass(runFunction = Main,
                                        docs = docs)
 
 #----------------------------------------------------------------
