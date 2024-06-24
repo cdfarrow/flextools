@@ -189,8 +189,9 @@ class FTPanel(Panel):
         # -- Module list and Report window
         self.moduleManager = moduleManager
         self.listOfModules = listOfModules
-        for button in self.runallButtons:
-            button.Enabled = not listOfModules.disableRunAll
+        if self.listOfModules:
+            for button in self.runallButtons:
+                button.Enabled = not listOfModules.disableRunAll
         self.reloadFunction = reloadFunction
         self.changeCollectionFunction = changeCollectionFunction
 
@@ -233,7 +234,7 @@ class FTPanel(Panel):
         self.collectionsTabControl.TabStop = False
         
         cm = SimpleContextMenu([(self.__OnMenuCloseTab, 
-                                "Close current tab"),])
+                                "Close current collection tab"),])
         self.collectionsTabControl.ContextMenu = cm
         
         self.ignoreTabChange = False
@@ -378,8 +379,9 @@ class FTPanel(Panel):
         if self.startupToolTip:
             self.startupToolTip.RemoveAll()
         self.listOfModules = listOfModules
-        for button in self.runallButtons:
-            button.Enabled = not listOfModules.disableRunAll
+        if self.listOfModules:
+            for button in self.runallButtons:
+                button.Enabled = not listOfModules.disableRunAll
         self.modulesList.UpdateAllItems(self.listOfModules)
         
     def UpdateCollectionTabs(self):
