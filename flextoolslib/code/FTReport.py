@@ -43,6 +43,9 @@ class FTReporter(object):
         self.messages = []
 
     def __Report(self, msgType, msg, ref):
+        if not isinstance(msg, (str, type(None))):
+            msg = repr(msg)
+            
         self.messages.append((msgType, msg, ref))
         self.messageCounts[msgType] += 1
         if self.__handler:
