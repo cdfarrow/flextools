@@ -59,7 +59,8 @@ else:
 
 logging.basicConfig(filename='flextools.log', 
                     filemode='w', 
-                    level=loggingLevel)
+                    level=loggingLevel,
+                    encoding='utf-8')
 
 logger = logging.getLogger(__name__)
 
