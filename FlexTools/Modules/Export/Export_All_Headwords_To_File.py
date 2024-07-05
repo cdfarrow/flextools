@@ -11,46 +11,41 @@
 #
 
 from flextoolslib import *
-import io
 
 #----------------------------------------------------------------
 # Documentation that the user sees:
 
 docs = {FTM_Name        : "Export All Headwords To File",
-        FTM_Version     : 1,
+        FTM_Version     : 2,
         FTM_ModifiesDB  : False,
-        FTM_Synopsis    : "Export all headwords to file.",
+        FTM_Synopsis    : "Export all headwords to a file.",
         FTM_Description :
 """
 Export all Headwords to a file.
 """ }
                  
 #----------------------------------------------------------------
-# The main processing function
 
-def MainFunction(project, report, modifyAllowed):
+def Main(project, report, modifyAllowed):
 
     headwordsFile = "Headwords_All_{0}.txt".format(project.ProjectName())
-    output = io.open(headwordsFile, mode="w", encoding="utf-8")
+
     headwords = []
     for e in project.LexiconAllEntries():
         headwords.append(project.LexiconGetHeadword(e))
     
-    numHeadwords = 0
-    for headword in sorted(headwords, key=lambda s: s.lower()):
-        output.write(headword + '\n')
-        numHeadwords += 1
+    with open(headwordsFile, mode="w", encoding="utf-8") as output:
+        for headword in sorted(headwords, key=lambda s: s.lower()):
+            output.write(headword + '\n')
+
     report.Info("Exported {0} headwords to file {1}".format(
-                numHeadwords, headwordsFile))
-    report.Info("Total Lexical Entries in Project = {}".format(
+                len(headwords), headwordsFile))
+    report.Info("Total lexical entries in project = {}".format(
                 project.LexiconNumberOfEntries()))
-    output.close()		
 
 #----------------------------------------------------------------
-# The name 'FlexToolsModule' must be defined like this:
 
-FlexToolsModule = FlexToolsModuleClass(runFunction = MainFunction,
-                                       docs = docs)
+FlexToolsModule = FlexToolsModuleClass(Main, docs)
             
 #----------------------------------------------------------------
 if __name__ == '__main__':
