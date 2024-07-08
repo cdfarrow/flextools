@@ -39,7 +39,8 @@ def Main(project, report, modifyAllowed):
             output.write(headword + '\n')
 
     report.Info("Exported {0} headwords to file {1}".format(
-                len(headwords), headwordsFile))
+                len(headwords), headwordsFile),
+                report.FileURL(headwordsFile))
     report.Info("Total lexical entries in project = {}".format(
                 project.LexiconNumberOfEntries()))
 

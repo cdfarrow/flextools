@@ -40,8 +40,8 @@ def Main(project, report, modifyAllowed):
             numTexts      += 1
 
     report.Info("Exported {0} texts to file {1}".format(
-                    numTexts, textsFile))
-
+                    numTexts, textsFile),
+                report.FileURL(textsFile))
 
 #----------------------------------------------------------------
 

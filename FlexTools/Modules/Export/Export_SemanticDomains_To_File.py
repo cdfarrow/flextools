@@ -38,7 +38,8 @@ def Main(project, report, modifyAllowed):
             report.Info("Semantic Domain: %s" % sd)
             count      += 1
     report.Info("Exported {0} semantic domains to file {1}".format(
-                count, outputFile))
+                count, outputFile),
+                report.FileURL(outputFile))
 
 #----------------------------------------------------------------
 
