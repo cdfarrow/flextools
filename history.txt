@@ -8,6 +8,24 @@ FLExTools History
 
 ====== History =======
 
+2.3.1_2024.7.9
+--------------
+
++ New support for passing a link to a file to the report functions,
+  which can be opened with a double-click on the report message. 
+  Use report.FileURL(filename) to create the link.
++ Double-clicking the output message from the Export modules opens the file.
++ Report.Info() converts non-strings with repr(), so objects can be passed
+  for debugging purposes.
++ GetAllSemanticDomains() returns ICmSemanticDomain objects
++ New API functions:
+    + Object(hvo-or-guid)
+    + LexiconAllEntriesSorted()
+    + GetLexicalRelationTypes()
+    + GetPublications()
+    + PublicationType(publicationName)
+
+
 2.3.1_2024.4.23
 ---------------
 
