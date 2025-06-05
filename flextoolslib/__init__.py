@@ -1,16 +1,20 @@
 #----------------------------------------------------------------------------
 # Name:         __init__.py
-# Purpose:      flextools is a GUI tool for running Python scripts on 
+# Purpose:      FLExTools is a GUI tool for running Python scripts on 
 #               FieldWorks Language Explorer projects.
+# Architecture: The bulk of the FLExTools code resides in this library
+#               (flextoolslib). The actual FLExTools launcher 
+#               (RunFlexTools.py) simply calls flextoolslib.main()
+#
 #----------------------------------------------------------------------------
 
-# We use the date of release for the version number: YYYY.MM.DD
-version = "2024.7.9"
+# We use the date of release for the version number: YYYY.M.D
+version = "2025.6.12"
 
 # Minimum and maximum supported versions of Fieldworks
 # (Later versions should work if the LCM interface hasn't changed.)
 MinFWVersion = "9.0.17"
-MaxFWVersion = "9.1.25"
+MaxFWVersion = "9.2.8"
 
 
 #----------------------------------------------------------------------------

@@ -8,12 +8,20 @@ FLExTools History
 
 ====== History =======
 
+2.3.TODO
+--------------
+
++ Issue #46: Added a menu item to open the current project in FieldWorks.
++ Issue #50: Save project and collection configuration immediately so 
+             the settings persist after a crash.
+
 2.3.1_2024.7.9
 --------------
 
 + New support for passing a link to a file to the report functions,
   which can be opened with a double-click on the report message. 
-  Use report.FileURL(filename) to create the link.
+  Use report.FileURL(filename) to create the link to pass as the third
+  parameter to the Info()/Warning()/Error() functions.
 + Double-clicking the output message from the Export modules opens the file.
 + Report.Info() converts non-strings with repr(), so objects can be passed
   for debugging purposes.
