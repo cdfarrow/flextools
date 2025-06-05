@@ -8,15 +8,19 @@
 #       from .FTConfig import FTConfig
 #       FTConfig.ModulesPath
 #   
-#   The configuration values that are in use are (case insensitive):
+#   These configuration values are used (case insensitive):
 #       ModulesPath
 #       CollectionsPath
+#       CollectionTabs
 #       CurrentProject
+#   These flags modify some behaviours. See UIMain.py for explanations.
 #       WarnOnModify
 #       DisableDoubleClick
+#       SimplifiedRunOps
+#       StopOnError
 #
 #   Craig Farrow
-#   Copyright 2012-2023
+#   Copyright 2012-2025
 #
 
 from os import getcwd, chdir

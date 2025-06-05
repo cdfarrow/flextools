@@ -603,6 +603,7 @@ class FTMainForm (Form):
             FTConfig.collectionTabs = []
             listOfModules = []
 
+        FTConfig.save()
         self.UpdateStatusBar()
         self.UpdateMenuEnabledStates(False if not listOfModules else
                                      listOfModules.disableRunAll)
@@ -649,6 +650,8 @@ class FTMainForm (Form):
             FTConfig.currentCollection = None
             FTConfig.collectionTabs = []
             listOfModules = []
+
+        FTConfig.save()
 
         self.Icon = Icon(UIGlobal.ApplicationIcon)
 
@@ -743,6 +746,7 @@ class FTMainForm (Form):
         dlg.ShowDialog()
         if dlg.projectName != FTConfig.currentProject:
             FTConfig.currentProject = dlg.projectName
+            FTConfig.save()
             self.UIPanel.UpdateProjectName()
             #self.UpdateStatusBar()  #Apr2023: removed project from statusbar
 
