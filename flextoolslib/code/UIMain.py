@@ -19,11 +19,13 @@
 #       If FTConfig.stopOnError is True, then processing will stop after
 #       any module that outputs an error message.
 #
-#   Copyright Craig Farrow, 2010 - 2024
+#   Copyright Craig Farrow, 2010 - 2025
 #
 
 import logging
 logger = logging.getLogger(__name__)
+
+from flexlibs import OpenProjectInFW
 
 import clr
 import System
@@ -316,7 +318,7 @@ class FTPanel(Panel):
         selectedModules = list(self.modulesList.SelectedIndices)
         if len(selectedModules) > 0:
             if len(selectedModules) == 1:
-                msg = "Running single module..."
+                msg = "Running module..."
             else:
                 msg = "Running selected modules..."
 
@@ -447,6 +449,10 @@ class FTMainForm (Form):
                           "Select Project...",
                           Shortcut.CtrlP,
                           "Select the FieldWorks project to operate on"),
+                          (self.LaunchProject,
+                          "Open Project in FieldWorks",
+                          Shortcut.CtrlShiftP,
+                          "Open the current project in FieldWorks"),
                          (self.ManageCollections,
                           "Manage Collections...",
                           Shortcut.CtrlL,
@@ -749,6 +755,14 @@ class FTMainForm (Form):
             FTConfig.save()
             self.UIPanel.UpdateProjectName()
             #self.UpdateStatusBar()  #Apr2023: removed project from statusbar
+
+    def LaunchProject(self, sender=None, event=None):
+        if FTConfig.currentProject:
+            self.UIPanel.reportWindow.Report(
+                f"Opening project '%s' in FieldWorks..." 
+                % FTConfig.currentProject)
+
+            OpenProjectInFW(FTConfig.currentProject)
 
     def CopyToClipboard(self, sender, event):
         self.UIPanel.CopyReportToClipboard()
