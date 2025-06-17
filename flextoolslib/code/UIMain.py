@@ -55,7 +55,6 @@ from System.Windows.Forms import (
     HorizontalAlignment, ImageList,
     RichTextBox, RichTextBoxScrollBars, ControlStyles,
     HtmlDocument, SplitContainer,
-    MainMenu, ContextMenu, MenuItem, Shortcut,
     Keys, Control,
     TextRenderer)
 
@@ -164,12 +163,14 @@ class FTPanel(Panel):
 
         self.toolbar = CustomToolBar(ButtonList,
                                      UIGlobal.ToolbarIconParams)
+        self.toolbar.Font = UIGlobal.normalFont
 
-        # Pre-calculate the menu items to disable when DisableRunAll is defined
+
+        # Pre-calculate the toolbar items to disable when DisableRunAll is defined
         # for a collection.
         runallIndices = [i for i, b in enumerate(ButtonList)
                          if b and b[0] in (self.RunAll, self.RunAllModify)]
-        self.runallButtons = [self.toolbar.Buttons[i]
+        self.runallButtons = [self.toolbar.Items[i]
                               for i in runallIndices]
 
     def __init__(self, 
@@ -237,7 +238,7 @@ class FTPanel(Panel):
         
         cm = SimpleContextMenu([(self.__OnMenuCloseTab, 
                                 "Close current collection tab"),])
-        self.collectionsTabControl.ContextMenu = cm
+        self.collectionsTabControl.ContextMenuStrip = cm
         
         self.ignoreTabChange = False
         self.collectionsTabControl.Selected += self.__OnTabSelected
@@ -256,17 +257,17 @@ class FTPanel(Panel):
         self.splitContainer1.Panel1.Controls.Add(self.collectionsTabControl)
         self.splitContainer1.Panel2.Controls.Add(self.reportWindow)
 
-        ## Add the main SplitContainer control to the panel.
+        # Add the main SplitContainer control to the panel.
         self.Controls.Add(self.splitContainer1)
         self.Controls.Add(self.toolbar)          # Last in takes space priority
 
     # ---- Toolbar button handlers ----
 
-    def __ManageCollections(self):
+    def __ManageCollections(self, sender=None, event=None):
         if self.__ManageCollectionsHandler:
             self.__ManageCollectionsHandler()
 
-    def __ChooseProject(self):
+    def __ChooseProject(self, sender=None, event=None):
         if self.__ChooseProjectHandler:
             self.__ChooseProjectHandler()
 
@@ -308,13 +309,13 @@ class FTPanel(Panel):
         # Make sure the progress indicator is off
         self.reportWindow.Reporter.ProgressStop()
 
-    def RunAll(self, modifyAllowed=False):
+    def RunAll(self, modifyAllowed=False, dummy=False):
         if len(self.listOfModules) > 0:
             self.__Run("Running all modules...",
                        self.listOfModules,
                        modifyAllowed)
 
-    def Run(self, modifyAllowed=False):
+    def Run(self, modifyAllowed=False, dummy=False):
         selectedModules = list(self.modulesList.SelectedIndices)
         if len(selectedModules) > 0:
             if len(selectedModules) == 1:
@@ -327,10 +328,10 @@ class FTPanel(Panel):
                        modulesToRun,
                        modifyAllowed)
 
-    def RunAllModify(self):
+    def RunAllModify(self, sender=None, event=None):
         self.RunAll(True)
 
-    def RunModify(self):
+    def RunModify(self, sender=None, event=None):
         self.Run(True)
 
     # ---- Collections Tab handlers ----
@@ -381,7 +382,7 @@ class FTPanel(Panel):
         if self.startupToolTip:
             self.startupToolTip.RemoveAll()
         self.listOfModules = listOfModules
-        if self.listOfModules:
+        if self.listOfModules is not None:  # (Empty lists included)
             for button in self.runallButtons:
                 button.Enabled = not listOfModules.disableRunAll
         self.modulesList.UpdateAllItems(self.listOfModules)
@@ -420,7 +421,7 @@ class FTPanel(Panel):
                                  FTConfig.currentProject)
         self.toolbar.UpdateButtonText(0, FTConfig.currentProject)
         
-    def ModuleInfo(self):
+    def ModuleInfo(self, sender=None, event=None):
         if self.modulesList.SelectedIndex >= 0:
             module = self.listOfModules[self.modulesList.SelectedIndex]
             moduleDocs = self.moduleManager.GetDocs(module)
@@ -447,69 +448,73 @@ class FTMainForm (Form):
         # Handler, Text, Shortcut, Tooltip
         FlexToolsMenu = [(self.ChooseProject,
                           "Select Project...",
-                          Shortcut.CtrlP,
+                          Keys.Control | Keys.P,
                           "Select the FieldWorks project to operate on"),
                           (self.LaunchProject,
                           "Open Project in FieldWorks",
-                          Shortcut.CtrlShiftP,
+                          Keys.Control | Keys.Shift | Keys.P,
                           "Open the current project in FieldWorks"),
                          (self.ManageCollections,
                           "Manage Collections...",
-                          Shortcut.CtrlL,
+                          Keys.Control | Keys.L,
                           "Manage and select a collection of modules"),
                          (self.ModuleInfo,
                           "Module Information",
-                          Shortcut.CtrlI,
+                          Keys.Control | Keys.I,
                           "Show help information on the selected module"),
                          (self.ReloadModules,
                           "Re-load Modules",
-                          Shortcut.F5,
+                          Keys.F5,
                           "Re-import all modules"),
-                         ## (TODO, "Preferences", Shortcut.CtrlP, None),
-                         (self.Exit,  "Exit", Shortcut.CtrlQ, None)]
+                         ## (TODO, "Preferences", Keys.Control | Keys.P, None),
+                         #(self.Exit,
+                          #"Exit",
+                          #Keys.Control | Keys.Q,
+                          #None)
+        ]
         if FTConfig.simplifiedRunOps:
             RunMenu = [(self.RunModify,
                         "Run Module",
-                        Shortcut.CtrlR,
+                        Keys.Control | Keys.R,
                         "Run the selected module"),
                        (self.RunAllModify,
                         "Run All Modules",
-                        Shortcut.CtrlA,
+                        Keys.Control | Keys.A,
                         "Run all the modules"),
                        ]
         else:
             RunMenu = [(self.Run,
                         "Run Module(s)",
-                        Shortcut.CtrlR,
+                        Keys.Control | Keys.R,
                         "Run the selected module(s)"),
                        (self.RunModify,
                         "Run Module(s) (Modify Enabled)",
-                        Shortcut.CtrlShiftR,
+                        Keys.Control | Keys.Shift | Keys.R,
                         "Run the selected module(s) and allow changes to the project"),
                        (self.RunAll,
                         "Run All Modules",
-                        Shortcut.CtrlA,
+                        Keys.Control | Keys.A,
                         "Run all the modules"),
                        (self.RunAllModify,
                         "Run All Modules (Modify Enabled)",
-                        Shortcut.CtrlShiftA,
+                        Keys.Control | Keys.Shift | Keys.A,
                         "Run all the modules and allow changes to the project"),
                        ]
 
-        ReportMenu =    [(self.CopyToClipboard, 
-                          "Copy to Clipboard", 
-                          Shortcut.CtrlC,
+        ReportMenu =    [(self.CopyToClipboard,
+                          "Copy to Clipboard",
+                          Keys.Control | Keys.C,
                           "Copy the report contents to the clipboard"),
-                         #(TODO, "Save...", Shortcut.CtrlS,
+                         #(TODO, "Save...", Keys.Control | Keys.S,
                          # "Save the current report to a file"),
-                         (self.ClearReport, 
-                          "Clear", 
-                          Shortcut.CtrlX,
+                         (self.ClearReport,
+                          "Clear",
+                          Keys.Control | Keys.X,
                           "Clear the current report")]
 
         HelpMenu =      [(Help.GeneralHelp,
                             "Help",
-                            Shortcut.F1,
+                            Keys.F1,
                             "Help on using FlexTools"),
                          (Help.ProgrammingHelp,
                             "Programming Help",
@@ -539,13 +544,20 @@ class FTMainForm (Form):
         if appMenu:
             MenuList.insert(3, appMenu)
 
-        self.Menu = CustomMainMenu(MenuList)
+        # Create the main menu
+        
+        # (.NET documentation says, "In addition to setting the 
+        # MainMenuStrip property, you must Add the MenuStrip control 
+        # to the Controls collection of the form.")
+        self.MainMenuStrip = CustomMainMenu(MenuList)
+        self.Controls.Add(self.MainMenuStrip)
 
         # Pre-calculate the menu items to disable when DisableRunAll is defined
         # for a collection.
         runallIndices = [i for i, m in enumerate(RunMenu)
                          if m[0] in (self.RunAll, self.RunAllModify)]
-        self.runallMenuItems = [self.Menu.MenuItems[1].MenuItems[i]
+        runMenu = self.MainMenuStrip.Items[1]
+        self.runallMenuItems = [runMenu.DropDownItems[i]
                                 for i in runallIndices]
 
     def __LoadModules(self):
@@ -661,10 +673,6 @@ class FTMainForm (Form):
 
         self.Icon = Icon(UIGlobal.ApplicationIcon)
 
-        self.InitMainMenu(appMenu)
-        self.UpdateMenuEnabledStates(False if not listOfModules else
-                                     listOfModules.disableRunAll)
-
         self.progressPercent = -1
         self.progressMessage = None
         self.StatusBar = StatusBar()
@@ -682,6 +690,10 @@ class FTMainForm (Form):
 
         self.Controls.Add(self.UIPanel)
         self.Controls.Add(self.StatusBar)
+        
+        self.InitMainMenu(appMenu)
+        self.UpdateMenuEnabledStates(False if not listOfModules else
+                                     listOfModules.disableRunAll)
 
     # ----
     def UpdateStatusBar(self):
