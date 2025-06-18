@@ -37,26 +37,16 @@ from System.Drawing import (Color, SystemColors, Point, PointF, Rectangle,
 
 clr.AddReference("System.Windows.Forms")
 from System.Windows.Forms import (
-    Application, 
-    BorderStyle, Button,
-    Form, FormBorderStyle, Label,
-    Panel, Screen, FixedPanel, Padding,
+    Form,
+    Panel, 
     MessageBox, MessageBoxButtons, MessageBoxIcon, DialogResult,
-    DockStyle, Orientation, View, SortOrder,
-    TreeView, TreeViewAction,
-    ListBox, DrawMode,
-    ListView, ListViewItem, DrawItemState,
-    TabControl, TabPage, TabAlignment, TabAppearance,
-    ToolBar, ToolBarButton, ToolBarButtonStyle, ToolBarAppearance,
-    ToolBarTextAlign,
+    DockStyle, Orientation,
+    TabControl, TabPage, TabAlignment,
     ToolTip,
     StatusBar,
-    Cursor,
-    HorizontalAlignment, ImageList,
-    RichTextBox, RichTextBoxScrollBars, ControlStyles,
-    HtmlDocument, SplitContainer,
+    SplitContainer,
     Keys, Control,
-    TextRenderer)
+    )
 
 from System.Threading import Thread, ThreadStart, ApartmentState
 
@@ -97,81 +87,6 @@ MESSAGE_RunButtons = \
 
 # ------------------------------------------------------------------
 class FTPanel(Panel):
-    def __InitToolBar(self):
-
-        global MESSAGE_SelectCollection
-        
-        # (Handler, Text, Image, Tooltip)
-        ButtonListA = [
-                      (self.__ChooseProject,
-                       "Select Project",
-                       "Flex",
-                       "Select the FieldWorks project to operate on"),
-                      (self.__ManageCollections,
-                       "Collections",
-                       "folder-open",
-                       "Manage and select a collection of modules"),
-                      (self.ModuleInfo,
-                       "Module Info",
-                       "documents",
-                       "Show the module documentation"),
-                      #(None,
-                      # "Configure",
-                      # "applications",
-                      # "Edit configuration parameters for this module"),
-                      None, # Separator
-                      ]
-            
-        if FTConfig.simplifiedRunOps:
-            ButtonListB = [
-                          (self.RunModify,
-                           "Run",
-                           "arrow-forward-!",
-                           "Run the selected module(s)"),
-                          (self.RunAllModify,
-                           "Run All",
-                           "arrow-forward-double-!",
-                           "Run all the modules")
-                           ]
-        else:
-            ButtonListB = [
-                          (self.Run,
-                           "Run",
-                           "arrow-forward",
-                           "Run the selected module(s) in preview mode"),
-                          (self.RunAll,
-                           "Run All",
-                           "arrow-forward-double",
-                           "Run all the modules in preview mode"),
-                          (self.RunModify,
-                           "Run (Modify)",
-                           "arrow-forward-!",
-                           "Run the selected module(s) and allow changes to the project"),
-                          (self.RunAllModify,
-                           "Run All (Modify)",
-                           "arrow-forward-double-!",
-                           "Run all the modules and allow changes to the project")
-                           ]
-            
-        if FTConfig.hideCollectionsButton:
-            ButtonListA.pop(1)
-            MESSAGE_SelectCollection = MESSAGE_SelectCollectionMenu
-        else:
-            MESSAGE_SelectCollection = MESSAGE_SelectCollectionToolbar
-        
-        ButtonList = ButtonListA + ButtonListB
-
-        self.toolbar = CustomToolBar(ButtonList,
-                                     UIGlobal.ToolbarIconParams)
-        self.toolbar.Font = UIGlobal.normalFont
-
-
-        # Pre-calculate the toolbar items to disable when DisableRunAll is defined
-        # for a collection.
-        runallIndices = [i for i, b in enumerate(ButtonList)
-                         if b and b[0] in (self.RunAll, self.RunAllModify)]
-        self.runallButtons = [self.toolbar.Items[i]
-                              for i in runallIndices]
 
     def __init__(self, 
                  moduleManager, 
@@ -184,17 +99,11 @@ class FTPanel(Panel):
         self.Dock = DockStyle.Fill
         self.Font = UIGlobal.normalFont
 
-        # -- Toolbar
-        self.__InitToolBar()
-
         self.__ManageCollectionsHandler = None
 
         # -- Module list and Report window
         self.moduleManager = moduleManager
         self.listOfModules = listOfModules
-        if self.listOfModules:
-            for button in self.runallButtons:
-                button.Enabled = not listOfModules.disableRunAll
         self.reloadFunction = reloadFunction
         self.changeCollectionFunction = changeCollectionFunction
 
@@ -213,7 +122,7 @@ class FTPanel(Panel):
         
         self.startupToolTip = None
         if FTConfig.currentProject:
-            self.UpdateProjectName()
+            self.MsgProjectSelected()
         else:
             self.reportWindow.Report(MESSAGE_SelectProject)
 
@@ -259,17 +168,8 @@ class FTPanel(Panel):
 
         # Add the main SplitContainer control to the panel.
         self.Controls.Add(self.splitContainer1)
-        self.Controls.Add(self.toolbar)          # Last in takes space priority
 
-    # ---- Toolbar button handlers ----
-
-    def __ManageCollections(self, sender=None, event=None):
-        if self.__ManageCollectionsHandler:
-            self.__ManageCollectionsHandler()
-
-    def __ChooseProject(self, sender=None, event=None):
-        if self.__ChooseProjectHandler:
-            self.__ChooseProjectHandler()
+    # ---- Run actions ----
 
     def __Run(self, message, modules, modifyAllowed = False):
         # Reload the modules to make sure we're using the latest code.
@@ -285,10 +185,9 @@ class FTPanel(Panel):
         if not modifyAllowed:
             modifyAllowed = (Control.ModifierKeys == Keys.Shift)
 
-        if modifyAllowed:
+        if modifyAllowed and FTConfig.warnOnModify:
             # Only warn if some of the module(s) actually make modifications
-            if FTConfig.warnOnModify and \
-               any([self.moduleManager.CanModify(m) for m in modules]):
+            if any([self.moduleManager.CanModify(m) for m in modules]):
                 dlgmsg = "Are you sure you want to make changes to the '%s' project? "\
                           "Please back up the project first."
                 title = "Allow changes?"
@@ -309,13 +208,13 @@ class FTPanel(Panel):
         # Make sure the progress indicator is off
         self.reportWindow.Reporter.ProgressStop()
 
-    def RunAll(self, modifyAllowed=False, dummy=False):
+    def RunAll(self, modifyAllowed=False):
         if len(self.listOfModules) > 0:
             self.__Run("Running all modules...",
                        self.listOfModules,
                        modifyAllowed)
 
-    def Run(self, modifyAllowed=False, dummy=False):
+    def Run(self, modifyAllowed=False):
         selectedModules = list(self.modulesList.SelectedIndices)
         if len(selectedModules) > 0:
             if len(selectedModules) == 1:
@@ -328,10 +227,10 @@ class FTPanel(Panel):
                        modulesToRun,
                        modifyAllowed)
 
-    def RunAllModify(self, sender=None, event=None):
+    def RunAllModify(self):
         self.RunAll(True)
 
-    def RunModify(self, sender=None, event=None):
+    def RunModify(self):
         self.Run(True)
 
     # ---- Collections Tab handlers ----
@@ -372,19 +271,10 @@ class FTPanel(Panel):
 
     # ---- Externally used methods ----
 
-    def SetChooseProjectHandler(self, handler):
-        self.__ChooseProjectHandler = handler
-
-    def SetManageCollectionsHandler(self, handler):
-        self.__ManageCollectionsHandler = handler
-
     def UpdateModuleList(self, listOfModules):
         if self.startupToolTip:
             self.startupToolTip.RemoveAll()
         self.listOfModules = listOfModules
-        if self.listOfModules is not None:  # (Empty lists included)
-            for button in self.runallButtons:
-                button.Enabled = not listOfModules.disableRunAll
         self.modulesList.UpdateAllItems(self.listOfModules)
         
     def UpdateCollectionTabs(self):
@@ -414,12 +304,11 @@ class FTPanel(Panel):
         else:
             self.reportWindow.Report(MESSAGE_SelectCollection)
 
-    def UpdateProjectName(self):
+    def MsgProjectSelected(self):
         if self.startupToolTip:
             self.startupToolTip.RemoveAll()
         self.reportWindow.Report(MESSAGE_ProjectSelected % \
                                  FTConfig.currentProject)
-        self.toolbar.UpdateButtonText(0, FTConfig.currentProject)
         
     def ModuleInfo(self, sender=None, event=None):
         if self.modulesList.SelectedIndex >= 0:
@@ -560,6 +449,83 @@ class FTMainForm (Form):
         self.runallMenuItems = [runMenu.DropDownItems[i]
                                 for i in runallIndices]
 
+
+    def InitToolBar(self):
+
+        global MESSAGE_SelectCollection
+        
+        # (Handler, Text, Image, Tooltip)
+        ButtonListA = [
+                      (self.ChooseProject,
+                       "Select Project",
+                       "Flex",
+                       "Select the FieldWorks project to operate on"),
+                      (self.ManageCollections,
+                       "Collections",
+                       "folder-open",
+                       "Manage and select a collection of modules"),
+                      (self.ModuleInfo,
+                       "Module Info",
+                       "documents",
+                       "Show the module documentation"),
+                      #(None,
+                      # "Configure",
+                      # "applications",
+                      # "Edit configuration parameters for this module"),
+                      None, # Separator
+                      ]
+            
+        if FTConfig.simplifiedRunOps:
+            ButtonListB = [
+                          (self.RunModify,
+                           "Run",
+                           "arrow-forward-!",
+                           "Run the selected module(s)"),
+                          (self.RunAllModify,
+                           "Run All",
+                           "arrow-forward-double-!",
+                           "Run all the modules")
+                           ]
+        else:
+            ButtonListB = [
+                          (self.Run,
+                           "Run",
+                           "arrow-forward",
+                           "Run the selected module(s) in preview mode"),
+                          (self.RunAll,
+                           "Run All",
+                           "arrow-forward-double",
+                           "Run all the modules in preview mode"),
+                          (self.RunModify,
+                           "Run (Modify)",
+                           "arrow-forward-!",
+                           "Run the selected module(s) and allow changes to the project"),
+                          (self.RunAllModify,
+                           "Run All (Modify)",
+                           "arrow-forward-double-!",
+                           "Run all the modules and allow changes to the project")
+                           ]
+            
+        if FTConfig.hideCollectionsButton:
+            ButtonListA.pop(1)
+            MESSAGE_SelectCollection = MESSAGE_SelectCollectionMenu
+        else:
+            MESSAGE_SelectCollection = MESSAGE_SelectCollectionToolbar
+        
+        ButtonList = ButtonListA + ButtonListB
+
+        self.toolbar = CustomToolBar(ButtonList,
+                                     UIGlobal.ToolbarIconParams)
+        self.toolbar.Font = UIGlobal.normalFont
+        self.Controls.Add(self.toolbar)
+
+        # Pre-calculate the toolbar items to disable when DisableRunAll is defined
+        # for a collection.
+        runallIndices = [i for i, b in enumerate(ButtonList)
+                         if b and b[0] in (self.RunAll, self.RunAllModify)]
+        self.runallButtons = [self.toolbar.Items[i]
+                              for i in runallIndices]
+
     def __LoadModules(self):
         logger.debug("Loading modules")
         if not hasattr(self, "moduleManager"):
@@ -623,8 +589,8 @@ class FTMainForm (Form):
 
         FTConfig.save()
         self.UpdateStatusBar()
-        self.UpdateMenuEnabledStates(False if not listOfModules else
-                                     listOfModules.disableRunAll)
+        self.UpdateDisabledStates(False if not listOfModules else
+                                  listOfModules.disableRunAll)
 
         self.UIPanel.UpdateModuleList(listOfModules)
         self.UIPanel.UpdateCollectionTabs()
@@ -636,6 +602,8 @@ class FTMainForm (Form):
             self.Text = appTitle
         else:
             self.Text = f"flextoolslib {version}"
+
+        self.Icon = Icon(UIGlobal.ApplicationIcon)
 
         # Initialise default configuration values
         if not FTConfig.currentCollection:
@@ -671,29 +639,36 @@ class FTMainForm (Form):
 
         FTConfig.save()
 
-        self.Icon = Icon(UIGlobal.ApplicationIcon)
-
-        self.progressPercent = -1
-        self.progressMessage = None
-        self.StatusBar = StatusBar()
-        self.statusbarCallback = appStatusbar
-        self.UpdateStatusBar()
-
+        # Main panel (modules' list & report window)
         self.UIPanel = FTPanel(self.moduleManager,
                                listOfModules,
                                self.__LoadModules,
                                self.__ProgressBar,
                                self.__ChangeCollection,
                                )
-        self.UIPanel.SetChooseProjectHandler(self.ChooseProject)
-        self.UIPanel.SetManageCollectionsHandler(self.ManageCollections)
 
         self.Controls.Add(self.UIPanel)
+        
+        # Status bar
+        self.progressPercent = -1
+        self.progressMessage = None
+        self.StatusBar = StatusBar()
+        self.statusbarCallback = appStatusbar
+        self.UpdateStatusBar()
+
         self.Controls.Add(self.StatusBar)
         
+        # Toolbar
+        self.InitToolBar()
+        if FTConfig.currentProject:
+            self.toolbar.UpdateButtonText(0, FTConfig.currentProject)
+
+        # Main Menu
         self.InitMainMenu(appMenu)
-        self.UpdateMenuEnabledStates(False if not listOfModules else
-                                     listOfModules.disableRunAll)
+        
+        # Disable the RunAll menus and toolbar buttons if required
+        self.UpdateDisabledStates(False if not listOfModules else
+                                  listOfModules.disableRunAll)
 
     # ----
     def UpdateStatusBar(self):
@@ -718,9 +693,11 @@ class FTMainForm (Form):
         if self.StatusBar.Text != newText:
             self.StatusBar.Text = newText
 
-    def UpdateMenuEnabledStates(self, disableRunAll):
+    def UpdateDisabledStates(self, disableRunAll):
         for menu in self.runallMenuItems:
             menu.Enabled = not disableRunAll
+        for button in self.runallButtons:
+            button.Enabled = not disableRunAll
 
     def __ProgressBar(self, val, max, msg=None):
         if max == 0: # Clear progress bar
@@ -740,7 +717,7 @@ class FTMainForm (Form):
             self.progressMessage = msg
             self.UpdateStatusBar()
 
-    # ---- Menu handlers ----
+    # ---- Menu & Toolbar handlers ----
 
     def Exit(self, sender=None, event=None):
         self.Close()
@@ -765,7 +742,8 @@ class FTMainForm (Form):
         if dlg.projectName != FTConfig.currentProject:
             FTConfig.currentProject = dlg.projectName
             FTConfig.save()
-            self.UIPanel.UpdateProjectName()
+            self.toolbar.UpdateButtonText(0, FTConfig.currentProject)
+            self.UIPanel.MsgProjectSelected()
             #self.UpdateStatusBar()  #Apr2023: removed project from statusbar
 
     def LaunchProject(self, sender=None, event=None):
