@@ -1,12 +1,12 @@
 #
 #   Project: FlexTools
 #   Module:  Help
-#   Platform: .NET v2 Windows.Forms (Python.NET 2.5)
+#   Platform: .NET Windows.Forms (Using python.NET 3)
 #
 #   About Box and Help file launcher
 #
 #   Craig Farrow
-#   Nov 2010
+#   2010-2025
 #
 
 from . import UIGlobal
@@ -56,7 +56,7 @@ class AboutInfo(RichTextBox):
 
         self.SelectionColor = Color.DarkSlateBlue
         self.SelectionFont = UIGlobal.normalFont
-        self.AppendText("A framework for running Python scripts on a Fieldworks Language Explorer project. \n")
+        self.AppendText("A framework for running Python scripts on a FieldWorks Language Explorer project. \n")
 
         self.SelectionAlignment = HorizontalAlignment.Left
         self.SelectionFont = UIGlobal.smallFont
@@ -70,13 +70,13 @@ class AboutInfo(RichTextBox):
         self.SelectionFont = UIGlobal.normalFont
         self.AppendText("Python version: %s\n" % sys.version.split()[0])
         self.SelectionFont = UIGlobal.normalFont
-        self.AppendText("Fieldworks version: %s\n\n" %
+        self.AppendText("FieldWorks version: %s\n\n" %
                             FWShortVersion)
 
         self.SelectionFont = UIGlobal.normalFont
         self.AppendText("FLExTools: \thttps://github.com/cdfarrow/flextools/wiki\n")
         self.SelectionFont = UIGlobal.normalFont
-        self.AppendText("Fieldworks: \thttps://software.sil.org/fieldworks/\n")
+        self.AppendText("FieldWorks: \thttps://software.sil.org/fieldworks/\n")
         self.SelectionFont = UIGlobal.normalFont
         self.AppendText("E-mail: \tmailto:flextoolshelp")
         self.SelectionFont = UIGlobal.normalFont
@@ -116,7 +116,7 @@ class AboutBox (Form):
         self.Controls.Add(AboutInfo())
 
 
-HELP_PATH = os.path.join(os.path.dirname(__file__), "..\docs")
+HELP_PATH = os.path.join(os.path.dirname(__file__), r"..\docs")
 
 GeneralHelpFile     = os.path.join(HELP_PATH, "FLExTools Help.pdf")
 ProgrammingHelpFile = os.path.join(HELP_PATH, "FLExTools Programming.pdf")
