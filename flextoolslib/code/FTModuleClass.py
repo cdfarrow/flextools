@@ -44,7 +44,7 @@ class FlexToolsModuleClass (object):
          def _processing_function_(project, report, modifyAllowed):
 
            - _project_ is a FLExProject instance:
-                   See flexlibs\FLExProject.py for the methods that are
+                   See flexlibs/FLExProject.py for the methods that are
                    provided.
            - _report_ is a FTReport.FTReporter instance that reports 
                    status messages:
