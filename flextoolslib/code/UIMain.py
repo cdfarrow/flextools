@@ -198,15 +198,19 @@ class FTPanel(Panel):
                     return
             if not FTConfig.simplifiedRunOps:
                 message += " (Changes enabled)"
-
+       
         self.reportWindow.Reporter.Info(message)
         self.reportWindow.Refresh()
+        
+        # Freeze our UI for when a module does its own UI (e.g. FLExTrans)
+        self.Parent.Enabled = False
         self.moduleManager.RunModules(FTConfig.currentProject,
                                       modules,
                                       self.reportWindow.Reporter,
                                       modifyAllowed)
         # Make sure the progress indicator is off
         self.reportWindow.Reporter.ProgressStop()
+        self.Parent.Enabled = True
 
     def RunAll(self, modifyAllowed=False):
         if len(self.listOfModules) > 0:
