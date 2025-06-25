@@ -41,6 +41,7 @@ from System.Windows.Forms import (
     Panel, 
     MessageBox, MessageBoxButtons, MessageBoxIcon, DialogResult,
     DockStyle, Orientation,
+    ToolStripButton,
     TabControl, TabPage, TabAlignment,
     ToolTip,
     StatusBar,
@@ -772,12 +773,26 @@ class FTMainForm (Form):
 
     def Run(self, sender, event):
         self.UIPanel.Run()
-        
+
+        # Hack to make the blue toolbar button highlight go away.
+        # This only affects modules that open another UI (such as
+        # the FLExTrans tools.)
+        if isinstance(sender, ToolStripButton):
+            sender.Visible = False
+            sender.Visible = True
+
     def RunModify(self, sender, event):
         self.UIPanel.RunModify()
         
+        # Hack to make the blue toolbar button highlight go away.
+        # This only affects modules that open another UI (such as
+        # the FLExTrans tools.)
+        if isinstance(sender, ToolStripButton):
+            sender.Visible = False
+            sender.Visible = True
+        
     def RunAll(self, sender, event):
         self.UIPanel.RunAll()
-        
+
     def RunAllModify(self, sender, event):
         self.UIPanel.RunAllModify()
