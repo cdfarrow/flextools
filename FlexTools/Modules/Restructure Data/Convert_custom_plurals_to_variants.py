@@ -131,7 +131,7 @@ def ConvertPlurals(project, report, modifyAllowed):
             # no plural field found in this entry, go to next loop iteration
             continue
         
-        report.Info("\lx {} has custom plural field {}".format(
+        report.Info("\\lx {} has custom plural field {}".format(
                         project.LexiconGetLexemeForm(entry), pluralStr))
         numPlurals += 1
         

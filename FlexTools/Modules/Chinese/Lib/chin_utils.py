@@ -53,7 +53,7 @@ class Character(object):
     def __setstate__(self, state):
         self.character, self.pronunciations, self.stroke_count, self.strokes = state
 
-tonenum_syl_pat = re.compile("\N{HORIZONTAL ELLIPSIS}|,|;|\?|//|/|\(|\)|[a-z:^]*[1-5]|[1-3]")
+tonenum_syl_pat = re.compile(r"\N{HORIZONTAL ELLIPSIS}|,|;|\?|//|/|\(|\)|[a-z:^]*[1-5]|[1-3]")
 
 def get_tone_syls(tonenum):
     """return a list of the tonenum syllables in tonenum.

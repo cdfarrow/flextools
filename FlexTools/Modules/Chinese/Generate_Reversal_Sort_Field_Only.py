@@ -85,7 +85,6 @@ HACK_LEVEL = 0
 
 #----------------------------------------------------------------
 import chin_utils
-import itertools
 from os.path import commonprefix
 
 HACK_ENDING = "()"
