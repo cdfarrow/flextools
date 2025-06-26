@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 #   Restructure Data.Convert_custom_plurals_to_variants
 #    - A FlexTools Module
@@ -132,7 +131,7 @@ def ConvertPlurals(project, report, modifyAllowed):
             # no plural field found in this entry, go to next loop iteration
             continue
         
-        report.Info("\lx {} has custom plural field {}".format(
+        report.Info("\\lx {} has custom plural field {}".format(
                         project.LexiconGetLexemeForm(entry), pluralStr))
         numPlurals += 1
         
@@ -206,4 +205,4 @@ FlexToolsModule = FlexToolsModuleClass(runFunction = ConvertPlurals,
 
 #----------------------------------------------------------------
 if __name__ == '__main__':
-    FlexToolsModule.Help()
+    print(FlexToolsModule.Help())

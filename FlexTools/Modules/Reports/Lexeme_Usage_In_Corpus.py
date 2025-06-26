@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 #   Lexeme_Usage_In_Corpus
 #    - A FlexTools Module -
@@ -99,10 +98,14 @@ def MainFunction(project, report, modifyAllowed):
                 entryTotal += senseCount
                 
             if senseUsageField:
-                project.LexiconSetFieldInteger(sense.Hvo, senseUsageField, senseCount)
+                project.LexiconSetFieldInteger(sense.Hvo, 
+                                               senseUsageField,
+                                               senseCount)
 
         if entryUsageField:
-            project.LexiconSetFieldInteger(entry.Hvo, entryUsageField, entryTotal)
+            project.LexiconSetFieldInteger(entry.Hvo, 
+                                           entryUsageField,
+                                           entryTotal)
             
         if entryTotal > 0:
             numAttested += 1
@@ -119,4 +122,4 @@ FlexToolsModule = FlexToolsModuleClass(runFunction = MainFunction,
 
 #----------------------------------------------------------------
 if __name__ == '__main__':
-    FlexToolsModule.Help()
+    print(FlexToolsModule.Help())

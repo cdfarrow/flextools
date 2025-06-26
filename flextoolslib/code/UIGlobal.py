@@ -29,8 +29,8 @@ ICON_SUFFIX1    = "_16.gif"
 ICON_PATH2      = os.path.join(ICON_PATH0, "Fugue")
 ICON_SUFFIX2    = ".png"
 
-ApplicationIcon   = os.path.join(ICON_PATH0, "flextools.ico")
-ModuleIcon        = os.path.join(ICON_PATH0, "module.ico")
+ApplicationIcon   = os.path.join(ICON_PATH0, "Flextools.ico")
+ModuleIcon        = os.path.join(ICON_PATH0, "Module.ico")
 ToolbarIconParams = (ICON_PATH1, ICON_SUFFIX1)
 ReportIconParams  = (ICON_PATH2, ICON_SUFFIX2)
 

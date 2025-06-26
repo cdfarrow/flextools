@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 #   Chinese.Generate Reversal Sort Field Only
 #    - A FlexTools Module -
@@ -86,7 +85,6 @@ HACK_LEVEL = 0
 
 #----------------------------------------------------------------
 import chin_utils
-import itertools
 from os.path import commonprefix
 
 HACK_ENDING = "()"
@@ -247,4 +245,4 @@ FlexToolsModule = FlexToolsModuleClass(runFunction = GenerateReversalSortFields,
 
 #----------------------------------------------------------------
 if __name__ == '__main__':
-    FlexToolsModule.Help()
+    print(FlexToolsModule.Help())

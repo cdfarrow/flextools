@@ -1,6 +1,7 @@
 # Custom Modules & Collections folders are excluded
 FlexTools/Modules-*
 FlexTools/Collections-*
+FlexTools/Modules/_*
 
 flextools.ini
 FlexTools/Collections/*

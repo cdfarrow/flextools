@@ -19,11 +19,13 @@
 #       If FTConfig.stopOnError is True, then processing will stop after
 #       any module that outputs an error message.
 #
-#   Copyright Craig Farrow, 2010 - 2024
+#   Copyright Craig Farrow, 2010 - 2025
 #
 
 import logging
 logger = logging.getLogger(__name__)
+
+from flexlibs import OpenProjectInFW
 
 import clr
 import System
@@ -35,27 +37,17 @@ from System.Drawing import (Color, SystemColors, Point, PointF, Rectangle,
 
 clr.AddReference("System.Windows.Forms")
 from System.Windows.Forms import (
-    Application, 
-    BorderStyle, Button,
-    Form, FormBorderStyle, Label,
-    Panel, Screen, FixedPanel, Padding,
+    Form,
+    Panel, 
     MessageBox, MessageBoxButtons, MessageBoxIcon, DialogResult,
-    DockStyle, Orientation, View, SortOrder,
-    TreeView, TreeViewAction,
-    ListBox, DrawMode,
-    ListView, ListViewItem, DrawItemState,
-    TabControl, TabPage, TabAlignment, TabAppearance,
-    ToolBar, ToolBarButton, ToolBarButtonStyle, ToolBarAppearance,
-    ToolBarTextAlign,
+    DockStyle, Orientation,
+    ToolStripButton,
+    TabControl, TabPage, TabAlignment,
     ToolTip,
     StatusBar,
-    Cursor,
-    HorizontalAlignment, ImageList,
-    RichTextBox, RichTextBoxScrollBars, ControlStyles,
-    HtmlDocument, SplitContainer,
-    MainMenu, ContextMenu, MenuItem, Shortcut,
+    SplitContainer,
     Keys, Control,
-    TextRenderer)
+    )
 
 from System.Threading import Thread, ThreadStart, ApartmentState
 
@@ -96,17 +88,384 @@ MESSAGE_RunButtons = \
 
 # ------------------------------------------------------------------
 class FTPanel(Panel):
-    def __InitToolBar(self):
+
+    def __init__(self, 
+                 moduleManager, 
+                 listOfModules, 
+                 reloadFunction, 
+                 progressFunction,
+                 changeCollectionFunction):
+        Panel.__init__(self)
+
+        self.Dock = DockStyle.Fill
+        self.Font = UIGlobal.normalFont
+
+        self.__ManageCollectionsHandler = None
+
+        # -- Module list and Report window
+        self.moduleManager = moduleManager
+        self.listOfModules = listOfModules
+        self.reloadFunction = reloadFunction
+        self.changeCollectionFunction = changeCollectionFunction
+
+        self.modulesList = UIModulesList.ModulesList(self.moduleManager,
+                                                     self.listOfModules)
+        if FTConfig.simplifiedRunOps:
+            self.modulesList.SetActivatedHandler(self.RunModify)
+        else:
+            self.modulesList.SetActivatedHandler(self.Run)
+
+        self.reportWindow = UIReport.ReportWindow()
+        self.reportWindow.Reporter.RegisterProgressHandler(progressFunction)
+
+        # -- Startup messages and getting started hint.
+        self.reportWindow.Report(MESSAGE_Welcome)
+        
+        self.startupToolTip = None
+        if FTConfig.currentProject:
+            self.MsgProjectSelected()
+        else:
+            self.reportWindow.Report(MESSAGE_SelectProject)
+
+            startupTips = [MESSAGE_Welcome]
+            startupTips.append(MESSAGE_SelectProject)
+            startupTips.append(MESSAGE_SelectCollection)
+            startupTips.append(MESSAGE_RunButtons)
+
+            self.startupToolTip = ToolTip()
+            self.startupToolTip.IsBalloon = True
+            self.startupToolTip.ToolTipTitle = "Getting started"
+            self.startupToolTip.InitialDelay = 0
+            self.startupToolTip.AutoPopDelay = 20000
+            self.startupToolTip.SetToolTip(self.modulesList, 
+                                           "\n".join(startupTips))
+
+        # -- The collection tabs 
+        self.collectionsTabControl = TabControl()
+        self.collectionsTabControl.Dock = DockStyle.Fill
+        self.collectionsTabControl.Alignment = TabAlignment.Top
+        self.collectionsTabControl.TabStop = False
+        
+        cm = SimpleContextMenu([(self.__OnMenuCloseTab, 
+                                "Close current collection tab"),])
+        self.collectionsTabControl.ContextMenuStrip = cm
+        
+        self.ignoreTabChange = False
+        self.collectionsTabControl.Selected += self.__OnTabSelected
+        
+        self.UpdateCollectionTabs()
+        
+        self.reportWindow.Report(MESSAGE_RunButtons)
+
+        # -- Put it all together
+        self.splitContainer1 = SplitContainer()
+        self.splitContainer1.Dock = DockStyle.Fill
+        self.splitContainer1.TabIndex = 1
+        self.splitContainer1.SplitterWidth = UIGlobal.SPLITTER_WIDTH
+        self.splitContainer1.SplitterDistance = 50
+        self.splitContainer1.Orientation = Orientation.Horizontal
+        self.splitContainer1.Panel1.Controls.Add(self.collectionsTabControl)
+        self.splitContainer1.Panel2.Controls.Add(self.reportWindow)
+
+        # Add the main SplitContainer control to the panel.
+        self.Controls.Add(self.splitContainer1)
+
+    # ---- Run actions ----
+
+    def __Run(self, message, modules, modifyAllowed = False):
+        # Reload the modules to make sure we're using the latest code.
+        if self.reloadFunction: self.reloadFunction()
+
+        if not FTConfig.currentProject:
+            self.reportWindow.Reporter.Error("No project selected! Use the Select Project button in the toolbar.")
+            return
+
+        self.reportWindow.Clear()
+        
+        # The Shift key activates Modify for Enter key and double click.
+        if not modifyAllowed:
+            modifyAllowed = (Control.ModifierKeys == Keys.Shift)
+
+        if modifyAllowed and FTConfig.warnOnModify:
+            # Only warn if some of the module(s) actually make modifications
+            if any([self.moduleManager.CanModify(m) for m in modules]):
+                dlgmsg = "Are you sure you want to make changes to the '%s' project? "\
+                          "Please back up the project first."
+                title = "Allow changes?"
+                result = MessageBox.Show(dlgmsg % FTConfig.currentProject, title,
+                                         MessageBoxButtons.YesNo,
+                                         MessageBoxIcon.Question)
+                if (result == DialogResult.No):
+                    return
+            if not FTConfig.simplifiedRunOps:
+                message += " (Changes enabled)"
+       
+        self.reportWindow.Reporter.Info(message)
+        self.reportWindow.Refresh()
+        
+        # Freeze our UI for when a module does its own UI (e.g. FLExTrans)
+        self.Parent.Enabled = False
+        self.moduleManager.RunModules(FTConfig.currentProject,
+                                      modules,
+                                      self.reportWindow.Reporter,
+                                      modifyAllowed)
+        # Make sure the progress indicator is off
+        self.reportWindow.Reporter.ProgressStop()
+        self.Parent.Enabled = True
+
+    def RunAll(self, modifyAllowed=False):
+        if len(self.listOfModules) > 0:
+            self.__Run("Running all modules...",
+                       self.listOfModules,
+                       modifyAllowed)
+
+    def Run(self, modifyAllowed=False):
+        selectedModules = list(self.modulesList.SelectedIndices)
+        if len(selectedModules) > 0:
+            if len(selectedModules) == 1:
+                msg = "Running module..."
+            else:
+                msg = "Running selected modules..."
+
+            modulesToRun = [m for i, m in enumerate(self.listOfModules) if i in selectedModules]
+            self.__Run(msg,
+                       modulesToRun,
+                       modifyAllowed)
+
+    def RunAllModify(self):
+        self.RunAll(True)
+
+    def RunModify(self):
+        self.Run(True)
+
+    # ---- Collections Tab handlers ----
+    
+    # Called when a tab is selected
+    def __OnTabSelected(self, sender, event):
+        
+        if self.ignoreTabChange: return
+        # Callback to parent Form to initiate refresh to new collection
+        if self.changeCollectionFunction:
+            if event.TabPage:
+                self.changeCollectionFunction(event.TabPage.Text)
+            else:
+                self.changeCollectionFunction(None)
+        
+    # Called from the popup menu on the tabs
+    def __OnMenuCloseTab(self, sender, event):
+
+        currentTab = self.collectionsTabControl.SelectedTab
+        
+        # Remove the collection from the tab list
+        # (FTConfig only supports assignment, so do this in two steps)
+        tempCollections = FTConfig.collectionTabs
+        index = tempCollections.index(currentTab.Text)
+        tempCollections.remove(currentTab.Text)
+        FTConfig.collectionTabs = tempCollections
+
+        if len(FTConfig.collectionTabs):
+            # Select the next tab to the left
+            if index > 0: index = index - 1
+            newCollection = FTConfig.collectionTabs[index]
+        else:
+            # All the tabs are closed
+            newCollection = None
+
+        if self.changeCollectionFunction:
+            self.changeCollectionFunction(newCollection)
+
+    # ---- Externally used methods ----
+
+    def UpdateModuleList(self, listOfModules):
+        if self.startupToolTip:
+            self.startupToolTip.RemoveAll()
+        self.listOfModules = listOfModules
+        self.modulesList.UpdateAllItems(self.listOfModules)
+        
+    def UpdateCollectionTabs(self):
+        self.ignoreTabChange = True     # Avoid nested TabChanged events
+
+        # Clear out any old pages...
+        self.collectionsTabControl.TabPages.Clear()
+
+        if FTConfig.currentCollection:
+            # ...and create them afresh
+            pages = [TabPage(name) for name in FTConfig.collectionTabs]
+
+            self.collectionsTabControl.TabPages.AddRange(pages)
+
+            # Activate the selected tab
+            index = FTConfig.collectionTabs.index(FTConfig.currentCollection)
+            currentTab = self.collectionsTabControl.TabPages[index]
+            currentTab.Controls.Add(self.modulesList)
+            currentTab.Focus()      # Removes dotted focus box from tab itself
+            self.collectionsTabControl.SelectedTab = currentTab
+
+        self.ignoreTabChange = False
+
+        if FTConfig.currentCollection:
+            self.reportWindow.Report(MESSAGE_CollectionSelected \
+                                     % FTConfig.currentCollection)
+        else:
+            self.reportWindow.Report(MESSAGE_SelectCollection)
+
+    def MsgProjectSelected(self):
+        if self.startupToolTip:
+            self.startupToolTip.RemoveAll()
+        self.reportWindow.Report(MESSAGE_ProjectSelected % \
+                                 FTConfig.currentProject)
+        
+    def ModuleInfo(self, sender=None, event=None):
+        if self.modulesList.SelectedIndex >= 0:
+            module = self.listOfModules[self.modulesList.SelectedIndex]
+            moduleDocs = self.moduleManager.GetDocs(module)
+            if moduleDocs:
+                infoDialog = ModuleInfoDialog(moduleDocs)
+                infoDialog.ShowDialog()
+
+    def CopyReportToClipboard(self):
+        self.reportWindow.CopyToClipboard()
+
+    def ClearReport(self):
+        self.reportWindow.Clear()
+
+    def RefreshModules(self):
+        self.modulesList.UpdateAllItems(self.listOfModules,
+                                        keepSelection=True)
+
+# ------------------------------------------------------------------
+
+class FTMainForm (Form):
+
+    def InitMainMenu(self, appMenu):
+
+        # Handler, Text, Shortcut, Tooltip
+        FlexToolsMenu = [(self.ChooseProject,
+                          "Select Project...",
+                          Keys.Control | Keys.P,
+                          "Select the FieldWorks project to operate on"),
+                          (self.LaunchProject,
+                          "Open Project in FieldWorks",
+                          Keys.Control | Keys.Shift | Keys.P,
+                          "Open the current project in FieldWorks"),
+                         (self.ManageCollections,
+                          "Manage Collections...",
+                          Keys.Control | Keys.L,
+                          "Manage and select a collection of modules"),
+                         (self.ModuleInfo,
+                          "Module Information",
+                          Keys.Control | Keys.I,
+                          "Show help information on the selected module"),
+                         (self.ReloadModules,
+                          "Re-load Modules",
+                          Keys.F5,
+                          "Re-import all modules"),
+                         ## (TODO, "Preferences", Keys.Control | Keys.P, None),
+                         #(self.Exit,
+                          #"Exit",
+                          #Keys.Control | Keys.Q,
+                          #None)
+        ]
+        if FTConfig.simplifiedRunOps:
+            RunMenu = [(self.RunModify,
+                        "Run Module",
+                        Keys.Control | Keys.R,
+                        "Run the selected module"),
+                       (self.RunAllModify,
+                        "Run All Modules",
+                        Keys.Control | Keys.A,
+                        "Run all the modules"),
+                       ]
+        else:
+            RunMenu = [(self.Run,
+                        "Run Module(s)",
+                        Keys.Control | Keys.R,
+                        "Run the selected module(s)"),
+                       (self.RunModify,
+                        "Run Module(s) (Modify Enabled)",
+                        Keys.Control | Keys.Shift | Keys.R,
+                        "Run the selected module(s) and allow changes to the project"),
+                       (self.RunAll,
+                        "Run All Modules",
+                        Keys.Control | Keys.A,
+                        "Run all the modules"),
+                       (self.RunAllModify,
+                        "Run All Modules (Modify Enabled)",
+                        Keys.Control | Keys.Shift | Keys.A,
+                        "Run all the modules and allow changes to the project"),
+                       ]
+
+        ReportMenu =    [(self.CopyToClipboard,
+                          "Copy to Clipboard",
+                          Keys.Control | Keys.C,
+                          "Copy the report contents to the clipboard"),
+                         #(TODO, "Save...", Keys.Control | Keys.S,
+                         # "Save the current report to a file"),
+                         (self.ClearReport,
+                          "Clear",
+                          Keys.Control | Keys.X,
+                          "Clear the current report")]
+
+        HelpMenu =      [(Help.GeneralHelp,
+                            "Help",
+                            Keys.F1,
+                            "Help on using FlexTools"),
+                         (Help.ProgrammingHelp,
+                            "Programming Help",
+                            None,
+                            "Help on how to program a FlexTools module"),
+                         (Help.APIHelp,
+                            "API Help",
+                            None,
+                            "Help on the Programming Interface"),
+                         None,     # Separator
+                         (Help.LaunchLCMBrowser,
+                            "Launch FieldWorks LCMBrowser",
+                            None,
+                            "Open the FieldWorks LCMBrowser application"),
+                         None,     # Separator
+                         (Help.About,
+                            "About",
+                            None,
+                            None)
+                         ]
+
+        MenuList = [("FLExTools", FlexToolsMenu),
+                    ("Run", RunMenu),
+                    ("Report", ReportMenu),
+                    ("Help", HelpMenu)]
+
+        if appMenu:
+            MenuList.insert(3, appMenu)
+
+        # Create the main menu
+        
+        # (.NET documentation says, "In addition to setting the 
+        # MainMenuStrip property, you must Add the MenuStrip control 
+        # to the Controls collection of the form.")
+        self.MainMenuStrip = CustomMainMenu(MenuList)
+        self.Controls.Add(self.MainMenuStrip)
+
+        # Pre-calculate the menu items to disable when DisableRunAll is defined
+        # for a collection.
+        runallIndices = [i for i, m in enumerate(RunMenu)
+                         if m[0] in (self.RunAll, self.RunAllModify)]
+        runMenu = self.MainMenuStrip.Items[1]
+        self.runallMenuItems = [runMenu.DropDownItems[i]
+                                for i in runallIndices]
+
+
+    def InitToolBar(self):
 
         global MESSAGE_SelectCollection
         
         # (Handler, Text, Image, Tooltip)
         ButtonListA = [
-                      (self.__ChooseProject,
+                      (self.ChooseProject,
                        "Select Project",
                        "Flex",
                        "Select the FieldWorks project to operate on"),
-                      (self.__ManageCollections,
+                      (self.ManageCollections,
                        "Collections",
                        "folder-open",
                        "Manage and select a collection of modules"),
@@ -162,383 +521,15 @@ class FTPanel(Panel):
 
         self.toolbar = CustomToolBar(ButtonList,
                                      UIGlobal.ToolbarIconParams)
+        self.toolbar.Font = UIGlobal.normalFont
+        self.Controls.Add(self.toolbar)
 
-        # Pre-calculate the menu items to disable when DisableRunAll is defined
+        # Pre-calculate the toolbar items to disable when DisableRunAll is defined
         # for a collection.
         runallIndices = [i for i, b in enumerate(ButtonList)
                          if b and b[0] in (self.RunAll, self.RunAllModify)]
-        self.runallButtons = [self.toolbar.Buttons[i]
+        self.runallButtons = [self.toolbar.Items[i]
                               for i in runallIndices]
-
-    def __init__(self, 
-                 moduleManager, 
-                 listOfModules, 
-                 reloadFunction, 
-                 progressFunction,
-                 changeCollectionFunction):
-        Panel.__init__(self)
-
-        self.Dock = DockStyle.Fill
-        self.Font = UIGlobal.normalFont
-
-        # -- Toolbar
-        self.__InitToolBar()
-
-        self.__ManageCollectionsHandler = None
-
-        # -- Module list and Report window
-        self.moduleManager = moduleManager
-        self.listOfModules = listOfModules
-        for button in self.runallButtons:
-            button.Enabled = not listOfModules.disableRunAll
-        self.reloadFunction = reloadFunction
-        self.changeCollectionFunction = changeCollectionFunction
-
-        self.modulesList = UIModulesList.ModulesList(self.moduleManager,
-                                                     self.listOfModules)
-        if FTConfig.simplifiedRunOps:
-            self.modulesList.SetActivatedHandler(self.RunModify)
-        else:
-            self.modulesList.SetActivatedHandler(self.Run)
-
-        self.reportWindow = UIReport.ReportWindow()
-        self.reportWindow.Reporter.RegisterProgressHandler(progressFunction)
-
-        # -- Startup messages and getting started hint.
-        self.reportWindow.Report(MESSAGE_Welcome)
-        
-        self.startupToolTip = None
-        if FTConfig.currentProject:
-            self.UpdateProjectName()
-        else:
-            self.reportWindow.Report(MESSAGE_SelectProject)
-
-            startupTips = [MESSAGE_Welcome]
-            startupTips.append(MESSAGE_SelectProject)
-            startupTips.append(MESSAGE_SelectCollection)
-            startupTips.append(MESSAGE_RunButtons)
-
-            self.startupToolTip = ToolTip()
-            self.startupToolTip.IsBalloon = True
-            self.startupToolTip.ToolTipTitle = "Getting started"
-            self.startupToolTip.InitialDelay = 0
-            self.startupToolTip.AutoPopDelay = 20000
-            self.startupToolTip.SetToolTip(self.modulesList, 
-                                           "\n".join(startupTips))
-
-        # -- The collection tabs 
-        self.collectionsTabControl = TabControl()
-        self.collectionsTabControl.Dock = DockStyle.Fill
-        self.collectionsTabControl.Alignment = TabAlignment.Top
-        self.collectionsTabControl.TabStop = False
-        
-        cm = SimpleContextMenu([(self.__OnMenuCloseTab, 
-                                "Close current tab"),])
-        self.collectionsTabControl.ContextMenu = cm
-        
-        self.ignoreTabChange = False
-        self.collectionsTabControl.Selected += self.__OnTabSelected
-        
-        self.UpdateCollectionTabs()
-        
-        self.reportWindow.Report(MESSAGE_RunButtons)
-
-        # -- Put it all together
-        self.splitContainer1 = SplitContainer()
-        self.splitContainer1.Dock = DockStyle.Fill
-        self.splitContainer1.TabIndex = 1
-        self.splitContainer1.SplitterWidth = UIGlobal.SPLITTER_WIDTH
-        self.splitContainer1.SplitterDistance = 50
-        self.splitContainer1.Orientation = Orientation.Horizontal
-        self.splitContainer1.Panel1.Controls.Add(self.collectionsTabControl)
-        self.splitContainer1.Panel2.Controls.Add(self.reportWindow)
-
-        ## Add the main SplitContainer control to the panel.
-        self.Controls.Add(self.splitContainer1)
-        self.Controls.Add(self.toolbar)          # Last in takes space priority
-
-    # ---- Toolbar button handlers ----
-
-    def __ManageCollections(self):
-        if self.__ManageCollectionsHandler:
-            self.__ManageCollectionsHandler()
-
-    def __ChooseProject(self):
-        if self.__ChooseProjectHandler:
-            self.__ChooseProjectHandler()
-
-    def __Run(self, message, modules, modifyAllowed = False):
-        # Reload the modules to make sure we're using the latest code.
-        if self.reloadFunction: self.reloadFunction()
-
-        if not FTConfig.currentProject:
-            self.reportWindow.Reporter.Error("No project selected! Use the Select Project button in the toolbar.")
-            return
-
-        self.reportWindow.Clear()
-        
-        # The Shift key activates Modify for Enter key and double click.
-        if not modifyAllowed:
-            modifyAllowed = (Control.ModifierKeys == Keys.Shift)
-
-        if modifyAllowed:
-            # Only warn if some of the module(s) actually make modifications
-            if FTConfig.warnOnModify and \
-               any([self.moduleManager.CanModify(m) for m in modules]):
-                dlgmsg = "Are you sure you want to make changes to the '%s' project? "\
-                          "Please back up the project first."
-                title = "Allow changes?"
-                result = MessageBox.Show(dlgmsg % FTConfig.currentProject, title,
-                                         MessageBoxButtons.YesNo,
-                                         MessageBoxIcon.Question)
-                if (result == DialogResult.No):
-                    return
-            if not FTConfig.simplifiedRunOps:
-                message += " (Changes enabled)"
-
-        self.reportWindow.Reporter.Info(message)
-        self.reportWindow.Refresh()
-        self.moduleManager.RunModules(FTConfig.currentProject,
-                                      modules,
-                                      self.reportWindow.Reporter,
-                                      modifyAllowed)
-        # Make sure the progress indicator is off
-        self.reportWindow.Reporter.ProgressStop()
-
-    def RunAll(self, modifyAllowed=False):
-        if len(self.listOfModules) > 0:
-            self.__Run("Running all modules...",
-                       self.listOfModules,
-                       modifyAllowed)
-
-    def Run(self, modifyAllowed=False):
-        selectedModules = list(self.modulesList.SelectedIndices)
-        if len(selectedModules) > 0:
-            if len(selectedModules) == 1:
-                msg = "Running single module..."
-            else:
-                msg = "Running selected modules..."
-
-            modulesToRun = [m for i, m in enumerate(self.listOfModules) if i in selectedModules]
-            self.__Run(msg,
-                       modulesToRun,
-                       modifyAllowed)
-
-    def RunAllModify(self):
-        self.RunAll(True)
-
-    def RunModify(self):
-        self.Run(True)
-
-    # ---- Collections Tab handlers ----
-    
-    # Called when a tab is selected
-    def __OnTabSelected(self, sender, event):
-        
-        if self.ignoreTabChange: return
-        # Callback to parent Form to initiate refresh to new collection
-        if self.changeCollectionFunction:
-            if event.TabPage:
-                self.changeCollectionFunction(event.TabPage.Text)
-            else:
-                self.changeCollectionFunction(None)
-        
-    # Called from the popup menu on the tabs
-    def __OnMenuCloseTab(self, sender, event):
-
-        currentTab = self.collectionsTabControl.SelectedTab
-        
-        # Remove the collection from the tab list
-        # (FTConfig only supports assignment, so do this in two steps)
-        tempCollections = FTConfig.collectionTabs
-        index = tempCollections.index(currentTab.Text)
-        tempCollections.remove(currentTab.Text)
-        FTConfig.collectionTabs = tempCollections
-
-        if len(FTConfig.collectionTabs):
-            # Select the next tab to the left
-            if index > 0: index = index - 1
-            newCollection = FTConfig.collectionTabs[index]
-        else:
-            # All the tabs are closed
-            newCollection = None
-
-        if self.changeCollectionFunction:
-            self.changeCollectionFunction(newCollection)
-
-    # ---- Externally used methods ----
-
-    def SetChooseProjectHandler(self, handler):
-        self.__ChooseProjectHandler = handler
-
-    def SetManageCollectionsHandler(self, handler):
-        self.__ManageCollectionsHandler = handler
-
-    def UpdateModuleList(self, listOfModules):
-        if self.startupToolTip:
-            self.startupToolTip.RemoveAll()
-        self.listOfModules = listOfModules
-        for button in self.runallButtons:
-            button.Enabled = not listOfModules.disableRunAll
-        self.modulesList.UpdateAllItems(self.listOfModules)
-        
-    def UpdateCollectionTabs(self):
-        self.ignoreTabChange = True     # Avoid nested TabChanged events
-
-        # Clear out any old pages...
-        self.collectionsTabControl.TabPages.Clear()
-
-        if FTConfig.currentCollection:
-            # ...and create them afresh
-            pages = [TabPage(name) for name in FTConfig.collectionTabs]
-
-            self.collectionsTabControl.TabPages.AddRange(pages)
-
-            # Activate the selected tab
-            index = FTConfig.collectionTabs.index(FTConfig.currentCollection)
-            currentTab = self.collectionsTabControl.TabPages[index]
-            currentTab.Controls.Add(self.modulesList)
-            currentTab.Focus()      # Removes dotted focus box from tab itself
-            self.collectionsTabControl.SelectedTab = currentTab
-
-        self.ignoreTabChange = False
-
-        if FTConfig.currentCollection:
-            self.reportWindow.Report(MESSAGE_CollectionSelected \
-                                     % FTConfig.currentCollection)
-        else:
-            self.reportWindow.Report(MESSAGE_SelectCollection)
-
-    def UpdateProjectName(self):
-        if self.startupToolTip:
-            self.startupToolTip.RemoveAll()
-        self.reportWindow.Report(MESSAGE_ProjectSelected % \
-                                 FTConfig.currentProject)
-        self.toolbar.UpdateButtonText(0, FTConfig.currentProject)
-        
-    def ModuleInfo(self):
-        if self.modulesList.SelectedIndex >= 0:
-            module = self.listOfModules[self.modulesList.SelectedIndex]
-            moduleDocs = self.moduleManager.GetDocs(module)
-            if moduleDocs:
-                infoDialog = ModuleInfoDialog(moduleDocs)
-                infoDialog.ShowDialog()
-
-    def CopyReportToClipboard(self):
-        self.reportWindow.CopyToClipboard()
-
-    def ClearReport(self):
-        self.reportWindow.Clear()
-
-    def RefreshModules(self):
-        self.modulesList.UpdateAllItems(self.listOfModules,
-                                        keepSelection=True)
-
-# ------------------------------------------------------------------
-
-class FTMainForm (Form):
-
-    def InitMainMenu(self, appMenu):
-
-        # Handler, Text, Shortcut, Tooltip
-        FlexToolsMenu = [(self.ChooseProject,
-                          "Select Project...",
-                          Shortcut.CtrlP,
-                          "Select the FieldWorks project to operate on"),
-                         (self.ManageCollections,
-                          "Manage Collections...",
-                          Shortcut.CtrlL,
-                          "Manage and select a collection of modules"),
-                         (self.ModuleInfo,
-                          "Module Information",
-                          Shortcut.CtrlI,
-                          "Show help information on the selected module"),
-                         (self.ReloadModules,
-                          "Re-load Modules",
-                          Shortcut.F5,
-                          "Re-import all modules"),
-                         ## (TODO, "Preferences", Shortcut.CtrlP, None),
-                         (self.Exit,  "Exit", Shortcut.CtrlQ, None)]
-        if FTConfig.simplifiedRunOps:
-            RunMenu = [(self.RunModify,
-                        "Run Module",
-                        Shortcut.CtrlR,
-                        "Run the selected module"),
-                       (self.RunAllModify,
-                        "Run All Modules",
-                        Shortcut.CtrlA,
-                        "Run all the modules"),
-                       ]
-        else:
-            RunMenu = [(self.Run,
-                        "Run Module(s)",
-                        Shortcut.CtrlR,
-                        "Run the selected module(s)"),
-                       (self.RunModify,
-                        "Run Module(s) (Modify Enabled)",
-                        Shortcut.CtrlShiftR,
-                        "Run the selected module(s) and allow changes to the project"),
-                       (self.RunAll,
-                        "Run All Modules",
-                        Shortcut.CtrlA,
-                        "Run all the modules"),
-                       (self.RunAllModify,
-                        "Run All Modules (Modify Enabled)",
-                        Shortcut.CtrlShiftA,
-                        "Run all the modules and allow changes to the project"),
-                       ]
-
-        ReportMenu =    [(self.CopyToClipboard, 
-                          "Copy to Clipboard", 
-                          Shortcut.CtrlC,
-                          "Copy the report contents to the clipboard"),
-                         #(TODO, "Save...", Shortcut.CtrlS,
-                         # "Save the current report to a file"),
-                         (self.ClearReport, 
-                          "Clear", 
-                          Shortcut.CtrlX,
-                          "Clear the current report")]
-
-        HelpMenu =      [(Help.GeneralHelp,
-                            "Help",
-                            Shortcut.F1,
-                            "Help on using FlexTools"),
-                         (Help.ProgrammingHelp,
-                            "Programming Help",
-                            None,
-                            "Help on how to program a FlexTools module"),
-                         (Help.APIHelp,
-                            "API Help",
-                            None,
-                            "Help on the Programming Interface"),
-                         None,     # Separator
-                         (Help.LaunchLCMBrowser,
-                            "Launch FieldWorks LCMBrowser",
-                            None,
-                            "Open the FieldWorks LCMBrowser application"),
-                         None,     # Separator
-                         (Help.About,
-                            "About",
-                            None,
-                            None)
-                         ]
-
-        MenuList = [("FLExTools", FlexToolsMenu),
-                    ("Run", RunMenu),
-                    ("Report", ReportMenu),
-                    ("Help", HelpMenu)]
-
-        if appMenu:
-            MenuList.insert(3, appMenu)
-
-        self.Menu = CustomMainMenu(MenuList)
-
-        # Pre-calculate the menu items to disable when DisableRunAll is defined
-        # for a collection.
-        runallIndices = [i for i, m in enumerate(RunMenu)
-                         if m[0] in (self.RunAll, self.RunAllModify)]
-        self.runallMenuItems = [self.Menu.MenuItems[1].MenuItems[i]
-                                for i in runallIndices]
 
     def __LoadModules(self):
         logger.debug("Loading modules")
@@ -601,9 +592,10 @@ class FTMainForm (Form):
             FTConfig.collectionTabs = []
             listOfModules = []
 
+        FTConfig.save()
         self.UpdateStatusBar()
-        self.UpdateMenuEnabledStates(False if not listOfModules else
-                                     listOfModules.disableRunAll)
+        self.UpdateDisabledStates(False if not listOfModules else
+                                  listOfModules.disableRunAll)
 
         self.UIPanel.UpdateModuleList(listOfModules)
         self.UIPanel.UpdateCollectionTabs()
@@ -615,6 +607,8 @@ class FTMainForm (Form):
             self.Text = appTitle
         else:
             self.Text = f"flextoolslib {version}"
+
+        self.Icon = Icon(UIGlobal.ApplicationIcon)
 
         # Initialise default configuration values
         if not FTConfig.currentCollection:
@@ -648,29 +642,38 @@ class FTMainForm (Form):
             FTConfig.collectionTabs = []
             listOfModules = []
 
-        self.Icon = Icon(UIGlobal.ApplicationIcon)
+        FTConfig.save()
 
-        self.InitMainMenu(appMenu)
-        self.UpdateMenuEnabledStates(False if not listOfModules else
-                                     listOfModules.disableRunAll)
-
-        self.progressPercent = -1
-        self.progressMessage = None
-        self.StatusBar = StatusBar()
-        self.statusbarCallback = appStatusbar
-        self.UpdateStatusBar()
-
+        # Main panel (modules' list & report window)
         self.UIPanel = FTPanel(self.moduleManager,
                                listOfModules,
                                self.__LoadModules,
                                self.__ProgressBar,
                                self.__ChangeCollection,
                                )
-        self.UIPanel.SetChooseProjectHandler(self.ChooseProject)
-        self.UIPanel.SetManageCollectionsHandler(self.ManageCollections)
 
         self.Controls.Add(self.UIPanel)
+        
+        # Status bar
+        self.progressPercent = -1
+        self.progressMessage = None
+        self.StatusBar = StatusBar()
+        self.statusbarCallback = appStatusbar
+        self.UpdateStatusBar()
+
         self.Controls.Add(self.StatusBar)
+        
+        # Toolbar
+        self.InitToolBar()
+        if FTConfig.currentProject:
+            self.toolbar.UpdateButtonText(0, FTConfig.currentProject)
+
+        # Main Menu
+        self.InitMainMenu(appMenu)
+        
+        # Disable the RunAll menus and toolbar buttons if required
+        self.UpdateDisabledStates(False if not listOfModules else
+                                  listOfModules.disableRunAll)
 
     # ----
     def UpdateStatusBar(self):
@@ -695,9 +698,11 @@ class FTMainForm (Form):
         if self.StatusBar.Text != newText:
             self.StatusBar.Text = newText
 
-    def UpdateMenuEnabledStates(self, disableRunAll):
+    def UpdateDisabledStates(self, disableRunAll):
         for menu in self.runallMenuItems:
             menu.Enabled = not disableRunAll
+        for button in self.runallButtons:
+            button.Enabled = not disableRunAll
 
     def __ProgressBar(self, val, max, msg=None):
         if max == 0: # Clear progress bar
@@ -717,7 +722,7 @@ class FTMainForm (Form):
             self.progressMessage = msg
             self.UpdateStatusBar()
 
-    # ---- Menu handlers ----
+    # ---- Menu & Toolbar handlers ----
 
     def Exit(self, sender=None, event=None):
         self.Close()
@@ -741,8 +746,18 @@ class FTMainForm (Form):
         dlg.ShowDialog()
         if dlg.projectName != FTConfig.currentProject:
             FTConfig.currentProject = dlg.projectName
-            self.UIPanel.UpdateProjectName()
+            FTConfig.save()
+            self.toolbar.UpdateButtonText(0, FTConfig.currentProject)
+            self.UIPanel.MsgProjectSelected()
             #self.UpdateStatusBar()  #Apr2023: removed project from statusbar
+
+    def LaunchProject(self, sender=None, event=None):
+        if FTConfig.currentProject:
+            self.UIPanel.reportWindow.Report(
+                f"Opening project '%s' in FieldWorks..." 
+                % FTConfig.currentProject)
+
+            OpenProjectInFW(FTConfig.currentProject)
 
     def CopyToClipboard(self, sender, event):
         self.UIPanel.CopyReportToClipboard()
@@ -758,12 +773,26 @@ class FTMainForm (Form):
 
     def Run(self, sender, event):
         self.UIPanel.Run()
-        
+
+        # Hack to make the blue toolbar button highlight go away.
+        # This only affects modules that open another UI (such as
+        # the FLExTrans tools.)
+        if isinstance(sender, ToolStripButton):
+            sender.Visible = False
+            sender.Visible = True
+
     def RunModify(self, sender, event):
         self.UIPanel.RunModify()
         
+        # Hack to make the blue toolbar button highlight go away.
+        # This only affects modules that open another UI (such as
+        # the FLExTrans tools.)
+        if isinstance(sender, ToolStripButton):
+            sender.Visible = False
+            sender.Visible = True
+        
     def RunAll(self, sender, event):
         self.UIPanel.RunAll()
-        
+
     def RunAllModify(self, sender, event):
         self.UIPanel.RunAllModify()

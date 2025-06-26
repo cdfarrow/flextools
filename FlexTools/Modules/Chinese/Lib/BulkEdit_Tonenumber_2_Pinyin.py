@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 #   BulkEdit_Tonenumber_2_Pinyin
 #    - A Fieldworks Writing System transducer

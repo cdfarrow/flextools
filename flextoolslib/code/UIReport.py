@@ -11,6 +11,9 @@
 
 import os
 
+import logging
+logger = logging.getLogger(__name__)
+
 from . import UIGlobal
 from . import FTReport
 
@@ -69,8 +72,11 @@ class ReportWindow(ListView):
     def __OnDoubleClick(self, sender, event):
         if sender.SelectedItems.Count:
             item = sender.SelectedItems[0]
-            if item.Tag and item.Tag.startswith("silfw:"):
-                os.startfile(item.Tag)
+            if item.Tag and item.Tag.startswith(("silfw:", "file:")):
+                try:
+                    os.startfile(item.Tag)
+                except FileNotFoundError as e:
+                    logger.error(f"os.startfile failed with {item.Tag}")
 
     def Report(self, reportItem):
         if type(reportItem) == tuple:
@@ -81,6 +87,8 @@ class ReportWindow(ListView):
                 try:
                     if extra.startswith("silfw:"):
                         item.ToolTipText = "Double-click to jump to Fieldworks"
+                    elif extra.startswith("file:"):
+                        item.ToolTipText = "Double-click to open file"
                     else:
                         item.ToolTipText = extra
                     item.Tag = extra

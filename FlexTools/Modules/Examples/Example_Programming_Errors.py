@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 #   Example_Programming_Errors
 #    - A FlexTools Module -
@@ -51,7 +50,6 @@ def MainFunction(project, report, modifyAllowed):
     report.Info("Type error...")
     report.Info("%d coffee beans per coffee shop" % 10000 // coffeeShops)
 
-    
              
 #----------------------------------------------------------------
 # The name 'FlexToolsModule' must be defined like this:
@@ -59,7 +57,6 @@ def MainFunction(project, report, modifyAllowed):
 FlexToolsModule = FlexToolsModuleClass(runFunction = MainFunction,
                                        docs = docs)
             
-
 #----------------------------------------------------------------
 if __name__ == '__main__':
-    FlexToolsModule.Help()
+    print(FlexToolsModule.Help())

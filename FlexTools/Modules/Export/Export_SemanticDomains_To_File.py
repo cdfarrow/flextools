@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 #   Export.Export_SemanticDomains_To_File
 #    - A FlexTools Module -
@@ -12,44 +11,40 @@
 #
 
 from flextoolslib import *
-import io
 
 #----------------------------------------------------------------
 # Documentation that the user sees:
 
 docs = {FTM_Name        : "Export Semantic Domain List To File",
-        FTM_Version     : 1,
+        FTM_Version     : 2,
         FTM_ModifiesDB  : False,
         FTM_Synopsis    : "Export the Semantic Domain list to a file.",
         FTM_Description :
 """
 Export the Semantic Domain list to a file.
 """ }
-                 
-#----------------------------------------------------------------
-# The main processing function
 
-def MainFunction(project, report, modifyAllowed):
+#----------------------------------------------------------------
+
+def Main(project, report, modifyAllowed):
 
     outputFile = "SemanticDomains_{0}.txt".format(project.ProjectName())
-    output = io.open(outputFile, mode="w", encoding="utf-8")
 
-    count = 0
-    for sd in project.GetAllSemanticDomains(True):
-        #output.write(sd.Hvo + '\n')
-        output.write(sd.ToString() + '\n')
-        report.Info("Semantic Domain: %s" % sd)
-        count      += 1
-    report.Info("Exported {0} Semantic Domains to file {1}".format(
-                count, outputFile))
-    output.close()
+    with open(outputFile, mode="w", encoding="utf-8") as output:
+        count = 0
+        for sd in project.GetAllSemanticDomains(True):
+            #output.write(sd.Hvo + '\n')
+            output.write(sd.ToString() + '\n')
+            report.Info("Semantic Domain: %s" % sd)
+            count      += 1
+    report.Info("Exported {0} semantic domains to file {1}".format(
+                count, outputFile),
+                report.FileURL(outputFile))
 
 #----------------------------------------------------------------
-# The name 'FlexToolsModule' must be defined like this:
 
-FlexToolsModule = FlexToolsModuleClass(runFunction = MainFunction,
-                                       docs = docs)
+FlexToolsModule = FlexToolsModuleClass(Main, docs)
             
 #----------------------------------------------------------------
 if __name__ == '__main__':
-    FlexToolsModule.Help()
+    print(FlexToolsModule.Help())

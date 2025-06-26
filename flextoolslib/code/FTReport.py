@@ -12,9 +12,11 @@
 #    - The UI displays this report information to the user.
 #
 #   Craig Farrow
-#   Oct 2008
-#   v0.00
+#   2008 - 2024
 #
+
+import os
+import pathlib
 
 # ------------------------------------------------------------------
 
@@ -43,6 +45,9 @@ class FTReporter(object):
         self.messages = []
 
     def __Report(self, msgType, msg, ref):
+        if not isinstance(msg, (str, type(None))):
+            msg = repr(msg)
+            
         self.messages.append((msgType, msg, ref))
         self.messageCounts[msgType] += 1
         if self.__handler:
@@ -82,6 +87,10 @@ class FTReporter(object):
         self.progressMessage = ""
         self.ProgressUpdate(-1)
            
+    # > URL for linking to a file.
+    
+    def FileURL(self, fname):
+        return pathlib.Path(os.path.abspath(fname)).as_uri()
             
 if __name__ == '__main__':
     f = FTReporter()

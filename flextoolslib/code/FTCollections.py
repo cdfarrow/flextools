@@ -84,28 +84,6 @@ class CollectionsManager(object):
     COLLECTIONS_SUFFIX = ".ini"
 
     def __init__(self):
-    
-        def __sortedModulesList(cp):
-            # This function bridges between the old style ini file, where
-            # an _Order option was used to specify the order of the modules.
-            # If _Order doesn't exist, then it is the new style.
-            # DELETE THIS SPECIAL HANDLING AFTER DEC2023 GIVING TIME FOR 
-            # USERS' INI FILES TO BE UPDATED TO THE NEW FORMAT.
-            # ALSO, ONLY CALL WriteAll() IF CHANGES ARE MADE.
-            
-            try:
-                mods = [(cp.getint(m, self.ORDER_OPTION), m) for m in cp.sections()]
-            except NoOptionError:
-                return CollectionsInfo(cp.sections())
-                
-            # Sort the modules according to the _Order option value. 
-            # This handles cases where there are gaps in the sequence 
-            # (such as when the FlexTrans installer removes the Settings
-            # module from users' Tools.ini file).
-            sortedModules = CollectionsInfo(m for i, m in sorted(mods))
-            return sortedModules
-               
-         
         # Load all the collection info
 
         collectionNames = [f for f in os.listdir(COLLECTIONS_PATH)
@@ -121,7 +99,7 @@ class CollectionsManager(object):
                 logger.warning(f"CollectionsManager init: Missing DEFAULT section in {collectionName}")
                 continue
             if result:
-                collectionsInfo = __sortedModulesList(cp)
+                collectionsInfo = CollectionsInfo(cp.sections())
                 if cp.has_option(DEFAULTSECT, self.DISABLERUNALL):
                     collectionsInfo.disableRunAll = True
 

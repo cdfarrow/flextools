@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 #   Example.Find_Duplicate_Definitions
 #    - A FlexTools Module
@@ -105,4 +104,4 @@ FlexToolsModule = FlexToolsModuleClass(runFunction = MainFunction,
 
 #----------------------------------------------------------------
 if __name__ == '__main__':
-    FlexToolsModule.Help()
+    print(FlexToolsModule.Help())

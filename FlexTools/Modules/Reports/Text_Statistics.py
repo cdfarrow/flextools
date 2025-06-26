@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 #   Reports.Text_Statistics
 #    - A FlexTools Module -
@@ -32,7 +31,7 @@ plus average numbers of words, sentences and paragraphs.
 #----------------------------------------------------------------
 # The main processing function
 
-def MainFunction(project, report, modifyAllowed):
+def Main(project, report, modifyAllowed):
 
     numTexts = 0
     numParagraphs = 0
@@ -64,11 +63,10 @@ def MainFunction(project, report, modifyAllowed):
 
          
 #----------------------------------------------------------------
-# The name 'FlexToolsModule' must be defined like this:
 
-FlexToolsModule = FlexToolsModuleClass(runFunction = MainFunction,
+FlexToolsModule = FlexToolsModuleClass(runFunction = Main,
                                        docs = docs)
             
 #----------------------------------------------------------------
 if __name__ == '__main__':
-    FlexToolsModule.Help()
+    print(FlexToolsModule.Help())

@@ -101,7 +101,7 @@ class ModuleInfoPane(RichTextBox):
         self.SelectionRightIndent = 0
         self.SelectionColor = Color.Black
         self.SelectionFont = UIGlobal.smallFont
-        self.AppendText(f"\nSource file: {moduleDocs[FTM_Path]}\n")
+        self.AppendText(f"\nSource file: {os.path.abspath(moduleDocs[FTM_Path])}\n")
 
         # Make it non-editable
         self.SelectAll()

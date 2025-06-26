@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 #   BulkEdit_HZ_2_Tonenumber
 #    - A Fieldworks Writing System transducer

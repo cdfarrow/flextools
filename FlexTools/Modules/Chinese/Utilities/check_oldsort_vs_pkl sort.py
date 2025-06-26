@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 #   check_dict_vs_sort
 #

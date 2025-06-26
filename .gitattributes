@@ -1,0 +1,4 @@
+# Pickle files are binary
+*.pkl binary
+
+*.doc binary

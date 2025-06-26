@@ -238,7 +238,7 @@ class CollectionsManagerUI(Panel):
        ]
 
     def __SetEnabledStates(self, inFocus):
-        for i, button in enumerate(self.toolbar.Buttons):
+        for i, button in enumerate(self.toolbar.Items):
             if inFocus == self.INFOCUS_Nothing:
                 button.Enabled = False
             else:
@@ -274,6 +274,7 @@ class CollectionsManagerUI(Panel):
 
         # -- Toolbar
         self.toolbar = self.__InitialiseToolBar()
+        self.toolbar.Font = UIGlobal.normalFont
 
         self.collectionsList.GotFocus += self.__ChangeOfFocusHandler
         self.collectionsList.LostFocus += self.__ChangeOfFocusHandler
@@ -392,7 +393,7 @@ class CollectionsManagerUI(Panel):
 
     # -- Toolbar button handlers
     
-    def __ToolbarNewHandler(self):
+    def __ToolbarNewHandler(self, sender=None, event=None):
         name = "New collection"
         # If this name still exists, then just go to that and rename it.
         if name in self.collections.Names():
@@ -405,7 +406,7 @@ class CollectionsManagerUI(Panel):
             item = self.collectionsList.AddCollection(name)
         item.BeginEdit()
 
-    def __ToolbarDeleteHandler(self):
+    def __ToolbarDeleteHandler(self, sender=None, event=None):
         try:
             itemToDelete = self.collectionsList.SelectedItems[0]
         except ArgumentOutOfRangeException:
@@ -426,7 +427,7 @@ class CollectionsManagerUI(Panel):
             self.currentCollection = None
             self.modulesList.Items.Clear()
 
-    def __ToolbarRenameHandler(self):
+    def __ToolbarRenameHandler(self, sender=None, event=None):
         try:
             item = self.collectionsList.SelectedItems[0]
         except ArgumentOutOfRangeException:
@@ -434,7 +435,7 @@ class CollectionsManagerUI(Panel):
 
         item.BeginEdit()
             
-    def __ToolbarAddHandler(self):
+    def __ToolbarAddHandler(self, sender=None, event=None):
         if self.moduleBrowser.selectedNode:
             self.__OnModuleActivated(self.moduleBrowser.selectedNode)
 
@@ -446,7 +447,7 @@ class CollectionsManagerUI(Panel):
         self.modulesList.EnsureVisible(newIndex) 
         self.modulesList.EndUpdate()
 
-    def __ToolbarMoveUpHandler(self):
+    def __ToolbarMoveUpHandler(self, sender=None, event=None):
         try:
             itemToMove = self.modulesList.SelectedItems[0]
         except ArgumentOutOfRangeException:
@@ -461,7 +462,7 @@ class CollectionsManagerUI(Panel):
         self.collections.MoveModuleUp(self.currentCollection,
                                       itemToMove.Text)
 
-    def __ToolbarMoveDownHandler(self):
+    def __ToolbarMoveDownHandler(self, sender=None, event=None):
         try:
             itemToMove = self.modulesList.SelectedItems[0]
         except ArgumentOutOfRangeException:
@@ -476,7 +477,7 @@ class CollectionsManagerUI(Panel):
         self.collections.MoveModuleDown(self.currentCollection,
                                         itemToMove.Text)
                         
-    def __ToolbarRemoveHandler(self):
+    def __ToolbarRemoveHandler(self, sender=None, event=None):
         try:
             itemToRemove = self.modulesList.SelectedItems[0]
         except ArgumentOutOfRangeException:
@@ -486,7 +487,7 @@ class CollectionsManagerUI(Panel):
                                       itemToRemove.Text)
         itemToRemove.Remove()
 
-    def __ToolbarSelectAndCloseHandler(self):
+    def __ToolbarSelectAndCloseHandler(self, sender=None, event=None):
         self.Parent.Close()
 
     def __ChangeOfFocusHandler(self, sender, event):

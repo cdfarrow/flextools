@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 #   Reports.Project_Information
 #    - A FlexTools Module
@@ -29,7 +28,7 @@ parts of speech.
 #----------------------------------------------------------------
 # The main processing function
 
-def MainFunction(project, report, modifyAllowed):
+def Main(project, report, modifyAllowed):
 
     # Global things in the Language Project
 
@@ -80,11 +79,10 @@ def MainFunction(project, report, modifyAllowed):
 
 
 #----------------------------------------------------------------
-# The name 'FlexToolsModule' must be defined like this:
 
-FlexToolsModule = FlexToolsModuleClass(runFunction = MainFunction,
+FlexToolsModule = FlexToolsModuleClass(runFunction = Main,
                                        docs = docs)
 
 #----------------------------------------------------------------
 if __name__ == '__main__':
-    FlexToolsModule.Help()
+    print(FlexToolsModule.Help())

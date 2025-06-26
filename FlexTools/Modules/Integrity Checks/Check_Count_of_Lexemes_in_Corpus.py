@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 #   Check_Count_of_Lexemes_in_Corpus
 #    - A FlexTools Module -
@@ -76,4 +75,4 @@ FlexToolsModule = FlexToolsModuleClass(runFunction = CheckNumberInCorpus,
 
 #----------------------------------------------------------------
 if __name__ == '__main__':
-    FlexToolsModule.Help()
+    print(FlexToolsModule.Help())
