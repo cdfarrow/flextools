@@ -8,17 +8,19 @@ FLExTools History
 
 ====== History =======
 
-2.3.TODO
---------------
+2.3.2_2025.6.26
+---------------
 
 + Issue #46: Added a menu item to open the current project in FieldWorks.
 + Issue #48: Don't show phantom projects in Open Project list.
 + Issue #50: Save project and collection configuration immediately so 
              the settings persist after a crash.
++ Issue #47: Block interaction with FlexTools while a FLExTrans tool is open.
 + Issue #30: Restore tooltips in menus
 
 + Supports Fieldworks 9.0.17 - 9.2.8 (later versions will likely work, but are untested)
 + Supports Python 3.8 - 3.13
+
 
 2.3.1_2024.7.9
 --------------
