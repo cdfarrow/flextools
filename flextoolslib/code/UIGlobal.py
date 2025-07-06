@@ -34,7 +34,7 @@ ModuleIcon        = os.path.join(ICON_PATH0, "Module.ico")
 ToolbarIconParams = (ICON_PATH1, ICON_SUFFIX1)
 ReportIconParams  = (ICON_PATH2, ICON_SUFFIX2)
 
-# General appearance
+# --- General appearance ---
 
 SPLITTER_WIDTH = 4
 
@@ -60,6 +60,10 @@ else:
 
 
 # Colours
+
 leftPanelColor  = Color.FromArgb(0xFA, 0xF8, 0xF0) # Light wheat
 rightPanelColor = Color.FromArgb(0xFF, 0xFA, 0xE8) # Light cream
 helpDialogColor = Color.White
+
+accentColor     = Color.DarkSlateBlue   # For text headings/accents
+

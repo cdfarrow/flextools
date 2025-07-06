@@ -50,11 +50,11 @@ class AboutInfo(RichTextBox):
         self.SelectionColor = Color.Black
         self.AppendText("\nFLExTools\n")
 
-        self.SelectionColor = Color.DarkSlateBlue
+        self.SelectionColor = UIGlobal.accentColor
         self.SelectionFont  = UIGlobal.smallFont
         self.AppendText(f"({version})\n\n")     # The flextoolslib version
 
-        self.SelectionColor = Color.DarkSlateBlue
+        self.SelectionColor = UIGlobal.accentColor
         self.SelectionFont = UIGlobal.normalFont
         self.AppendText("A framework for running Python scripts on a FieldWorks Language Explorer project. \n")
 

@@ -62,7 +62,7 @@ class ModuleInfoPane(RichTextBox):
              self.AppendText("Can modify the project\n")
 
         # Module Synopsis
-        self.SelectionColor = Color.DarkSlateBlue
+        self.SelectionColor = UIGlobal.accentColor
         self.SelectionFont = UIGlobal.normalFont
         self.AppendText(moduleDocs[FTM_Synopsis]+"\n")
 

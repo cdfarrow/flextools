@@ -19,13 +19,15 @@ from . import UIGlobal
 from .FTModuleClass import *
 from .UIModuleInfo import ModuleInfoPane
 
-from System.Drawing import (Color, Point, Rectangle, Size, Bitmap,
-                            Icon,
-                            Font, FontStyle, FontFamily)
+from System.Drawing import (
+    Size,
+    Font, FontStyle
+    )
+
 from System.Windows.Forms import (
     Application, 
     BorderStyle,
-    Form, FormBorderStyle,
+    Form,
     Panel,
     SplitContainer,
     TreeView, TreeViewAction,
@@ -87,7 +89,7 @@ class ModuleTree(TreeView):
 
                 node = self.Nodes.Add(libText, libText)    # Key & Label
                 node.NodeFont = Font(UIGlobal.normalFont,FontStyle.Italic)
-                node.ForeColor = Color.DarkSlateBlue
+                node.ForeColor = UIGlobal.accentColor
                 node.Nodes.Add(moduleName, moduleText)
         else:
             self.Nodes.Add(moduleName, moduleName)
@@ -125,14 +127,11 @@ class ModuleBrowser(Panel):
         self.Controls.Add(self.splitContainer1)
 
     def TreeNodeSelected(self, sender, event):
-        ##print "Got TreeNodeSelected"
         if sender.SelectedNode.Nodes.Count != 0:
-            ##print "This is a Library node"
             self.infoPane.Text = "Library: "+sender.SelectedNode.Text
             self.selectedNode = ""
         else:
             # .Name == The Key given when adding to the TreeNodeCollection
-            #print "Node is:", sender.SelectedNode.Name
             self.infoPane.SetFromDocs (
                 self.modules.GetDocs(sender.SelectedNode.Name))
             self.selectedNode = sender.SelectedNode.Name
