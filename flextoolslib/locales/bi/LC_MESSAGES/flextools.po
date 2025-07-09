@@ -1,33 +1,35 @@
-
 msgid ""
 msgstr ""
-"Project-Id-Version:  flextools\n"
+"Project-Id-Version: flextools\n"
 "Report-Msgid-Bugs-To: flextoolshelp@gmail.com\n"
 "POT-Creation-Date: 2025-07-07 13:38+1100\n"
-"PO-Revision-Date: 2025-07-09 09:08+1100\n"
-"Last-Translator: \n"
-"Language: bi_VU\n"
-"Language-Team: Bislama\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.17.0\n"
+"Generated-By: Babel 2.16.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: flextools\n"
+"X-Crowdin-Project-ID: 806454\n"
+"X-Crowdin-Language: bi\n"
+"X-Crowdin-File: /develop-intl/flextoolslib/locales/flextools.pot\n"
+"X-Crowdin-File-ID: 16\n"
+"Language-Team: Bislama\n"
+"Language: bi_VU\n"
+"PO-Revision-Date: 2025-07-09 05:39\n"
 
 #: ../code/Help.py:59
-msgid ""
-"A framework for running Python scripts on a FieldWorks Language Explorer "
-"project."
+msgid "A framework for running Python scripts on a FieldWorks Language Explorer project."
 msgstr ""
 
 #: ../code/Help.py:70
 #, python-brace-format
 msgid "Modules installed: {}"
-msgstr ""
+msgstr "I gat {} module we i stap."
 
 #: ../code/Help.py:72
 #, python-brace-format
 msgid "Python version: {}"
-msgstr ""
+msgstr "Vesen blong Python: {}"
 
 #: ../code/Help.py:74
 #, python-brace-format
@@ -40,7 +42,7 @@ msgstr "E-mael"
 
 #: ../code/UICollections.py:83
 msgid "Double-click a collection to select it"
-msgstr ""
+msgstr "Mekem dabol-klik long eni koleksen blong jusum"
 
 #: ../code/UICollections.py:164
 msgid "New"
@@ -60,19 +62,19 @@ msgstr ""
 
 #: ../code/UICollections.py:176
 msgid "Delete"
-msgstr ""
+msgstr "Dilit"
 
 #: ../code/UICollections.py:178
 msgid "Delete the selected collection"
-msgstr ""
+msgstr "Dilit koleksen we i gat haelaet"
 
 #: ../code/UICollections.py:182
 msgid "Select"
-msgstr ""
+msgstr "Jusum"
 
 #: ../code/UICollections.py:184
 msgid "Close this dialog"
-msgstr ""
+msgstr "Sarem windo ia"
 
 #: ../code/UICollections.py:189
 msgid "Add Module"
@@ -151,7 +153,7 @@ msgstr ""
 
 #: ../code/UIMain.py:90
 msgid "Welcome to FLExTools!"
-msgstr ""
+msgstr "Welkam long FLExTools!"
 
 #: ../code/UIMain.py:92
 msgid "Select a project by clicking the 'Select project' button in the toolbar."
@@ -160,23 +162,19 @@ msgstr ""
 #: ../code/UIMain.py:94
 #, python-brace-format
 msgid "Project '{}' selected."
-msgstr ""
+msgstr "Projek '{}' hemi bin jusum finis."
 
 #: ../code/UIMain.py:96
 #, python-brace-format
 msgid "Collection '{}' selected."
-msgstr ""
+msgstr "Koleksen '{}' hemi bin jusum finis."
 
 #: ../code/UIMain.py:99
-msgid ""
-"Select or create a collection by clicking the 'Collections' button in the"
-" toolbar."
+msgid "Select or create a collection by clicking the 'Collections' button in the toolbar."
 msgstr ""
 
 #: ../code/UIMain.py:101
-msgid ""
-"Select or create a collection by using the 'FlexTools | Manage "
-"collections' menu, or pressing Ctrl-L."
+msgid "Select or create a collection by using the 'FlexTools | Manage collections' menu, or pressing Ctrl-L."
 msgstr ""
 
 #: ../code/UIMain.py:103
@@ -197,9 +195,7 @@ msgstr ""
 
 #: ../code/UIMain.py:208
 #, python-brace-format
-msgid ""
-"Are you sure you want to make changes to the '{}' project? Please back up"
-" the project first."
+msgid "Are you sure you want to make changes to the '{}' project? Please back up the project first."
 msgstr ""
 
 #: ../code/UIMain.py:210
@@ -208,7 +204,7 @@ msgstr ""
 
 #: ../code/UIMain.py:218
 msgid " (Changes enabled)"
-msgstr ""
+msgstr " (Ol jenis i alowem)"
 
 #: ../code/UIMain.py:235
 msgid "Running all modules..."
@@ -335,7 +331,7 @@ msgstr "Klia ol mesaj long windo mesaj"
 #. NOTE: Menu title
 #: ../code/UIMain.py:442 ../code/UIMain.py:476
 msgid "Help"
-msgstr "Help"
+msgstr ""
 
 #: ../code/UIMain.py:444
 msgid "Help on using FlexTools"
@@ -372,7 +368,7 @@ msgstr ""
 #. NOTE: Menu title
 #: ../code/UIMain.py:470
 msgid "FLExTools"
-msgstr ""
+msgstr "Men menyu"
 
 #. NOTE: Menu title
 #. NOTE: Toolbar item
