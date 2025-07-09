@@ -15,7 +15,7 @@ msgstr ""
 "X-Crowdin-File-ID: 16\n"
 "Language-Team: Bislama\n"
 "Language: bi_VU\n"
-"PO-Revision-Date: 2025-07-09 04:29\n"
+"PO-Revision-Date: 2025-07-09 05:06\n"
 
 #: ../code/Help.py:59
 msgid "A framework for running Python scripts on a FieldWorks Language Explorer project."
@@ -24,12 +24,12 @@ msgstr ""
 #: ../code/Help.py:70
 #, python-brace-format
 msgid "Modules installed: {}"
-msgstr ""
+msgstr "I gat {} module we i stap."
 
 #: ../code/Help.py:72
 #, python-brace-format
 msgid "Python version: {}"
-msgstr ""
+msgstr "Vesen blong Python: {}"
 
 #: ../code/Help.py:74
 #, python-brace-format
@@ -42,7 +42,7 @@ msgstr "E-mael"
 
 #: ../code/UICollections.py:83
 msgid "Double-click a collection to select it"
-msgstr ""
+msgstr "Mekem dabol-klik long eni koleksen blong jusum"
 
 #: ../code/UICollections.py:164
 msgid "New"
