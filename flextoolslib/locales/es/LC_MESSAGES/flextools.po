@@ -15,7 +15,7 @@ msgstr ""
 "X-Crowdin-File-ID: 16\n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
-"PO-Revision-Date: 2025-07-09 08:09\n"
+"PO-Revision-Date: 2025-07-09 08:12\n"
 
 #: ../code/Help.py:59
 msgid "A framework for running Python scripts on a FieldWorks Language Explorer project."
@@ -28,7 +28,7 @@ msgstr "Módulos instalados: {}"
 
 #: ../code/Help.py:72
 #, python-brace-format
-msgid "Python versión: {}"
+msgid "Python version: {}"
 msgstr "Python versión: {}"
 
 #: ../code/Help.py:74
@@ -372,6 +372,10 @@ msgstr "FLExTools"
 
 #. NOTE: Menu title
 #. NOTE: Toolbar item
+#. _("Configure"),
+#. "applications",
+#. _("Edit configuration parameters for this module")),
+#. Separator
 #: ../code/UIMain.py:472 ../code/UIMain.py:531 ../code/UIMain.py:544
 msgid "Run"
 msgstr "Ejecutar"
