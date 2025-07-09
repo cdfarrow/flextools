@@ -56,7 +56,8 @@ class AboutInfo(RichTextBox):
 
         self.SelectionColor = UIGlobal.accentColor
         self.SelectionFont = UIGlobal.normalFont
-        self.AppendText("A framework for running Python scripts on a FieldWorks Language Explorer project. \n")
+        self.AppendText(_("A framework for running Python scripts on a FieldWorks Language Explorer project."))
+        self.AppendText("\n")
 
         self.SelectionAlignment = HorizontalAlignment.Left
         self.SelectionFont = UIGlobal.smallFont
@@ -66,19 +67,19 @@ class AboutInfo(RichTextBox):
         mm = ModuleManager()
         mm.LoadAll()
         self.SelectionFont = UIGlobal.normalFont
-        self.AppendText("Modules installed: %d\n" % len(mm.ListOfNames()))
+        self.AppendText(_("Modules installed: {}").format(len(mm.ListOfNames()))+"\n")
         self.SelectionFont = UIGlobal.normalFont
-        self.AppendText("Python version: %s\n" % sys.version.split()[0])
+        self.AppendText(_("Python version: {}").format(sys.version.split()[0])+"\n")
         self.SelectionFont = UIGlobal.normalFont
-        self.AppendText("FieldWorks version: %s\n\n" %
-                            FWShortVersion)
+        self.AppendText(_("FieldWorks version: {}").format(FWShortVersion)+"\n")
+        self.AppendText("\n")
 
         self.SelectionFont = UIGlobal.normalFont
         self.AppendText("FLExTools: \thttps://github.com/cdfarrow/flextools/wiki\n")
         self.SelectionFont = UIGlobal.normalFont
         self.AppendText("FieldWorks: \thttps://software.sil.org/fieldworks/\n")
         self.SelectionFont = UIGlobal.normalFont
-        self.AppendText("E-mail: \tmailto:flextoolshelp")
+        self.AppendText("{}: \tmailto:flextoolshelp".format(_("E-mail")))
         self.SelectionFont = UIGlobal.normalFont
         self.AppendText("@gmail.com\n")
 

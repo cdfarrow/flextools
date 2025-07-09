@@ -67,7 +67,6 @@ class ModulesList(ListBox):
         return len(s.split("\n"))
 
     def OnMeasureItem(self, sender, e):
-        #print "Measuring:", sender.Items[e.Index]
         if e.Index < 0: return
         textHeight = self.Font.Height * self.__countLines(sender.Items[e.Index])
         e.ItemHeight = textHeight + 2 + self.SPACING # extra for separator line
@@ -135,18 +134,24 @@ class ModulesList(ListBox):
                     # It is a top-level module with no '<library>.' prefix.
                     displayName = moduleName
 
-                composedString = "%s, version %s\n%s" %(displayName,
-                                                       str(docs[FTM_Version]),
-                                                       docs[FTM_Synopsis])
+                composedString = _("{}, version {}").format(displayName,
+                                                            str(docs[FTM_Version]))
+                composedString += "\n"
+                composedString += docs[FTM_Synopsis]
+                
                 if docs[FTM_ModifiesDB]:
-                    composedString += "\nNote: Can modify the project. "
+                    composedString += "\n"
+                    # NOTE: Keep the space at the end if your language uses spaces.
+                    composedString += _("Note: Can modify the project. ")
                     if not FTConfig.simplifiedRunOps:
-                        composedString += "(Use the 'Run (Modify)' buttons to make changes.) "
+                        composedString += _("(Use the 'Run (Modify)' buttons to make changes.)")
                 if docs[FTM_HasConfig]:
-                    composedString += "\nNote: This module has configurable parameters"
+                    composedString += "\n"
+                    composedString += _("Note: This module has configurable parameters.")
             else:
-                composedString = "\nModule '%s' missing or failed to import!\n" \
-                                  % moduleName
+                composedString = "\n"
+                composedString += _("Module '{}' is missing or failed to import!").format(moduleName)
+                composedString += "\n"
             formattedItems.Add(composedString)
         self.DataSource = formattedItems
 

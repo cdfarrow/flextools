@@ -25,11 +25,26 @@ FOR %%C IN ("Init"
     goto :End
     
 :DoClean
+    cmd /c del /s *.mo
     rmdir /s /q ".\build"
     rmdir /s /q ".\dist"
     goto :End
     
 :DoBuild
+    @REM Build the translation files:
+    pushd flextoolslib\locales\
+    @REM  - Create the template from the source code
+    pybabel extract -o body.pot ..\code --omit-header --no-wrap -c TRANSLATORS,NOTE
+    @REM  - Join it with the header
+    cmd /c copy /b header.pot+body.pot flextools.pot
+    @REM  - Update the .po files [-N = no-fuzzy, i.e. don't guess translations]
+    pybabel update -D flextools -N -i flextools.pot -d .
+    @REM  - Compile the .mo files
+    pybabel compile -D flextools -d . --statistics
+    
+    popd
+    goto :END
+    
     @REM Build the wheel for flextoolslib with setuptools
     %PYTHON% -m build -w
     

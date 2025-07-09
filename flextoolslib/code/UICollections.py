@@ -25,15 +25,15 @@ from . import FTModules
 
 
 from System.Drawing import (
-    Color, SystemColors, 
-    Point, Rectangle, Size, 
-    Bitmap, Image, Icon,
-    Font, FontStyle, FontFamily)
+    Size, 
+    Icon,
+    )
+
 from System.Windows.Forms import (
-    Application, BorderStyle, Button,
-    Form, FormBorderStyle, Label,
-    Panel, Screen, FixedPanel, Padding,
-    KeyEventArgs, KeyPressEventArgs, Keys,
+    Application,
+    Form,
+    Panel,
+    KeyEventArgs, Keys,
     MessageBox, MessageBoxButtons, MessageBoxIcon, DialogResult,
     DockStyle, Orientation, View, SortOrder,
     TreeView, TreeViewAction,
@@ -41,10 +41,8 @@ from System.Windows.Forms import (
     ColumnHeaderStyle,
     ToolTip,
     TabControl, TabPage, TabAlignment,
-    ToolBar, ToolBarButton, ToolBarButtonStyle, ToolBarAppearance,
-    ImageList,
-    ColorDepth,
-    RichTextBox, HtmlDocument, SplitContainer)
+    SplitContainer,
+    )
 
 from System import (
     ArgumentOutOfRangeException
@@ -53,7 +51,7 @@ from System import (
 from cdfutils.DotNet import CustomToolBar
 
 # Set of characters prohibited from collection names
-INVALID_CHARS = set(r':\/*?"<>|')
+INVALID_CHARS = r':\/*?"<>|'
 
 # ------------------------------------------------------------------
 class CollectionsList(ListView):
@@ -82,7 +80,7 @@ class CollectionsList(ListView):
 
         tooltip = ToolTip()
         tooltip.IsBalloon = True
-        tooltip.SetToolTip(self, "Double-click a collection to select it.")
+        tooltip.SetToolTip(self, _("Double-click a collection to select it"))
 
         self.__SelectedHandler = None
         self.__ActivatedHandler = None
@@ -163,53 +161,61 @@ class CollectionsManagerUI(Panel):
         ButtonList = [
             [
              self.__ToolbarNewHandler,
-             "New",
+             # NOTE: Toolbar item
+             _("New"),
              "documents", 
-             "Create a new collection",
+             _("Create a new collection"),
             ],
             [
              self.__ToolbarRenameHandler,
-             "Rename",
+             # NOTE: Toolbar item
+             _("Rename"),
              "copy", 
-             "Rename the selected collection",
+             _("Rename the selected collection"),
             ],
             [
              self.__ToolbarDeleteHandler,
-             "Delete",
+             # NOTE: Toolbar item
+             _("Delete"),
              "trash", 
-             "Delete the selected collection",
+             _("Delete the selected collection"),
             ],
             [
              self.__ToolbarSelectAndCloseHandler,
-             "Select",
+             # NOTE: Toolbar item
+             _("Select"),
              "folder-closed", 
-             "Close this dialog",
+             _("Close this dialog"),
             ],            
             None,   # Separator
             [
              self.__ToolbarAddHandler,
-             "Add Module",
+             # NOTE: Toolbar item
+             _("Add Module"),
              "add", 
-             "Add a module to the current collection",
+             _("Add a module to the current collection"),
             ],
             None,   # Separator
             [
              self.__ToolbarMoveUpHandler,
-             "Move Up",
+             # NOTE: Toolbar item
+             _("Move Up"),
              "arrow-up", 
-             "Move the selected module up",
+             _("Move the selected module up"),
             ],
             [
              self.__ToolbarMoveDownHandler,
-             "Move Down",
+             # NOTE: Toolbar item
+             _("Move Down"),
              "arrow-down", 
-             "Move the selected module down",
+             _("Move the selected module down"),
             ],
             [
              self.__ToolbarRemoveHandler,
-             "Remove",
+             # NOTE: Toolbar item
+             _("Remove"),
              "delete", 
-             "Remove the selected module",
+             _("Remove the selected module from the current collection"),
             ],
             ]
             
@@ -295,7 +301,7 @@ class CollectionsManagerUI(Panel):
 
         self.collectionsTabPage = TabPage()
         self.collectionsTabPage.Controls.Add(self.splitContainer1)
-        self.collectionsTabPage.Text = "Collections"
+        self.collectionsTabPage.Text = _("Collections")
         self.collectionsTabControl = TabControl()
         self.collectionsTabControl.Dock = DockStyle.Fill
         self.collectionsTabControl.Alignment = TabAlignment.Left
@@ -304,7 +310,7 @@ class CollectionsManagerUI(Panel):
 
         self.modulesTabPage = TabPage()
         self.modulesTabPage.Controls.Add(self.moduleBrowser)
-        self.modulesTabPage.Text = "Modules"
+        self.modulesTabPage.Text = _("Modules")
         self.modulesTabControl = TabControl()
         self.modulesTabControl.Dock = DockStyle.Fill
         self.modulesTabControl.Alignment = TabAlignment.Left
@@ -348,8 +354,8 @@ class CollectionsManagerUI(Panel):
                 self.collections.AddModule(self.currentCollection,
                                            moduleName)
             except FTCollections.FTC_ExistsError:
-                MessageBox.Show("This module is already in the current collection.",
-                                "Duplicate module",
+                MessageBox.Show(_("This module is already in the current collection."),
+                                _("Duplicate module"),
                                 MessageBoxButtons.OK,
                                 MessageBoxIcon.Information)
             else:
@@ -368,9 +374,8 @@ class CollectionsManagerUI(Panel):
         if self.currentCollection != event.Label:
             errorMsg = None
             # Guard against invalid file/path characters in the name.
-            if INVALID_CHARS.intersection(event.Label):
-                errorMsg = "A collection name cannot include any of these symbols: "\
-                            + " ".join(INVALID_CHARS)
+            if set(INVALID_CHARS).intersection(event.Label):
+                errorMsg = _("A collection name cannot include any of these symbols: {}").format(" ".join(INVALID_CHARS))
             else:
                 try:
                     self.collections.Rename(self.currentCollection, event.Label)
@@ -386,7 +391,8 @@ class CollectionsManagerUI(Panel):
             else:
                 # Cancel the event and return the label to its original state.
                 event.CancelEdit = True
-                MessageBox.Show(errorMsg, "Renaming error",
+                MessageBox.Show(errorMsg, 
+                                _("Renaming error"),
                                 MessageBoxButtons.OK,
                                 MessageBoxIcon.Error)
         return
@@ -394,7 +400,7 @@ class CollectionsManagerUI(Panel):
     # -- Toolbar button handlers
     
     def __ToolbarNewHandler(self, sender=None, event=None):
-        name = "New collection"
+        name = _("New collection")
         # If this name still exists, then just go to that and rename it.
         if name in self.collections.Names():
             try:
@@ -413,9 +419,10 @@ class CollectionsManagerUI(Panel):
             return          # There is nothing selected
             
         moduleName = itemToDelete.Text
-        message = f"Are you sure you want to delete collection '{moduleName}'?"
-        caption = "Confirm delete"
-        result = MessageBox.Show(message, caption,
+        message = _("Are you sure you want to delete the collection '{}'?")
+        title = _("Confirm delete")
+        result = MessageBox.Show(message.format(moduleName), 
+                                 title,
                                  MessageBoxButtons.YesNo,
                                  MessageBoxIcon.Question)
 
@@ -506,7 +513,7 @@ class CollectionsDialog(Form):
     def __init__(self, cm, mm, currentCollection):
         Form.__init__(self)
         self.ClientSize = UIGlobal.collectionsWindowSize
-        self.Text = "Collections Manager"
+        self.Text = _("Collections Manager")
         self.Icon = Icon(UIGlobal.ApplicationIcon)
 
         self.activatedCollection = None

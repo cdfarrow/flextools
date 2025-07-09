@@ -68,23 +68,39 @@ from cdfutils.DotNet import (
     )
 
 # ------------------------------------------------------------------
+# Localisation
+
+import gettext
+
+if not FTConfig.UILanguage:
+    FTConfig.UILanguage = 'en'
+    
+# fallback = True makes it silently fall back to the original strings if
+# the language code is invalid (i.e. the .mo file isn't found).
+translator = gettext.translation('flextools', 
+                                 UIGlobal.LOCALES_PATH, 
+                                 languages=[FTConfig.UILanguage],
+                                 fallback = True)
+translator.install()
+
+# ------------------------------------------------------------------
 # UI Messages & text
 
 MESSAGE_Welcome = \
-    "Welcome to FLExTools!"
+    _("Welcome to FLExTools!")
 MESSAGE_SelectProject = \
-    "Select a project by clicking the Select Project button in the toolbar."
+    _("Select a project by clicking the 'Select project' button in the toolbar.")
 MESSAGE_ProjectSelected = \
-    "Project '%s' selected."
+    _("Project '{}' selected.")
 MESSAGE_CollectionSelected = \
-    "Collection '%s' selected."
+    _("Collection '{}' selected.")
 MESSAGE_SelectCollection = ""
 MESSAGE_SelectCollectionToolbar = \
-    "Select or create a collection by clicking the Collections button in the toolbar."
+    _("Select or create a collection by clicking the 'Collections' button in the toolbar.")
 MESSAGE_SelectCollectionMenu = \
-    "Select or create a collection by using the FlexTools | Manage Collections menu, or pressing Ctrl-L."
+    _("Select or create a collection by using the 'FlexTools | Manage collections' menu, or pressing Ctrl-L.")
 MESSAGE_RunButtons = \
-    "Use the Run buttons to run modules."
+    _("Use the Run buttons to run modules.")
 
 # ------------------------------------------------------------------
 class FTPanel(Panel):
@@ -134,7 +150,7 @@ class FTPanel(Panel):
 
             self.startupToolTip = ToolTip()
             self.startupToolTip.IsBalloon = True
-            self.startupToolTip.ToolTipTitle = "Getting started"
+            self.startupToolTip.ToolTipTitle = _("Getting started")
             self.startupToolTip.InitialDelay = 0
             self.startupToolTip.AutoPopDelay = 20000
             self.startupToolTip.SetToolTip(self.modulesList, 
@@ -147,7 +163,7 @@ class FTPanel(Panel):
         self.collectionsTabControl.TabStop = False
         
         cm = SimpleContextMenu([(self.__OnMenuCloseTab, 
-                                "Close current collection tab"),])
+                                _("Close current collection tab")),])
         self.collectionsTabControl.ContextMenuStrip = cm
         
         self.ignoreTabChange = False
@@ -177,7 +193,7 @@ class FTPanel(Panel):
         if self.reloadFunction: self.reloadFunction()
 
         if not FTConfig.currentProject:
-            self.reportWindow.Reporter.Error("No project selected! Use the Select Project button in the toolbar.")
+            self.reportWindow.Reporter.Error(_("No project selected! Use the 'Select project' button in the toolbar."))
             return
 
         self.reportWindow.Clear()
@@ -189,16 +205,18 @@ class FTPanel(Panel):
         if modifyAllowed and FTConfig.warnOnModify:
             # Only warn if some of the module(s) actually make modifications
             if any([self.moduleManager.CanModify(m) for m in modules]):
-                dlgmsg = "Are you sure you want to make changes to the '%s' project? "\
-                          "Please back up the project first."
-                title = "Allow changes?"
-                result = MessageBox.Show(dlgmsg % FTConfig.currentProject, title,
+                dlgmsg = _("Are you sure you want to make changes to the '{}' project? "\
+                          "Please back up the project first.")
+                title = _("Allow changes?")
+                result = MessageBox.Show(dlgmsg.format(FTConfig.currentProject), 
+                                         title,
                                          MessageBoxButtons.YesNo,
                                          MessageBoxIcon.Question)
                 if (result == DialogResult.No):
                     return
             if not FTConfig.simplifiedRunOps:
-                message += " (Changes enabled)"
+                # NOTE: Keep the space at the beginning if your language uses spaces.
+                message += _(" (Changes enabled)")
        
         self.reportWindow.Reporter.Info(message)
         self.reportWindow.Refresh()
@@ -215,7 +233,7 @@ class FTPanel(Panel):
 
     def RunAll(self, modifyAllowed=False):
         if len(self.listOfModules) > 0:
-            self.__Run("Running all modules...",
+            self.__Run(_("Running all modules..."),
                        self.listOfModules,
                        modifyAllowed)
 
@@ -223,9 +241,9 @@ class FTPanel(Panel):
         selectedModules = list(self.modulesList.SelectedIndices)
         if len(selectedModules) > 0:
             if len(selectedModules) == 1:
-                msg = "Running module..."
+                msg = _("Running module...")
             else:
-                msg = "Running selected modules..."
+                msg = _("Running selected modules...")
 
             modulesToRun = [m for i, m in enumerate(self.listOfModules) if i in selectedModules]
             self.__Run(msg,
@@ -304,16 +322,16 @@ class FTPanel(Panel):
         self.ignoreTabChange = False
 
         if FTConfig.currentCollection:
-            self.reportWindow.Report(MESSAGE_CollectionSelected \
-                                     % FTConfig.currentCollection)
+            self.reportWindow.Report(MESSAGE_CollectionSelected.
+                                    format(FTConfig.currentCollection))
         else:
             self.reportWindow.Report(MESSAGE_SelectCollection)
 
     def MsgProjectSelected(self):
         if self.startupToolTip:
             self.startupToolTip.RemoveAll()
-        self.reportWindow.Report(MESSAGE_ProjectSelected % \
-                                 FTConfig.currentProject)
+        self.reportWindow.Report(MESSAGE_ProjectSelected.
+                                    format(FTConfig.currentProject))
         
     def ModuleInfo(self, sender=None, event=None):
         if self.modulesList.SelectedIndex >= 0:
@@ -341,99 +359,140 @@ class FTMainForm (Form):
 
         # Handler, Text, Shortcut, Tooltip
         FlexToolsMenu = [(self.ChooseProject,
-                          "Select Project...",
+                          # NOTE: Menu item
+                          _("Select project"),
                           Keys.Control | Keys.P,
-                          "Select the FieldWorks project to operate on"),
-                          (self.LaunchProject,
-                          "Open Project in FieldWorks",
+                          _("Select the FieldWorks project to operate on")
+                         ),
+                         (self.LaunchProject,
+                          # NOTE: Menu item
+                          _("Open project in FieldWorks"),
                           Keys.Control | Keys.Shift | Keys.P,
-                          "Open the current project in FieldWorks"),
+                          _("Open the current project in FieldWorks")
+                         ),
                          (self.ManageCollections,
-                          "Manage Collections...",
+                          # NOTE: Menu item
+                          _("Manage collections"),
                           Keys.Control | Keys.L,
-                          "Manage and select a collection of modules"),
+                          _("Manage and select a collection of modules")
+                         ),
                          (self.ModuleInfo,
-                          "Module Information",
+                          # NOTE: Menu item
+                          _("Module information"),
                           Keys.Control | Keys.I,
-                          "Show help information on the selected module"),
+                          _("Show help information on the selected module")
+                         ),
                          (self.ReloadModules,
-                          "Re-load Modules",
+                          # NOTE: Menu item
+                          _("Re-load modules"),
                           Keys.F5,
-                          "Re-import all modules"),
-                         ## (TODO, "Preferences", Keys.Control | Keys.P, None),
+                          _("Re-import all modules")
+                         ),
+                         ## (TODO, _("Settings)", None, None),
                          #(self.Exit,
-                          #"Exit",
+                          #_("Exit"),
                           #Keys.Control | Keys.Q,
                           #None)
-        ]
+                        ]
         if FTConfig.simplifiedRunOps:
             RunMenu = [(self.RunModify,
-                        "Run Module",
+                        # NOTE: Menu item
+                        _("Run module"),
                         Keys.Control | Keys.R,
-                        "Run the selected module"),
+                        _("Run the selected module")
+                       ),
                        (self.RunAllModify,
-                        "Run All Modules",
+                        # NOTE: Menu item
+                        _("Run all modules"),
                         Keys.Control | Keys.A,
-                        "Run all the modules"),
-                       ]
+                        _("Run all the modules")
+                       ),
+                      ]
         else:
             RunMenu = [(self.Run,
-                        "Run Module(s)",
+                        # NOTE: Menu item
+                        _("Run module(s)"),
                         Keys.Control | Keys.R,
-                        "Run the selected module(s)"),
+                        _("Run the selected module(s)")
+                       ),
                        (self.RunModify,
-                        "Run Module(s) (Modify Enabled)",
+                        # NOTE: Menu item
+                        _("Run module(s) (Modify enabled)"),
                         Keys.Control | Keys.Shift | Keys.R,
-                        "Run the selected module(s) and allow changes to the project"),
+                        _("Run the selected module(s) and allow changes to the project")
+                       ),
                        (self.RunAll,
-                        "Run All Modules",
+                        # NOTE: Menu item
+                        _("Run all modules"),
                         Keys.Control | Keys.A,
-                        "Run all the modules"),
+                        _("Run all the modules")
+                       ),
                        (self.RunAllModify,
-                        "Run All Modules (Modify Enabled)",
+                        # NOTE: Menu item
+                        _("Run all modules (Modify enabled)"),
                         Keys.Control | Keys.Shift | Keys.A,
-                        "Run all the modules and allow changes to the project"),
-                       ]
-
+                        _("Run all the modules and allow changes to the project")
+                       ),
+                      ]
         ReportMenu =    [(self.CopyToClipboard,
-                          "Copy to Clipboard",
+                          # NOTE: Menu item
+                          _("Copy to clipboard"),
                           Keys.Control | Keys.C,
-                          "Copy the report contents to the clipboard"),
-                         #(TODO, "Save...", Keys.Control | Keys.S,
-                         # "Save the current report to a file"),
+                          _("Copy the report contents to the clipboard")
+                         ),
+                         #(TODO, _("Save..."), Keys.Control | Keys.S,
+                         # _("Save the current report to a file")),
                          (self.ClearReport,
-                          "Clear",
+                          # NOTE: Menu item
+                          _("Clear"),
                           Keys.Control | Keys.X,
-                          "Clear the current report")]
-
+                          _("Clear the current report")
+                         ),
+                        ]
+                        
         HelpMenu =      [(Help.GeneralHelp,
-                            "Help",
-                            Keys.F1,
-                            "Help on using FlexTools"),
+                          # NOTE: Menu item
+                          _("Help"),
+                          Keys.F1,
+                          _("Help on using FlexTools")
+                         ),
                          (Help.ProgrammingHelp,
-                            "Programming Help",
-                            None,
-                            "Help on how to program a FlexTools module"),
+                          # NOTE: Menu item
+                          _("Programming help"),
+                          None,
+                          _("Help on how to program a FlexTools module")
+                         ),
                          (Help.APIHelp,
-                            "API Help",
-                            None,
-                            "Help on the Programming Interface"),
+                          # NOTE: Menu item
+                          _("API help"),
+                          None,
+                          ("Help on the Programming Interface")
+                         ),
                          None,     # Separator
                          (Help.LaunchLCMBrowser,
-                            "Launch FieldWorks LCMBrowser",
-                            None,
-                            "Open the FieldWorks LCMBrowser application"),
+                          # NOTE: Menu item
+                          _("Launch LCMBrowser"),
+                          None,
+                          _("Open the FieldWorks LCMBrowser application")
+                         ),
                          None,     # Separator
                          (Help.About,
-                            "About",
-                            None,
-                            None)
-                         ]
+                          # NOTE: Menu item
+                          _("About"),
+                          None,
+                          None
+                         ),
+                        ]
 
-        MenuList = [("FLExTools", FlexToolsMenu),
-                    ("Run", RunMenu),
-                    ("Report", ReportMenu),
-                    ("Help", HelpMenu)]
+        MenuList = [
+                    # NOTE: Menu title
+                    (_("FLExTools"), FlexToolsMenu),
+                    # NOTE: Menu title
+                    (_("Run"), RunMenu),
+                    # NOTE: Menu title
+                    (_("Report"), ReportMenu),
+                    # NOTE: Menu title
+                    (_("Help"), HelpMenu)]
 
         if appMenu:
             MenuList.insert(3, appMenu)
@@ -461,55 +520,64 @@ class FTMainForm (Form):
         
         # (Handler, Text, Image, Tooltip)
         ButtonListA = [
-                      (self.ChooseProject,
-                       "Select Project",
-                       "Flex",
-                       "Select the FieldWorks project to operate on"),
-                      (self.ManageCollections,
-                       "Collections",
-                       "folder-open",
-                       "Manage and select a collection of modules"),
-                      (self.ModuleInfo,
-                       "Module Info",
-                       "documents",
-                       "Show the module documentation"),
-                      #(None,
-                      # "Configure",
-                      # "applications",
-                      # "Edit configuration parameters for this module"),
-                      None, # Separator
-                      ]
+                       (self.ChooseProject,
+                          # NOTE: Toolbar item
+                          _("Select project"),
+                          "Flex",
+                          _("Select the FieldWorks project to operate on")),
+                       (self.ManageCollections,
+                          # NOTE: Toolbar item
+                         _("Collections"),
+                         "folder-open",
+                         _("Manage and select a collection of modules")),
+                       (self.ModuleInfo,
+                          # NOTE: Toolbar item
+                         _("Module info"),
+                         "documents",
+                         _("Show the module documentation")),
+                       #(None,
+                       # _("Configure"),
+                       # "applications",
+                       # _("Edit configuration parameters for this module")),
+                        None, # Separator
+                       ]
             
         if FTConfig.simplifiedRunOps:
             ButtonListB = [
-                          (self.RunModify,
-                           "Run",
-                           "arrow-forward-!",
-                           "Run the selected module(s)"),
-                          (self.RunAllModify,
-                           "Run All",
-                           "arrow-forward-double-!",
-                           "Run all the modules")
-                           ]
+                           (self.RunModify,
+                              # NOTE: Toolbar item
+                              _("Run"),
+                              "arrow-forward-!",
+                              _("Run the selected module(s)")),
+                           (self.RunAllModify,
+                              # NOTE: Toolbar item
+                              _("Run all"),
+                              "arrow-forward-double-!",
+                              _("Run all the modules"))
+                          ]
         else:
             ButtonListB = [
-                          (self.Run,
-                           "Run",
-                           "arrow-forward",
-                           "Run the selected module(s) in preview mode"),
-                          (self.RunAll,
-                           "Run All",
-                           "arrow-forward-double",
-                           "Run all the modules in preview mode"),
-                          (self.RunModify,
-                           "Run (Modify)",
-                           "arrow-forward-!",
-                           "Run the selected module(s) and allow changes to the project"),
-                          (self.RunAllModify,
-                           "Run All (Modify)",
-                           "arrow-forward-double-!",
-                           "Run all the modules and allow changes to the project")
-                           ]
+                           (self.Run,
+                              # NOTE: Toolbar item
+                              _("Run"),
+                              "arrow-forward",
+                              _("Run the selected module(s) in preview mode")),
+                           (self.RunAll,
+                              # NOTE: Toolbar item
+                              _("Run all"),
+                              "arrow-forward-double",
+                              _("Run all the modules in preview mode")),
+                           (self.RunModify,
+                              # NOTE: Toolbar item
+                              _("Run (Modify)"),
+                              "arrow-forward-!",
+                              _("Run the selected module(s) and allow changes to the project")),
+                           (self.RunAllModify,
+                              # NOTE: Toolbar item
+                              _("Run all (Modify)"),
+                              "arrow-forward-double-!",
+                              _("Run all the modules and allow changes to the project"))
+                          ]
             
         if FTConfig.hideCollectionsButton:
             ButtonListA.pop(1)
@@ -537,7 +605,7 @@ class FTMainForm (Form):
             self.moduleManager = FTModules.ModuleManager()
         errorList = self.moduleManager.LoadAll()
         if errorList:
-            MessageBox.Show("\n".join(errorList), "Import Error!")
+            MessageBox.Show("\n".join(errorList), _("Import Error!"))
         if hasattr(self, "UIPanel"):
             self.UIPanel.RefreshModules()
             
@@ -677,7 +745,7 @@ class FTMainForm (Form):
 
     # ----
     def UpdateStatusBar(self):
-        collectionText = f"Collection: {FTConfig.currentCollection}"
+        collectionText = _("Collection: {}").format(FTConfig.currentCollection)
 
         if self.statusbarCallback:
             try:
@@ -688,7 +756,7 @@ class FTMainForm (Form):
             appText = ""
 
         if self.progressPercent >= 0:
-            msg = self.progressMessage if self.progressMessage else "Progress"
+            msg = self.progressMessage if self.progressMessage else _("Progress")
             progressText = "[%s: %i%%]" % (msg, self.progressPercent)
         else:
             progressText = ""
@@ -754,8 +822,7 @@ class FTMainForm (Form):
     def LaunchProject(self, sender=None, event=None):
         if FTConfig.currentProject:
             self.UIPanel.reportWindow.Report(
-                f"Opening project '%s' in FieldWorks..." 
-                % FTConfig.currentProject)
+                _("Opening project '{}' in FieldWorks...").format(FTConfig.currentProject))
 
             OpenProjectInFW(FTConfig.currentProject)
 

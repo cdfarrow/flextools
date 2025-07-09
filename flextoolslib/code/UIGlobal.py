@@ -20,10 +20,15 @@ from System.Drawing import (Color,
                             Font, FontStyle, FontFamily)
 from sys import argv
 
+# --- Paths ---
+
+BASE_PATH       = os.path.dirname(os.path.dirname(__file__))
+
+LOCALES_PATH    = os.path.join(BASE_PATH, "locales")
+
 # Icon path details
 
-ICON_PATH0      = os.path.join(os.path.dirname(os.path.dirname(__file__)),
-                               "icons")
+ICON_PATH0      = os.path.join(BASE_PATH, "icons")
 ICON_PATH1      = os.path.join(ICON_PATH0, "IconBuffet Redmond Studio")
 ICON_SUFFIX1    = "_16.gif"
 ICON_PATH2      = os.path.join(ICON_PATH0, "Fugue")

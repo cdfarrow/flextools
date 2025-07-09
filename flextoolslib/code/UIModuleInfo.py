@@ -15,16 +15,18 @@ import os
 from . import UIGlobal
 from .FTModuleClass import *
 
-from System.Drawing import (Color, Point, Rectangle, Size, Bitmap,
-                            Icon,
-                            Font, FontStyle, FontFamily)
-from System.Windows.Forms import (Application, BorderStyle, Button,
-    Form, FormBorderStyle,
+from System.Drawing import (
+    Color, Size,
+    Icon,
+    )
+    
+from System.Windows.Forms import (
+    Application,
+    Form,
     MessageBox, MessageBoxButtons, MessageBoxIcon, 
     RichTextBox, 
     DockStyle,
     HorizontalAlignment,
-    ToolTip,
     )
 
 # ------------------------------------------------------------------
@@ -46,20 +48,19 @@ class ModuleInfoPane(RichTextBox):
         self.SelectionAlignment = HorizontalAlignment.Center
         self.AppendText(moduleDocs[FTM_Name]+"\n")
 
-        self.SelectionIndent = 8
-
         self.SelectionAlignment = HorizontalAlignment.Left
+        self.AppendText("\n")
 
         # Module Version
         self.SelectionFont = UIGlobal.normalFont
         self.SelectionColor = Color.Blue
-        self.AppendText("\nVersion: %s\n" % str(moduleDocs[FTM_Version]))
-
+        self.AppendText(_("Version {}").format(str(moduleDocs[FTM_Version]))+"\n")
+                        
         # Modification warning
         if moduleDocs[FTM_ModifiesDB]:
              self.SelectionFont = UIGlobal.normalFont
              self.SelectionColor = Color.Red
-             self.AppendText("Can modify the project\n")
+             self.AppendText(_("Can modify the project")+"\n")
 
         # Module Synopsis
         self.SelectionColor = UIGlobal.accentColor
@@ -69,7 +70,7 @@ class ModuleInfoPane(RichTextBox):
         # Module Help
         if FTM_Help in moduleDocs and moduleDocs[FTM_Help]:
             self.SelectionFont = UIGlobal.normalFont
-            self.AppendText("Help: ")
+            self.AppendText(_("Help:")+" ")
             
             link = "file:%s\n" % moduleDocs[FTM_Help]
             # Change spaces to underscores so the whole path is treated as a hyperlink
@@ -93,7 +94,7 @@ class ModuleInfoPane(RichTextBox):
         # Chinese text messes up the font: setting the font after Append fixes it. 
         self.Select(start,self.TextLength)      # Start, Length
         self.SelectionFont = UIGlobal.normalFont
-        self.AppendText("\n")                  # NL, and puts insertion point at end.
+        self.AppendText("\n\n")                  # NL, and puts insertion point at end.
 
         # Module filename
         self.SelectionIndent = 0
@@ -101,7 +102,8 @@ class ModuleInfoPane(RichTextBox):
         self.SelectionRightIndent = 0
         self.SelectionColor = Color.Black
         self.SelectionFont = UIGlobal.smallFont
-        self.AppendText(f"\nSource file: {os.path.abspath(moduleDocs[FTM_Path])}\n")
+        path = os.path.abspath(moduleDocs[FTM_Path])
+        self.AppendText(_("Source file: {}").format(path) + "\n")
 
         # Make it non-editable
         self.SelectAll()
@@ -112,8 +114,8 @@ class ModuleInfoPane(RichTextBox):
         try:
             os.startfile(self.HelpLink)
         except WindowsError as e:
-            MessageBox.Show("Error opening link: %s" % self.HelpLink,
-                            "Error!" ,
+            MessageBox.Show(_("Error opening link: {}").format(self.HelpLink),
+                            _("Error!"),
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Error)
 

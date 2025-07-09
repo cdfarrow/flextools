@@ -51,7 +51,7 @@ class ModuleTree(TreeView):
         
         tooltip = ToolTip()
         tooltip.IsBalloon = True
-        tooltip.SetToolTip(self, "Double-click a module to add it to the collection.") 
+        tooltip.SetToolTip(self, _("Double-click a module to add it to the current collection"))
 
     def SetSelectedHandler(self, handler):
         self.AfterSelect += handler
