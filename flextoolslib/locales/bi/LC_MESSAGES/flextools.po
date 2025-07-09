@@ -42,110 +42,118 @@ msgstr "E-mael"
 msgid "Double-click a collection to select it"
 msgstr ""
 
-#: ../code/UICollections.py:164
+#. NOTE: Toolbar item
+#: ../code/UICollections.py:165
 msgid "New"
 msgstr "Niufala"
 
-#: ../code/UICollections.py:166
+#: ../code/UICollections.py:167
 msgid "Create a new collection"
 msgstr "Mekem niufala koleksen"
 
-#: ../code/UICollections.py:170
+#. NOTE: Toolbar item
+#: ../code/UICollections.py:172
 msgid "Rename"
 msgstr ""
 
-#: ../code/UICollections.py:172
+#: ../code/UICollections.py:174
 msgid "Rename the selected collection"
 msgstr ""
 
-#: ../code/UICollections.py:176
+#. NOTE: Toolbar item
+#: ../code/UICollections.py:179
 msgid "Delete"
 msgstr ""
 
-#: ../code/UICollections.py:178
+#: ../code/UICollections.py:181
 msgid "Delete the selected collection"
 msgstr ""
 
-#: ../code/UICollections.py:182
+#. NOTE: Toolbar item
+#: ../code/UICollections.py:186
 msgid "Select"
 msgstr ""
 
-#: ../code/UICollections.py:184
+#: ../code/UICollections.py:188
 msgid "Close this dialog"
 msgstr ""
 
-#: ../code/UICollections.py:189
+#. NOTE: Toolbar item
+#: ../code/UICollections.py:194
 msgid "Add Module"
 msgstr "Putum module ia"
 
-#: ../code/UICollections.py:191
+#: ../code/UICollections.py:196
 msgid "Add a module to the current collection"
 msgstr ""
 
-#: ../code/UICollections.py:196
+#. NOTE: Toolbar item
+#: ../code/UICollections.py:202
 msgid "Move Up"
 msgstr "Muvum antap"
 
-#: ../code/UICollections.py:198
+#: ../code/UICollections.py:204
 msgid "Move the selected module up"
 msgstr ""
 
-#: ../code/UICollections.py:202
+#. NOTE: Toolbar item
+#: ../code/UICollections.py:209
 msgid "Move Down"
 msgstr "Muvum daon"
 
-#: ../code/UICollections.py:204
+#: ../code/UICollections.py:211
 msgid "Move the selected module down"
 msgstr ""
 
-#: ../code/UICollections.py:208
+#. NOTE: Toolbar item
+#: ../code/UICollections.py:216
 msgid "Remove"
 msgstr "Karemaot"
 
-#: ../code/UICollections.py:210
+#: ../code/UICollections.py:218
 msgid "Remove the selected module from the current collection"
 msgstr ""
 
 #. NOTE: Toolbar item
-#: ../code/UICollections.py:296 ../code/UIMain.py:511
+#: ../code/UICollections.py:304 ../code/UIMain.py:530
 msgid "Collections"
 msgstr "Ol koleksen"
 
-#: ../code/UICollections.py:305
+#: ../code/UICollections.py:313
 msgid "Modules"
 msgstr "Ol module"
 
-#: ../code/UICollections.py:349
+#: ../code/UICollections.py:357
 msgid "This module is already in the current collection."
 msgstr ""
 
-#: ../code/UICollections.py:350
+#: ../code/UICollections.py:358
 msgid "Duplicate module"
 msgstr ""
 
-#: ../code/UICollections.py:370
+#: ../code/UICollections.py:378
 #, python-brace-format
 msgid "A collection name cannot include any of these symbols: {}"
 msgstr ""
 
-#: ../code/UICollections.py:387
+#: ../code/UICollections.py:395
 msgid "Renaming error"
 msgstr ""
 
-#: ../code/UICollections.py:395
+#: ../code/UICollections.py:403
 msgid "New collection"
 msgstr "Niu koleksen"
 
-#: ../code/UICollections.py:414
+#: ../code/UICollections.py:422
 #, python-brace-format
 msgid "Are you sure you want to delete the collection '{}'?"
 msgstr "Yu sua se yu wantem dilit '{}' koleksen?"
 
-#: ../code/UICollections.py:415
+#: ../code/UICollections.py:423
 msgid "Confirm delete"
 msgstr "Konfemem dilit"
 
-#: ../code/UICollections.py:508
+#: ../code/UICollections.py:516
 msgid "Collections Manager"
 msgstr ""
 
@@ -206,235 +214,232 @@ msgstr ""
 msgid "Allow changes?"
 msgstr ""
 
-#: ../code/UIMain.py:218
+#. NOTE: Keep the space at the beginning if your language uses spaces.
+#: ../code/UIMain.py:219
 msgid " (Changes enabled)"
 msgstr ""
 
-#: ../code/UIMain.py:235
+#: ../code/UIMain.py:236
 msgid "Running all modules..."
 msgstr ""
 
-#: ../code/UIMain.py:243
+#: ../code/UIMain.py:244
 msgid "Running module..."
 msgstr ""
 
-#: ../code/UIMain.py:245
+#: ../code/UIMain.py:246
 msgid "Running selected modules..."
 msgstr ""
 
 #. NOTE: Menu item
 #. NOTE: Toolbar item
-#: ../code/UIMain.py:362 ../code/UIMain.py:506
+#: ../code/UIMain.py:363 ../code/UIMain.py:525
 msgid "Select project"
 msgstr "Jusum projek"
 
-#: ../code/UIMain.py:364 ../code/UIMain.py:508
+#: ../code/UIMain.py:365 ../code/UIMain.py:527
 msgid "Select the FieldWorks project to operate on"
 msgstr ""
 
 #. NOTE: Menu item
-#: ../code/UIMain.py:367
+#: ../code/UIMain.py:369
 msgid "Open project in FieldWorks"
 msgstr ""
 
-#: ../code/UIMain.py:369
+#: ../code/UIMain.py:371
 msgid "Open the current project in FieldWorks"
 msgstr ""
 
 #. NOTE: Menu item
-#: ../code/UIMain.py:372
+#: ../code/UIMain.py:375
 msgid "Manage collections"
 msgstr ""
 
-#: ../code/UIMain.py:374 ../code/UIMain.py:513
+#: ../code/UIMain.py:377 ../code/UIMain.py:532
 msgid "Manage and select a collection of modules"
 msgstr ""
 
 #. NOTE: Menu item
-#: ../code/UIMain.py:377
+#: ../code/UIMain.py:381
 msgid "Module information"
 msgstr ""
 
-#: ../code/UIMain.py:379
+#: ../code/UIMain.py:383
 msgid "Show help information on the selected module"
 msgstr ""
 
 #. NOTE: Menu item
-#: ../code/UIMain.py:382
+#: ../code/UIMain.py:387
 msgid "Re-load modules"
 msgstr ""
 
-#: ../code/UIMain.py:384
+#: ../code/UIMain.py:389
 msgid "Re-import all modules"
 msgstr ""
 
 #. NOTE: Menu item
-#: ../code/UIMain.py:394
+#: ../code/UIMain.py:400
 msgid "Run module"
 msgstr ""
 
-#: ../code/UIMain.py:396
+#: ../code/UIMain.py:402
 msgid "Run the selected module"
 msgstr ""
 
 #. NOTE: Menu item
-#: ../code/UIMain.py:399 ../code/UIMain.py:416
+#: ../code/UIMain.py:406 ../code/UIMain.py:426
 msgid "Run all modules"
 msgstr ""
 
-#: ../code/UIMain.py:401 ../code/UIMain.py:418 ../code/UIMain.py:538
+#: ../code/UIMain.py:408 ../code/UIMain.py:428 ../code/UIMain.py:556
 msgid "Run all the modules"
 msgstr "Ronem evri module"
 
 #. NOTE: Menu item
-#: ../code/UIMain.py:406
+#: ../code/UIMain.py:414
 msgid "Run module(s)"
 msgstr "Ronem (ol) module"
 
-#: ../code/UIMain.py:408 ../code/UIMain.py:533
+#: ../code/UIMain.py:416 ../code/UIMain.py:551
 msgid "Run the selected module(s)"
 msgstr "Ronem ol module we oli gat haelaet"
 
 #. NOTE: Menu item
-#: ../code/UIMain.py:411
+#: ../code/UIMain.py:420
 msgid "Run module(s) (Modify enabled)"
 msgstr "Ronem (ol) module (Mekem ol jenis)"
 
-#: ../code/UIMain.py:413 ../code/UIMain.py:556
+#: ../code/UIMain.py:422 ../code/UIMain.py:574
 msgid "Run the selected module(s) and allow changes to the project"
 msgstr "Ronem ol module we oli gat haelaet mo alowem blong mekem jenis long projek"
 
 #. NOTE: Menu item
-#: ../code/UIMain.py:421
+#: ../code/UIMain.py:432
 msgid "Run all modules (Modify enabled)"
 msgstr "Ronem evri module (Mekem ol jenis)"
 
-#: ../code/UIMain.py:423 ../code/UIMain.py:561
+#: ../code/UIMain.py:434 ../code/UIMain.py:579
 msgid "Run all the modules and allow changes to the project"
 msgstr "Ronem evri module mo alowem blong mekem jenis long projek"
 
 #. NOTE: Menu item
-#: ../code/UIMain.py:428
+#: ../code/UIMain.py:439
 msgid "Copy to clipboard"
 msgstr "Kopi long klipbod"
 
-#: ../code/UIMain.py:430
+#: ../code/UIMain.py:441
 msgid "Copy the report contents to the clipboard"
 msgstr "Kopi ol mesaj oli go long klipbod"
 
 #. NOTE: Menu item
-#: ../code/UIMain.py:435
+#: ../code/UIMain.py:447
 msgid "Clear"
 msgstr "Klia ol mesaj"
 
-#: ../code/UIMain.py:437
+#: ../code/UIMain.py:449
 msgid "Clear the current report"
 msgstr "Klia ol mesaj long windo mesaj"
 
 #. NOTE: Menu item
 #. NOTE: Menu title
-#: ../code/UIMain.py:442 ../code/UIMain.py:476
+#: ../code/UIMain.py:455 ../code/UIMain.py:495
 msgid "Help"
 msgstr "Help"
 
-#: ../code/UIMain.py:444
+#: ../code/UIMain.py:457
 msgid "Help on using FlexTools"
 msgstr ""
 
 #. NOTE: Menu item
-#: ../code/UIMain.py:447
+#: ../code/UIMain.py:461
 msgid "Programming help"
 msgstr ""
 
-#: ../code/UIMain.py:449
+#: ../code/UIMain.py:463
 msgid "Help on how to program a FlexTools module"
 msgstr ""
 
 #. NOTE: Menu item
-#: ../code/UIMain.py:452
+#: ../code/UIMain.py:467
 msgid "API help"
 msgstr ""
 
 #. NOTE: Menu item
-#: ../code/UIMain.py:458
+#: ../code/UIMain.py:474
 msgid "Launch LCMBrowser"
 msgstr ""
 
-#: ../code/UIMain.py:460
+#: ../code/UIMain.py:476
 msgid "Open the FieldWorks LCMBrowser application"
 msgstr ""
 
 #. NOTE: Menu item
-#: ../code/UIMain.py:464
+#: ../code/UIMain.py:481
 msgid "About"
 msgstr ""
 
 #. NOTE: Menu title
-#: ../code/UIMain.py:470
+#: ../code/UIMain.py:489
 msgid "FLExTools"
 msgstr ""
 
 #. NOTE: Menu title
 #. NOTE: Toolbar item
-#. _("Configure"),
-#. "applications",
-#. _("Edit configuration parameters for this module")),
-#. Separator
-#: ../code/UIMain.py:472 ../code/UIMain.py:531 ../code/UIMain.py:544
+#: ../code/UIMain.py:491 ../code/UIMain.py:549 ../code/UIMain.py:562
 msgid "Run"
 msgstr "Ron"
 
 #. NOTE: Menu title
-#: ../code/UIMain.py:474
+#: ../code/UIMain.py:493
 msgid "Report"
 msgstr ""
 
 #. NOTE: Toolbar item
-#: ../code/UIMain.py:516
+#: ../code/UIMain.py:535
 msgid "Module info"
 msgstr ""
 
-#: ../code/UIMain.py:518
+#: ../code/UIMain.py:537
 msgid "Show the module documentation"
 msgstr ""
 
 #. NOTE: Toolbar item
-#: ../code/UIMain.py:536 ../code/UIMain.py:549
+#: ../code/UIMain.py:554 ../code/UIMain.py:567
 msgid "Run all"
 msgstr ""
 
-#: ../code/UIMain.py:546
+#: ../code/UIMain.py:564
 msgid "Run the selected module(s) in preview mode"
 msgstr ""
 
-#: ../code/UIMain.py:551
+#: ../code/UIMain.py:569
 msgid "Run all the modules in preview mode"
 msgstr ""
 
 #. NOTE: Toolbar item
-#: ../code/UIMain.py:554
+#: ../code/UIMain.py:572
 msgid "Run (Modify)"
 msgstr ""
 
 #. NOTE: Toolbar item
-#: ../code/UIMain.py:559
+#: ../code/UIMain.py:577
 msgid "Run all (Modify)"
 msgstr ""
 
-#: ../code/UIMain.py:590
+#: ../code/UIMain.py:608
 msgid "Import Error!"
 msgstr ""
 
-#: ../code/UIMain.py:730
+#: ../code/UIMain.py:748
 #, python-brace-format
 msgid "Collection: {}"
 msgstr ""
 
-#: ../code/UIMain.py:741
+#: ../code/UIMain.py:759
 msgid "Progress"
 msgstr ""
 
-#: ../code/UIMain.py:807
+#: ../code/UIMain.py:825
 #, python-brace-format
 msgid "Opening project '{}' in FieldWorks..."
 msgstr ""
@@ -475,7 +480,7 @@ msgstr ""
 msgid "{}, version {}"
 msgstr "{}, vesen {}"
 
-#. TRANSLATORS: Keep the space at the end if your language uses spaces.
+#. NOTE: Keep the space at the end if your language uses spaces.
 #: ../code/UIModulesList.py:145
 msgid "Note: Can modify the project. "
 msgstr "Not: Modyul ia save jenisim projek ia. "

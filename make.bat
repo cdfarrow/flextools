@@ -34,7 +34,7 @@ FOR %%C IN ("Init"
     @REM Build the translation files:
     pushd flextoolslib\locales\
     @REM  - Create the template from the source code
-    pybabel extract -o body.pot ..\code --omit-header --no-wrap -c TRANSLATORS,NOTE
+    pybabel extract -o body.pot ..\code --omit-header --no-wrap -c NOTE:
     @REM  - Join it with the header
     cmd /c copy /b header.pot+body.pot flextools.pot
     @REM  - Update the .po files [-N = no-fuzzy, i.e. don't guess translations]
