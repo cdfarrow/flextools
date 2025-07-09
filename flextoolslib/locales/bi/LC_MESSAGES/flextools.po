@@ -15,7 +15,7 @@ msgstr ""
 "X-Crowdin-File-ID: 16\n"
 "Language-Team: Bislama\n"
 "Language: bi_VU\n"
-"PO-Revision-Date: 2025-07-09 05:06\n"
+"PO-Revision-Date: 2025-07-09 05:39\n"
 
 #: ../code/Help.py:59
 msgid "A framework for running Python scripts on a FieldWorks Language Explorer project."
@@ -62,19 +62,19 @@ msgstr ""
 
 #: ../code/UICollections.py:176
 msgid "Delete"
-msgstr ""
+msgstr "Dilit"
 
 #: ../code/UICollections.py:178
 msgid "Delete the selected collection"
-msgstr ""
+msgstr "Dilit koleksen we i gat haelaet"
 
 #: ../code/UICollections.py:182
 msgid "Select"
-msgstr ""
+msgstr "Jusum"
 
 #: ../code/UICollections.py:184
 msgid "Close this dialog"
-msgstr ""
+msgstr "Sarem windo ia"
 
 #: ../code/UICollections.py:189
 msgid "Add Module"
@@ -153,7 +153,7 @@ msgstr ""
 
 #: ../code/UIMain.py:90
 msgid "Welcome to FLExTools!"
-msgstr ""
+msgstr "Welkam long FLExTools!"
 
 #: ../code/UIMain.py:92
 msgid "Select a project by clicking the 'Select project' button in the toolbar."
@@ -162,12 +162,12 @@ msgstr ""
 #: ../code/UIMain.py:94
 #, python-brace-format
 msgid "Project '{}' selected."
-msgstr ""
+msgstr "Projek '{}' hemi bin jusum finis."
 
 #: ../code/UIMain.py:96
 #, python-brace-format
 msgid "Collection '{}' selected."
-msgstr ""
+msgstr "Koleksen '{}' hemi bin jusum finis."
 
 #: ../code/UIMain.py:99
 msgid "Select or create a collection by clicking the 'Collections' button in the toolbar."
@@ -204,7 +204,7 @@ msgstr ""
 
 #: ../code/UIMain.py:218
 msgid " (Changes enabled)"
-msgstr ""
+msgstr " (Ol jenis i alowem)"
 
 #: ../code/UIMain.py:235
 msgid "Running all modules..."
@@ -368,7 +368,7 @@ msgstr ""
 #. NOTE: Menu title
 #: ../code/UIMain.py:470
 msgid "FLExTools"
-msgstr ""
+msgstr "Men menyu"
 
 #. NOTE: Menu title
 #. NOTE: Toolbar item
