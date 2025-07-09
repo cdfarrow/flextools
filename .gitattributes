@@ -2,3 +2,7 @@
 *.pkl binary
 
 *.doc binary
+
+# Translation files use Unix format
+*.pot text eol=lf
+*.po text eol=lf
