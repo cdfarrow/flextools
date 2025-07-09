@@ -28,7 +28,7 @@ msgstr "Módulos instalados: {}"
 
 #: ../code/Help.py:72
 #, python-brace-format
-msgid "Python version: {}"
+msgid "Python versión: {}"
 msgstr "Python versión: {}"
 
 #: ../code/Help.py:74
@@ -372,10 +372,6 @@ msgstr "FLExTools"
 
 #. NOTE: Menu title
 #. NOTE: Toolbar item
-#. _("Configure"),
-#. "applications",
-#. _("Edit configuration parameters for this module")),
-#. Separator
 #: ../code/UIMain.py:472 ../code/UIMain.py:531 ../code/UIMain.py:544
 msgid "Run"
 msgstr "Ejecutar"
