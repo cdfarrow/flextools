@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 24\n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
-"PO-Revision-Date: 2025-07-10 03:50\n"
+"PO-Revision-Date: 2025-07-10 04:14\n"
 
 #: ../code/Help.py:59
 msgid "A framework for running Python scripts on a FieldWorks Language Explorer project."
@@ -41,7 +41,7 @@ msgstr "E-mail"
 
 #: ../code/Help.py:107
 msgid "About FLExTools"
-msgstr ""
+msgstr "Acerca de FLExTools"
 
 #: ../code/UICollections.py:77
 msgid "Double-click a collection to select it"
@@ -476,7 +476,7 @@ msgstr "¡Error!"
 
 #: ../code/UIModuleInfo.py:127
 msgid "Module Details"
-msgstr ""
+msgstr "Detalles del módulo"
 
 #: ../code/UIModulesList.py:135
 #, python-brace-format
@@ -486,7 +486,7 @@ msgstr "{}, versión {}"
 #. NOTE: Keep the space at the end if your language uses spaces.
 #: ../code/UIModulesList.py:143
 msgid "Note: Can modify the project. "
-msgstr ""
+msgstr "Nota: Puede modificar el proyecto. "
 
 #: ../code/UIModulesList.py:145
 msgid "(Use the 'Run (Modify)' buttons to make changes.)"
