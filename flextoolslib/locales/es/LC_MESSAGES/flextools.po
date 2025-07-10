@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 24\n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
-"PO-Revision-Date: 2025-07-10 04:14\n"
+"PO-Revision-Date: 2025-07-10 04:37\n"
 
 #: ../code/Help.py:59
 msgid "A framework for running Python scripts on a FieldWorks Language Explorer project."
@@ -134,7 +134,7 @@ msgstr "Este módulo ya está en la colección actual."
 
 #: ../code/UICollections.py:352
 msgid "Duplicate module"
-msgstr ""
+msgstr "Duplicate module"
 
 #: ../code/UICollections.py:372
 #, python-brace-format
