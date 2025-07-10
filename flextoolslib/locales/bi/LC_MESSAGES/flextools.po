@@ -1,28 +1,29 @@
-
 msgid ""
 msgstr ""
-"Project-Id-Version:  flextools\n"
+"Project-Id-Version: flextools\n"
 "Report-Msgid-Bugs-To: flextoolshelp@gmail.com\n"
 "POT-Creation-Date: 2025-07-07 13:38+1100\n"
-"PO-Revision-Date: 2025-07-09 05:39+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language: bi_VU\n"
-"Language-Team: Bislama\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.17.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: flextools\n"
+"X-Crowdin-Project-ID: 806454\n"
+"X-Crowdin-Language: bi\n"
+"X-Crowdin-File: /develop/flextoolslib/locales/flextools.pot\n"
+"X-Crowdin-File-ID: 24\n"
+"Language-Team: Bislama\n"
+"Language: bi_VU\n"
+"PO-Revision-Date: 2025-07-10 00:23\n"
 
 #: ../code/Help.py:59
-msgid ""
-"A framework for running Python scripts on a FieldWorks Language Explorer "
-"project."
+msgid "A framework for running Python scripts on a FieldWorks Language Explorer project."
 msgstr ""
 
 #: ../code/Help.py:70
 #, python-brace-format
 msgid "Modules installed: {}"
-msgstr "I gat {} module we i stap."
+msgstr "I gat {} module we i stap"
 
 #: ../code/Help.py:72
 #, python-brace-format
@@ -36,7 +37,7 @@ msgstr "Vesen blong FieldWorks: {}"
 
 #: ../code/Help.py:82
 msgid "E-mail"
-msgstr "E-mael"
+msgstr "Imeil"
 
 #: ../code/UICollections.py:83
 msgid "Double-click a collection to select it"
@@ -176,15 +177,11 @@ msgid "Collection '{}' selected."
 msgstr "Koleksen '{}' hemi bin jusum finis."
 
 #: ../code/UIMain.py:99
-msgid ""
-"Select or create a collection by clicking the 'Collections' button in the"
-" toolbar."
+msgid "Select or create a collection by clicking the 'Collections' button in the toolbar."
 msgstr ""
 
 #: ../code/UIMain.py:101
-msgid ""
-"Select or create a collection by using the 'FlexTools | Manage "
-"collections' menu, or pressing Ctrl-L."
+msgid "Select or create a collection by using the 'FlexTools | Manage collections' menu, or pressing Ctrl-L."
 msgstr ""
 
 #: ../code/UIMain.py:103
@@ -205,19 +202,17 @@ msgstr ""
 
 #: ../code/UIMain.py:208
 #, python-brace-format
-msgid ""
-"Are you sure you want to make changes to the '{}' project? Please back up"
-" the project first."
+msgid "Are you sure you want to make changes to the '{}' project? Please back up the project first."
 msgstr ""
 
 #: ../code/UIMain.py:210
 msgid "Allow changes?"
-msgstr ""
+msgstr "?Alowem ol jenis?"
 
 #. NOTE: Keep the space at the beginning if your language uses spaces.
 #: ../code/UIMain.py:219
 msgid " (Changes enabled)"
-msgstr " (Ol jenis i alowem)"
+msgstr " (I stap alowem ol jenis)"
 
 #: ../code/UIMain.py:236
 msgid "Running all modules..."
