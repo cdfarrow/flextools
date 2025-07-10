@@ -1,26 +1,24 @@
-
 msgid ""
 msgstr ""
-"Project-Id-Version:  flextools\n"
+"Project-Id-Version: flextools\n"
 "Report-Msgid-Bugs-To: flextoolshelp@gmail.com\n"
 "POT-Creation-Date: 2025-07-07 13:38+1100\n"
-"PO-Revision-Date: 2025-07-09 08:12+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language: es_ES\n"
-"Language-Team: Spanish\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.17.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: flextools\n"
+"X-Crowdin-Project-ID: 806454\n"
+"X-Crowdin-Language: es-ES\n"
+"X-Crowdin-File: /develop/flextoolslib/locales/flextools.pot\n"
+"X-Crowdin-File-ID: 24\n"
+"Language-Team: Spanish\n"
+"Language: es_ES\n"
+"PO-Revision-Date: 2025-07-10 00:23\n"
 
 #: ../code/Help.py:59
-msgid ""
-"A framework for running Python scripts on a FieldWorks Language Explorer "
-"project."
-msgstr ""
-"Un framework para ejecutar scripts Python en un proyecto de Explorador de"
-" Lenguaje de FieldWorks."
+msgid "A framework for running Python scripts on a FieldWorks Language Explorer project."
+msgstr "Un framework para ejecutar scripts Python en un proyecto de Explorador de Lenguaje de FieldWorks."
 
 #: ../code/Help.py:70
 #, python-brace-format
@@ -93,7 +91,7 @@ msgstr "Añadir un módulo a la colección actual"
 #. NOTE: Toolbar item
 #: ../code/UICollections.py:202
 msgid "Move Up"
-msgstr "Subir"
+msgstr "Mover arriba"
 
 #: ../code/UICollections.py:204
 msgid "Move the selected module up"
@@ -166,9 +164,7 @@ msgstr "¡Bienvenido a FLExTools!"
 
 #: ../code/UIMain.py:92
 msgid "Select a project by clicking the 'Select project' button in the toolbar."
-msgstr ""
-"Seleccione un proyecto haciendo clic en el botón 'Seleccionar proyecto' "
-"en la barra de herramientas."
+msgstr "Seleccione un proyecto haciendo clic en el botón 'Seleccionar proyecto' en la barra de herramientas."
 
 #: ../code/UIMain.py:94
 #, python-brace-format
@@ -181,20 +177,12 @@ msgid "Collection '{}' selected."
 msgstr "Colección '{}' seleccionada."
 
 #: ../code/UIMain.py:99
-msgid ""
-"Select or create a collection by clicking the 'Collections' button in the"
-" toolbar."
-msgstr ""
-"Seleccione o cree una colección haciendo clic en el botón 'Colecciones' "
-"de la barra de herramientas."
+msgid "Select or create a collection by clicking the 'Collections' button in the toolbar."
+msgstr "Seleccione o cree una colección haciendo clic en el botón 'Colecciones' de la barra de herramientas."
 
 #: ../code/UIMain.py:101
-msgid ""
-"Select or create a collection by using the 'FlexTools | Manage "
-"collections' menu, or pressing Ctrl-L."
-msgstr ""
-"Seleccione o cree una colección usando el menú 'FlexTools | Administrar "
-"colecciones', o presione Ctrl-L."
+msgid "Select or create a collection by using the 'FlexTools | Manage collections' menu, or pressing Ctrl-L."
+msgstr "Seleccione o cree una colección usando el menú 'FlexTools | Administrar colecciones', o presione Ctrl-L."
 
 #: ../code/UIMain.py:103
 msgid "Use the Run buttons to run modules."
@@ -210,18 +198,12 @@ msgstr "Cerrar la pestaña de colección actual"
 
 #: ../code/UIMain.py:196
 msgid "No project selected! Use the 'Select project' button in the toolbar."
-msgstr ""
-"Ningún proyecto seleccionado! Utilice el botón 'Seleccionar proyecto' en "
-"la barra de herramientas."
+msgstr "Ningún proyecto seleccionado! Utilice el botón 'Seleccionar proyecto' en la barra de herramientas."
 
 #: ../code/UIMain.py:208
 #, python-brace-format
-msgid ""
-"Are you sure you want to make changes to the '{}' project? Please back up"
-" the project first."
-msgstr ""
-"¿Está seguro que desea realizar cambios en el proyecto '{}'? Por favor, "
-"haga una copia de seguridad del proyecto primero."
+msgid "Are you sure you want to make changes to the '{}' project? Please back up the project first."
+msgstr "¿Está seguro que desea realizar cambios en el proyecto '{}'? Por favor, haga una copia de seguridad del proyecto primero."
 
 #: ../code/UIMain.py:210
 msgid "Allow changes?"
