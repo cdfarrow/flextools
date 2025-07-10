@@ -94,9 +94,9 @@ class ProjectChooser(Form):
     def __init__(self, currentProject=None):
         Form.__init__(self)
 
-        self.ClientSize = Size(350, 250)
+        self.ClientSize = UIGlobal.projectChooserSize
         self.Text = _("Choose Project")
-        self.Icon = Icon(UIGlobal.ApplicationIcon)
+        self.Icon = UIGlobal.ApplicationIcon
 
         self.projectName = currentProject
 

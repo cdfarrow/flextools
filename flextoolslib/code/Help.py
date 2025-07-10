@@ -19,16 +19,16 @@ from flexlibs import FWShortVersion, FWCodeDir, APIHelpFile
 
 from .FTModules import ModuleManager
 
-from System.Drawing import (Color, SystemColors, Point, PointF, Rectangle,
-                            Size, Bitmap, Image, Icon,
-                            SolidBrush, Pens, Font, FontStyle, FontFamily)
+from System.Drawing import (
+    Color, Image,
+    )
 
 from System.Windows.Forms import (Application, BorderStyle, Button,
     Form, FormBorderStyle, Label,
     MessageBox, MessageBoxButtons, MessageBoxIcon, DialogResult,
-    DockStyle, Orientation, View, SortOrder,
-    HorizontalAlignment, ImageList,
-    RichTextBox, RichTextBoxScrollBars, ControlStyles,
+    DockStyle,
+    HorizontalAlignment,
+    RichTextBox,
     PictureBox, PictureBoxSizeMode,
     )
 
@@ -103,13 +103,13 @@ class AboutInfo(RichTextBox):
 class AboutBox (Form):
     def __init__(self):
         Form.__init__(self)
-        self.ClientSize = Size(400, 250)
-        self.Text = "About FLExTools"
-        self.FormBorderStyle  = FormBorderStyle .Fixed3D
-        self.Icon = Icon(UIGlobal.ApplicationIcon)
+        self.ClientSize = UIGlobal.aboutBoxSize
+        self.Text = _("About FLExTools")
+        self.FormBorderStyle  = FormBorderStyle.Fixed3D
+        self.Icon = UIGlobal.ApplicationIcon
 
         pb = PictureBox()
-        pb.Image = Image.FromFile(UIGlobal.ApplicationIcon)
+        pb.Image = Image.FromFile(UIGlobal.ApplicationIconFile)
         pb.BackColor = UIGlobal.helpDialogColor
         pb.SizeMode = PictureBoxSizeMode.CenterImage
 

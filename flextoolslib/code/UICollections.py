@@ -23,12 +23,6 @@ from .UIModuleBrowser import ModuleBrowser
 from . import FTCollections
 from . import FTModules
 
-
-from System.Drawing import (
-    Size, 
-    Icon,
-    )
-
 from System.Windows.Forms import (
     Application,
     Form,
@@ -514,7 +508,7 @@ class CollectionsDialog(Form):
         Form.__init__(self)
         self.ClientSize = UIGlobal.collectionsWindowSize
         self.Text = _("Collections Manager")
-        self.Icon = Icon(UIGlobal.ApplicationIcon)
+        self.Icon = UIGlobal.ApplicationIcon
 
         self.activatedCollection = None
 
@@ -547,7 +541,7 @@ if __name__ == "__main__":
     cmPanel = CollectionsManagerUI(collections, mm, None)
 
     form = Form()
-    form.ClientSize = Size(600, 550)
+    form.ClientSize = UIGlobal.collectionsWindowSize
     form.Text = "Test of Collections Manager"
 
     form.Controls.Add(cmPanel)

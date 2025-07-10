@@ -18,12 +18,12 @@ from . import UIGlobal
 from . import FTReport
 
 from System.Drawing import (
-                            Size, Bitmap, Image, Icon,
-                            )
+    Bitmap,
+    )
 
 from System.Windows.Forms import (
-    DockStyle, Orientation, View, SortOrder,
-    ListView, ListViewItem, DrawItemState, ColumnHeaderStyle,
+    DockStyle, View,
+    ListView, ListViewItem, ColumnHeaderStyle,
     HorizontalAlignment, 
     ImageList, ColorDepth,
     Clipboard,
@@ -31,6 +31,7 @@ from System.Windows.Forms import (
 
 from System import Environment
 
+# ------------------------------------------------------------------
 
 class ReportWindow(ListView):
     def __init__(self):

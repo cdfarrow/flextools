@@ -16,8 +16,7 @@ from . import UIGlobal
 from .FTModuleClass import *
 
 from System.Drawing import (
-    Color, Size,
-    Icon,
+    Color,
     )
     
 from System.Windows.Forms import (
@@ -124,9 +123,9 @@ class ModuleInfoPane(RichTextBox):
 class ModuleInfoDialog(Form):
     def __init__(self, docs):
         Form.__init__(self)
-        self.ClientSize = Size(400, 400)
-        self.Text = "Module Details"
-        self.Icon = Icon(UIGlobal.ApplicationIcon)
+        self.ClientSize = UIGlobal.moduleInfoSize
+        self.Text = _("Module Details")
+        self.Icon = UIGlobal.ApplicationIcon
 
         infoPane = ModuleInfoPane()
         infoPane.SetFromDocs(docs)

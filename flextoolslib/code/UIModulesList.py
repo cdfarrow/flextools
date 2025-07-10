@@ -17,18 +17,16 @@ from System import String
 
 from System.Collections.Generic import List
 
-from System.Drawing import (Color, SystemColors, Point, PointF, Rectangle,
-                            Size, Bitmap, Image, Icon, SystemIcons,
-                            SolidBrush, Pens, Font, FontStyle, FontFamily)
+from System.Drawing import (Color, SystemColors, Point, PointF,
+                            Bitmap,
+                            SolidBrush, Pens)
 
 from System.Windows.Forms import (
     ListBox, SelectionMode, DrawMode,
-    Button,
-    DockStyle, Orientation, View, SortOrder,
-    HorizontalAlignment, ImageList,
-    DrawItemState, DrawItemEventArgs,
-    KeyEventArgs, KeyPressEventArgs, Keys,
-    TextRenderer)
+    DockStyle,
+    DrawItemState,
+    KeyEventArgs, Keys,
+    )
 
 # ------------------------------------------------------------------
 
@@ -53,7 +51,7 @@ class ModulesList(ListBox):
         self.HideSelection = False    # Keep selected item grey when lost focus
 
         self.textBrush = SolidBrush(SystemColors.WindowText)
-        self.icon = Bitmap(UIGlobal.ModuleIcon)
+        self.icon = Bitmap(UIGlobal.ModuleIconFile)
 
         self.DrawMode = DrawMode.OwnerDrawVariable
         self.DrawItem += self.OnDrawItem

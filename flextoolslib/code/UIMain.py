@@ -30,11 +30,6 @@ from flexlibs import OpenProjectInFW
 import clr
 import System
 
-clr.AddReference("System.Drawing")
-from System.Drawing import (Color, SystemColors, Point, PointF, Rectangle,
-                            Size, Bitmap, Image, Icon,
-                            SolidBrush, Pens, Font, FontStyle, FontFamily)
-
 clr.AddReference("System.Windows.Forms")
 from System.Windows.Forms import (
     Form,
@@ -670,13 +665,6 @@ class FTMainForm (Form):
 
     def __init__(self, appTitle=None, appMenu=None, appStatusbar=None):
         Form.__init__(self)
-        self.ClientSize = UIGlobal.mainWindowSize
-        if appTitle:
-            self.Text = appTitle
-        else:
-            self.Text = f"flextoolslib {version}"
-
-        self.Icon = Icon(UIGlobal.ApplicationIcon)
 
         # Initialise default configuration values
         if not FTConfig.currentCollection:
@@ -694,6 +682,18 @@ class FTMainForm (Form):
             FTConfig.disableDoubleClick = False
         if FTConfig.hideCollectionsButton is None:
             FTConfig.hideCollectionsButton = False
+
+        if FTConfig.simplifiedRunOps:
+            self.ClientSize = UIGlobal.mainWindowSizeNarrow
+        else:
+            self.ClientSize = UIGlobal.mainWindowSizeNormal
+            
+        if appTitle:
+            self.Text = appTitle
+        else:
+            self.Text = f"flextoolslib {version}"
+
+        self.Icon = UIGlobal.ApplicationIcon
 
         self.collectionsManager = FTCollections.CollectionsManager()
 

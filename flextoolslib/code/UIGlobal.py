@@ -8,17 +8,17 @@
 #   Oct 2009-2022
 #
 
-import clr
-clr.AddReference("System")
-clr.AddReference("System.Drawing")
-clr.AddReference("System.Windows.Forms")
 
 import os
-import System
+from sys import argv
+
+import clr
+clr.AddReference("System.Drawing")
+
 from System.Drawing import (Color,
                             Size,
+                            Icon,
                             Font, FontStyle, FontFamily)
-from sys import argv
 
 # --- Paths ---
 
@@ -34,8 +34,9 @@ ICON_SUFFIX1    = "_16.gif"
 ICON_PATH2      = os.path.join(ICON_PATH0, "Fugue")
 ICON_SUFFIX2    = ".png"
 
-ApplicationIcon   = os.path.join(ICON_PATH0, "Flextools.ico")
-ModuleIcon        = os.path.join(ICON_PATH0, "Module.ico")
+ApplicationIconFile = os.path.join(ICON_PATH0, "Flextools.ico")
+ApplicationIcon   = Icon(ApplicationIconFile)
+ModuleIconFile    = os.path.join(ICON_PATH0, "Module.ico")
 ToolbarIconParams = (ICON_PATH1, ICON_SUFFIX1)
 ReportIconParams  = (ICON_PATH2, ICON_SUFFIX2)
 
@@ -50,8 +51,12 @@ if "DEMO" in argv[1:]:
     headingFont = Font(FontFamily.GenericSansSerif, 16.5)
 
     # Window sizes
-    mainWindowSize = Size(900, 500)
-    collectionsWindowSize = Size (800,500)
+    mainWindowSizeNormal    = Size(1200,550)
+    mainWindowSizeNarrow    = Size(900, 550)
+    collectionsWindowSize   = Size(850, 500)
+    moduleInfoSize          = Size(500, 500)
+    projectChooserSize      = Size(400, 300)
+    aboutBoxSize            = Size(600, 350)
 
 else:
     # Font styles
@@ -60,9 +65,12 @@ else:
     headingFont = Font(FontFamily.GenericSansSerif, 11.0)
 
     # Window sizes
-    mainWindowSize = Size(700, 500)
-    collectionsWindowSize = Size (600,500)
-
+    mainWindowSizeNormal    = Size(900, 500)
+    mainWindowSizeNarrow    = Size(650, 500)
+    collectionsWindowSize   = Size(650, 500)
+    moduleInfoSize          = Size(400, 400)
+    projectChooserSize      = Size(350, 250)
+    aboutBoxSize            = Size(400, 250)
 
 # Colours
 
