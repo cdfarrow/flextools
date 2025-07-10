@@ -4,8 +4,8 @@ msgstr ""
 "Project-Id-Version:  flextools\n"
 "Report-Msgid-Bugs-To: flextoolshelp@gmail.com\n"
 "POT-Creation-Date: 2025-07-07 13:38+1100\n"
-"PO-Revision-Date: 2025-07-09 09:08+1100\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2025-07-09 05:39+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: bi_VU\n"
 "Language-Team: Bislama\n"
 "MIME-Version: 1.0\n"
@@ -22,12 +22,12 @@ msgstr ""
 #: ../code/Help.py:70
 #, python-brace-format
 msgid "Modules installed: {}"
-msgstr ""
+msgstr "I gat {} module we i stap."
 
 #: ../code/Help.py:72
 #, python-brace-format
 msgid "Python version: {}"
-msgstr ""
+msgstr "Vesen blong Python: {}"
 
 #: ../code/Help.py:74
 #, python-brace-format
@@ -40,7 +40,7 @@ msgstr "E-mael"
 
 #: ../code/UICollections.py:83
 msgid "Double-click a collection to select it"
-msgstr ""
+msgstr "Mekem dabol-klik long eni koleksen blong jusum"
 
 #. NOTE: Toolbar item
 #: ../code/UICollections.py:165
@@ -63,20 +63,20 @@ msgstr ""
 #. NOTE: Toolbar item
 #: ../code/UICollections.py:179
 msgid "Delete"
-msgstr ""
+msgstr "Dilit"
 
 #: ../code/UICollections.py:181
 msgid "Delete the selected collection"
-msgstr ""
+msgstr "Dilit koleksen we i gat haelaet"
 
 #. NOTE: Toolbar item
 #: ../code/UICollections.py:186
 msgid "Select"
-msgstr ""
+msgstr "Jusum"
 
 #: ../code/UICollections.py:188
 msgid "Close this dialog"
-msgstr ""
+msgstr "Sarem windo ia"
 
 #. NOTE: Toolbar item
 #: ../code/UICollections.py:194
@@ -159,7 +159,7 @@ msgstr ""
 
 #: ../code/UIMain.py:90
 msgid "Welcome to FLExTools!"
-msgstr ""
+msgstr "Welkam long FLExTools!"
 
 #: ../code/UIMain.py:92
 msgid "Select a project by clicking the 'Select project' button in the toolbar."
@@ -168,12 +168,12 @@ msgstr ""
 #: ../code/UIMain.py:94
 #, python-brace-format
 msgid "Project '{}' selected."
-msgstr ""
+msgstr "Projek '{}' hemi bin jusum finis."
 
 #: ../code/UIMain.py:96
 #, python-brace-format
 msgid "Collection '{}' selected."
-msgstr ""
+msgstr "Koleksen '{}' hemi bin jusum finis."
 
 #: ../code/UIMain.py:99
 msgid ""
@@ -217,7 +217,7 @@ msgstr ""
 #. NOTE: Keep the space at the beginning if your language uses spaces.
 #: ../code/UIMain.py:219
 msgid " (Changes enabled)"
-msgstr ""
+msgstr " (Ol jenis i alowem)"
 
 #: ../code/UIMain.py:236
 msgid "Running all modules..."
@@ -381,7 +381,7 @@ msgstr ""
 #. NOTE: Menu title
 #: ../code/UIMain.py:489
 msgid "FLExTools"
-msgstr ""
+msgstr "Men menyu"
 
 #. NOTE: Menu title
 #. NOTE: Toolbar item

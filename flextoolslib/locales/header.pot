@@ -1,0 +1,13 @@
+# Translations template for FlexTools.
+# Copyright (C) 2025
+# This file is distributed under the same license as the FlexTools project.
+# Craig Farrow <flextoolshelp@gmail.com>, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: FlexTools v2\n"
+"Report-Msgid-Bugs-To: flextoolshelp@gmail.com\n"
+"POT-Creation-Date: 2025-07-07 13:38+1100\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
