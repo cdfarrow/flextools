@@ -7,7 +7,8 @@ set PYTHON=py
 REM Check that the argument is a valid command, and do it. /I ignores case.
 FOR %%C IN ("Init"
             "Clean"
-            "Translate"
+            "Extract"
+            "Compile"
             "Build"
             "Publish") DO (
             IF /I "%1"=="%%~C" GOTO :Do%1
@@ -17,7 +18,8 @@ FOR %%C IN ("Init"
     echo Usage:
     echo      make init         - Install the libraries for building
     echo      make clean        - Clean out build files
-    echo      make translate    - Update the translation files
+    echo      make extract      - Update the translation strings template
+    echo      make compile      - Update the translation files
     echo      make build        - Build the project
     echo      make publish      - Publish the project to PyPI
     goto :End
@@ -27,29 +29,30 @@ FOR %%C IN ("Init"
     goto :End
     
 :DoClean
-    cmd /c del /s *.mo
+    del /s *.mo
     rmdir /s /q ".\build"
     rmdir /s /q ".\dist"
     goto :End
     
-:DoTranslate
+:DoExtract
     @REM Build the translation files:
     pushd flextoolslib\locales\
     @REM  - Create the template from the source code
-    pybabel extract -o body.pot ..\code --omit-header --no-wrap -c NOTE:
+    pybabel extract ..\code -o body.pot --omit-header --no-wrap -c NOTE:
     @REM  - Join it with the pre-populated header. (Binary to keep the Unix EOLs.)
     cmd /c copy /b header.pot+body.pot flextools.pot
-    @REM  - Update the .po files [-N = no-fuzzy, i.e. don't guess translations]
-    pybabel update -D flextools -N -i flextools.pot -d .
-    @REM  - Compile the .mo files
-    pybabel compile -D flextools -d . --statistics
     popd
+    goto :END
+    
+:DoCompile
+    @REM  - Compile the .mo files
+    pybabel compile -D flextools -d flextoolslib\locales\ --statistics   
     goto :END
     
 :DoBuild
     @REM  - Compile the .mo files
-    pybabel compile -D flextools -d flextoolslib\locales\ --statistics   
-    
+    pybabel compile -D flextools -d flextoolslib\locales\
+
     @REM Build the wheel for flextoolslib with setuptools
     %PYTHON% -m build -w
     
