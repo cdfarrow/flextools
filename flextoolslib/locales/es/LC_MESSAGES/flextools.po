@@ -14,7 +14,79 @@ msgstr ""
 "X-Crowdin-File-ID: 24\n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
-"PO-Revision-Date: 2025-07-10 04:14\n"
+"PO-Revision-Date: 2025-07-11 05:27\n"
+
+#. NOTE: Parameter = collection name
+#: ../code/FTCollections.py:128 ../code/FTCollections.py:154
+#, python-brace-format
+msgid "'{}' already exists."
+msgstr "'{}' ya existe."
+
+#. NOTE: Parameter = module name
+#: ../code/FTCollections.py:171
+#, python-brace-format
+msgid "'{}' is already in the collection."
+msgstr "'{}' ya está en la colección."
+
+#: ../code/FTModuleClass.py:89
+msgid "Module documentation is missing a required key.\n"
+"Required keys:"
+msgstr "La documentación del módulo carece de una clave requerida.\n"
+"Claves requeridas:"
+
+#: ../code/FTModules.py:94
+msgid "Use Ctrl-C to copy this report to the clipboard to see more information."
+msgstr "Utilice Ctrl-C para copiar este informe al portapapeles para ver más información."
+
+#: ../code/FTModules.py:168
+msgid "Duplicate module names found in these files (using the first one):"
+msgstr "Duplicar nombres de módulos encontrados en estos archivos (usando el primer):"
+
+#: ../code/FTModules.py:204
+#, python-brace-format
+msgid "Opening project '{}'..."
+msgstr "Abriendo proyecto '{}'..."
+
+#: ../code/FTModules.py:209 ../code/FTModules.py:214 ../code/FTModules.py:219
+msgid "Error opening project:"
+msgstr "Error abriendo proyecto:"
+
+#: ../code/FTModules.py:210
+msgid "This project is in use by another program. To allow shared access to this project, turn on the sharing option in the Sharing tab of the Fieldworks Project Properties dialog."
+msgstr "Este proyecto está siendo utilizado por otro programa. Para permitir el acceso compartido a este proyecto, activa la opción de compartir en la pestaña Compartir del diálogo Propiedades del Proyecto Fieldworks."
+
+#: ../code/FTModules.py:215
+msgid "This project needs to be opened in FieldWorks in order for it to be migrated to the latest format."
+msgstr "Este proyecto necesita ser abierto en FieldWorks para que sea migrado al último formato."
+
+#: ../code/FTModules.py:223
+#, python-brace-format
+msgid "OpenProject failed with exception {}!"
+msgstr "¡OpenProject falló con excepción {}!"
+
+#: ../code/FTModules.py:232
+#, python-brace-format
+msgid "Module '{}' is missing or failed to import."
+msgstr "Falta el módulo '{}' o no se ha importado."
+
+#: ../code/FTModules.py:245
+#, python-brace-format
+msgid "Running '{}' (version {})..."
+msgstr "Ejecutando '{}' (versión {})..."
+
+#: ../code/FTModules.py:258
+msgid "Module failed with a programming error!"
+msgstr "¡El módulo ha fallado con un error de programación!"
+
+#: ../code/FTModules.py:263
+#, python-brace-format
+msgid "Module failed with exception {}!"
+msgstr "¡El módulo ha fallado con la excepción {}!"
+
+#: ../code/FTModules.py:274
+#, python-brace-format
+msgid "Processing completed. Errors: {}; Warnings: {}"
+msgstr "Procesamiento completado. Errores: {}; Avisos: {}"
 
 #: ../code/Help.py:59
 msgid "A framework for running Python scripts on a FieldWorks Language Explorer project."
@@ -128,13 +200,9 @@ msgstr "Colecciones"
 msgid "Modules"
 msgstr "Módulos"
 
-#: ../code/UICollections.py:351
-msgid "This module is already in the current collection."
-msgstr "Este módulo ya está en la colección actual."
-
 #: ../code/UICollections.py:352
 msgid "Duplicate module"
-msgstr ""
+msgstr "Duplicate module"
 
 #: ../code/UICollections.py:372
 #, python-brace-format
