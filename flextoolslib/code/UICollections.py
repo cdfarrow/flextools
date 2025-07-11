@@ -347,8 +347,8 @@ class CollectionsManagerUI(Panel):
             try:
                 self.collections.AddModule(self.currentCollection,
                                            moduleName)
-            except FTCollections.FTC_ExistsError:
-                MessageBox.Show(_("This module is already in the current collection."),
+            except FTCollections.FTC_ExistsError as e:
+                MessageBox.Show(e.message,
                                 _("Duplicate module"),
                                 MessageBoxButtons.OK,
                                 MessageBoxIcon.Information)

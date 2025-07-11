@@ -11,6 +11,78 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+#. NOTE: Parameter = collection name
+#: ../code/FTCollections.py:128 ../code/FTCollections.py:154
+#, python-brace-format
+msgid "'{}' already exists."
+msgstr ""
+
+#. NOTE: Parameter = module name
+#: ../code/FTCollections.py:171
+#, python-brace-format
+msgid "'{}' is already in the collection."
+msgstr ""
+
+#: ../code/FTModuleClass.py:89
+msgid ""
+"Module documentation is missing a required key.\n"
+"Required keys:"
+msgstr ""
+
+#: ../code/FTModules.py:94
+msgid "Use Ctrl-C to copy this report to the clipboard to see more information."
+msgstr ""
+
+#: ../code/FTModules.py:168
+msgid "Duplicate module names found in these files (using the first one):"
+msgstr ""
+
+#: ../code/FTModules.py:204
+#, python-brace-format
+msgid "Opening project '{}'..."
+msgstr ""
+
+#: ../code/FTModules.py:209 ../code/FTModules.py:214 ../code/FTModules.py:219
+msgid "Error opening project:"
+msgstr ""
+
+#: ../code/FTModules.py:210
+msgid "This project is in use by another program. To allow shared access to this project, turn on the sharing option in the Sharing tab of the Fieldworks Project Properties dialog."
+msgstr ""
+
+#: ../code/FTModules.py:215
+msgid "This project needs to be opened in FieldWorks in order for it to be migrated to the latest format."
+msgstr ""
+
+#: ../code/FTModules.py:223
+#, python-brace-format
+msgid "OpenProject failed with exception {}!"
+msgstr ""
+
+#: ../code/FTModules.py:232
+#, python-brace-format
+msgid "Module '{}' is missing or failed to import."
+msgstr ""
+
+#: ../code/FTModules.py:245
+#, python-brace-format
+msgid "Running '{}' (version {})..."
+msgstr ""
+
+#: ../code/FTModules.py:258
+msgid "Module failed with a programming error!"
+msgstr ""
+
+#: ../code/FTModules.py:263
+#, python-brace-format
+msgid "Module failed with exception {}!"
+msgstr ""
+
+#: ../code/FTModules.py:274
+#, python-brace-format
+msgid "Processing completed. Errors: {}; Warnings: {}"
+msgstr ""
+
 #: ../code/Help.py:59
 msgid "A framework for running Python scripts on a FieldWorks Language Explorer project."
 msgstr ""
@@ -121,10 +193,6 @@ msgstr ""
 
 #: ../code/UICollections.py:307
 msgid "Modules"
-msgstr ""
-
-#: ../code/UICollections.py:351
-msgid "This module is already in the current collection."
 msgstr ""
 
 #: ../code/UICollections.py:352

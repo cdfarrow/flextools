@@ -24,6 +24,8 @@ from . import FTReport
 from flexlibs import (
     FLExProject, 
     FP_ProjectError, 
+    FP_FileLockedError,
+    FP_MigrationRequired,
     FP_RuntimeError,
     )
 
@@ -89,7 +91,7 @@ class ModuleManager (object):
             del self.project
 
     def __buildExceptionMessages(self, e, msg):
-        __copyMessage = "Use Ctrl-C to copy this report to the clipboard to see more information."
+        __copyMessage = _("Use Ctrl-C to copy this report to the clipboard to see more information.")
         eName = details = ""
         # Test for .NET Exception first, since they are also Python Exceptions.
         if isinstance(e, System.Exception): #.NET
@@ -124,7 +126,7 @@ class ModuleManager (object):
         except ValueError:
             pass
         
-        logger.info("Module libraries found: %s" % libNames)
+        logger.info(f"Module libraries found: {libNames}")
         
         for library in libNames:
             libPath = os.path.join(MODULES_PATH, library)
@@ -162,8 +164,11 @@ class ModuleManager (object):
 
                 if moduleFullName in self.__modules:
                     otherModule = self.__modules[moduleFullName].docs[FTM_Path]
-                    errString = "Duplicate module names found in these files (using the first one):\n"\
-                                "\t%s \n\t%s" % (otherModule, moduleFullPath)
+                    errLines = [
+                        _("Duplicate module names found in these files (using the first one):"),
+                        "\t{}".format(otherModule),
+                        "\t{}".format(moduleFullPath)]
+                    errString = "\n".join(errLines)
                     self.__errors.append(errString)
                     continue
 
@@ -196,16 +201,27 @@ class ModuleManager (object):
         if not projectName:
             return False
 
-        reporter.Info("Opening project %s..." % projectName)
+        reporter.Info(_("Opening project '{}'...").format(projectName))
         try:
             self.__openProject(projectName, modifyAllowed)
+        except FP_FileLockedError as e:
+            logger.error(e.message)
+            reporter.Error(_("Error opening project:") +\
+                _("This project is in use by another program. To allow shared access to this project, turn on the sharing option in the Sharing tab of the Fieldworks Project Properties dialog."))
+            return False
+        except FP_MigrationRequired as e:
+            logger.error(e.message)
+            reporter.Error(_("Error opening project:") +\
+                           _("This project needs to be opened in FieldWorks in order for it to be migrated to the latest format."))
+            return False
         except FP_ProjectError as e:
             logger.error(e.message)
-            reporter.Error("Error opening project: %s"
-                           % e.message, e.message)
+            reporter.Error(_("Error opening project:") + e.message,
+                           e.message)
             return False
         except Exception as e:
-            msg, details = self.__buildExceptionMessages(e, "OpenProject failed with exception {}!")
+            msg, details = self.__buildExceptionMessages(e, _("OpenProject failed with exception {}!"))
+            logger.error(msg)
             logger.error(details)
             reporter.Error(msg, details)
             return False
@@ -213,7 +229,7 @@ class ModuleManager (object):
         for moduleName in moduleList:
             docs = self.GetDocs(moduleName)
             if not docs:
-                reporter.Warning("Module %s missing or failed to import." % moduleName)
+                reporter.Error(_("Module '{}' is missing or failed to import.").format(moduleName))
                 continue
 
             reporter.Blank()
@@ -226,8 +242,8 @@ class ModuleManager (object):
                 # It is a top-level module with no '<library>.' prefix.
                 displayName = moduleName
 
-            reporter.Info("Running %s (version %s)..." %
-                          (displayName,
+            reporter.Info(_("Running '{}' (version {})...").format(
+                           displayName,
                            str(docs[FTM_Version])))
             
             # In simplified mode, we always allow mods if the module does.
@@ -239,10 +255,14 @@ class ModuleManager (object):
                                                reporter,
                                                modifyAllowed=modifyAllowed)
             except FP_RuntimeError as e:
-                msg, details = self.__buildExceptionMessages(e, "Module failed with a programming error!")
+                msg, details = self.__buildExceptionMessages(e, _("Module failed with a programming error!"))
+                logger.error(msg)
+                logger.error(details)
                 reporter.Error(msg, details)
             except Exception as e:
-                msg, details = self.__buildExceptionMessages(e, "Module failed with exception {}!")
+                msg, details = self.__buildExceptionMessages(e, _("Module failed with exception {}!"))
+                logger.error(msg)
+                logger.error(details)
                 reporter.Error(msg, details)
                 
             if FTConfig.stopOnError:
@@ -251,9 +271,8 @@ class ModuleManager (object):
 
         numErrors   = reporter.messageCounts[reporter.ERROR]
         numWarnings = reporter.messageCounts[reporter.WARNING]
-        reporter.Info("Processing completed with %d error%s and %d warning%s" \
-                      % (numErrors,   "" if numErrors==1 else "s",
-                         numWarnings, "" if numWarnings==1 else "s"))
+        reporter.Info(_("Processing completed. Errors: {}; Warnings: {}").format(
+                        numErrors, numWarnings))
         self.__closeProject()
 
         return True

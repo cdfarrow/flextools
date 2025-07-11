@@ -116,6 +116,7 @@ class CollectionsManager(object):
 
     def ListOfModules(self, collectionName):
         if collectionName not in self.collections:
+            # Obscure scenario: don't translate
             raise FTC_NameError(f"Bad collection name '{collectionName}'")
         return self.collections[collectionName]
 
@@ -123,14 +124,16 @@ class CollectionsManager(object):
 
     def Add(self, collectionName):
         if collectionName in self.collections:
-            raise FTC_ExistsError(collectionName + " already exists.")
+            # NOTE: Parameter = collection name
+            raise FTC_ExistsError(_("'{}' already exists.").format(collectionName))
         newCollection = CollectionsInfo()
         self.collections[collectionName] = newCollection
         self.WriteOne(collectionName, newCollection)
 
     def Delete(self, collectionName):
         if collectionName not in self.collections:
-            raise FTC_NameError("Collection not found.")
+            # Obscure scenario: don't translate
+            raise FTC_NameError(f"Collection not found '{collectionName}'")
             
         try:
             os.remove(os.path.join(COLLECTIONS_PATH,
@@ -141,12 +144,14 @@ class CollectionsManager(object):
 
     def Rename(self, collectionName, newName):
         if collectionName not in self.collections:
-            raise FTC_NameError("Collection not found.")
+            # Obscure scenario: don't translate
+            raise FTC_NameError(f"Collection not found '{collectionName}'")
             
         # Prevent duplicate names, but allow change of case
         if newName.lower() != collectionName.lower():
             if newName.lower() in [c.lower() for c in self.collections]:
-                raise FTC_ExistsError(f"'{newName}' already exists.")
+                # NOTE: Parameter = collection name
+                raise FTC_ExistsError(_("'{}' already exists.").format(newName))
 
         try:
             os.rename(os.path.join(COLLECTIONS_PATH,
@@ -154,6 +159,7 @@ class CollectionsManager(object):
                       os.path.join(COLLECTIONS_PATH,
                                    newName + self.COLLECTIONS_SUFFIX))
         except:
+            # Obscure scenario: don't translate
             raise FTC_BadNameError("An error occured renaming the collection. The name must be a valid filename.")
         else:
             self.collections[newName] = self.collections.pop(collectionName)
@@ -161,7 +167,8 @@ class CollectionsManager(object):
     def AddModule(self, collectionName, moduleName):
         collectionsInfo = self.collections[collectionName]
         if moduleName in collectionsInfo:
-            raise FTC_ExistsError(moduleName + " already exists.")
+            # NOTE: Parameter = module name
+            raise FTC_ExistsError(_("'{}' is already in the collection.").format(moduleName))
         collectionsInfo.append(moduleName)
 
     def RemoveModule(self, collectionName, moduleName):
