@@ -24,7 +24,9 @@ from System.Drawing import (
     )
 
 from System.Windows.Forms import (Application, BorderStyle, Button,
-    Form, FormBorderStyle, Label,
+    Form, 
+    FormBorderStyle,
+    FormStartPosition,
     MessageBox, MessageBoxButtons, MessageBoxIcon, DialogResult,
     DockStyle,
     HorizontalAlignment,
@@ -33,6 +35,7 @@ from System.Windows.Forms import (Application, BorderStyle, Button,
     )
 
 
+# ------------------------------------------------------------------
 
 class AboutInfo(RichTextBox):
     def __init__(self):
@@ -105,7 +108,10 @@ class AboutBox (Form):
         Form.__init__(self)
         self.ClientSize = UIGlobal.aboutBoxSize
         self.Text = _("About FLExTools")
+        self.StartPosition = FormStartPosition.CenterScreen
         self.FormBorderStyle  = FormBorderStyle.Fixed3D
+        self.MinimizeBox = False
+        self.MaximizeBox = False
         self.Icon = UIGlobal.ApplicationIcon
 
         pb = PictureBox()
@@ -140,7 +146,6 @@ def About(sender=None, event=None):
     dlg = AboutBox()
     dlg.ShowDialog()
 
-
 def GeneralHelp(sender=None, event=None):
     Help(GeneralHelpFile)
 
@@ -155,6 +160,9 @@ def LaunchLCMBrowser(sender=None, event=None):
 
 
 # ------------------------------------------------------------------
+
+# To test the dialog standalone run (from the FlexTools directory):
+# py -m flextoolslib.code.Help
 
 if __name__ == "__main__":
     About()
