@@ -21,6 +21,7 @@ from .FTModules import ModuleManager
 
 from System.Drawing import (
     Color, Image,
+    Point,
     )
 
 from System.Windows.Forms import (Application, BorderStyle, Button,
@@ -32,10 +33,13 @@ from System.Windows.Forms import (Application, BorderStyle, Button,
     HorizontalAlignment,
     RichTextBox,
     PictureBox, PictureBoxSizeMode,
+    LinkLabel, LinkBehavior,
     )
 
 
 # ------------------------------------------------------------------
+
+# --- About dialog ---
 
 class AboutInfo(RichTextBox):
     def __init__(self):
@@ -76,27 +80,42 @@ class AboutInfo(RichTextBox):
         self.SelectionFont = UIGlobal.normalFont
         self.AppendText(_("FieldWorks version: {}").format(FWShortVersion)+"\n")
         self.AppendText("\n")
-
-        self.SelectionFont = UIGlobal.normalFont
-        self.AppendText("FLExTools: \thttps://github.com/cdfarrow/flextools/wiki\n")
-        self.SelectionFont = UIGlobal.normalFont
-        self.AppendText("FieldWorks: \thttps://software.sil.org/fieldworks/\n")
-        self.SelectionFont = UIGlobal.normalFont
-        self.AppendText("{}: \tmailto:flextoolshelp".format(_("E-mail")))
-        self.SelectionFont = UIGlobal.normalFont
-        self.AppendText("@gmail.com\n")
-
+       
         # Make it all non-editable
         self.SelectAll()
         self.SelectionProtected = True
         self.Select(10000,10000)
         self.SendToBack()
 
+        # Add hyperlinks to external sites/email
+
+        links = [
+            ("FLExTools",  "https://github.com/cdfarrow/flextools/wiki"),
+            ("FieldWorks", "https://software.sil.org/fieldworks/"),
+            (_("E-mail"),  "mailto:flextoolshelp"+"@gmail.com"),
+            ]
+
+        yPos = UIGlobal.aboutBoxSize.Height - 5 * UIGlobal.normalFont.Height // 2
+        xSpacing = UIGlobal.aboutBoxSize.Width // (len(links) + 1)
+        for i, (text, url) in enumerate(links):
+            link = LinkLabel()
+            link.Font = UIGlobal.normalFont           
+            link.Text = text
+            link.Tag = url
+            link.LinkColor = Color.Navy
+            link.LinkBehavior = LinkBehavior.HoverUnderline
+            link.AutoSize = True
+            link.Location = Point(xSpacing * (i+1) - link.PreferredSize.Width // 2,
+                                  yPos)
+            link.LinkClicked += self.__OnLinkClicked
+            self.Controls.Add(link)
+
         self.LinkClicked += self.__OnLinkClicked
+
 
     def __OnLinkClicked(self, sender, event):
         try:
-            os.startfile(event.LinkText)
+            os.startfile(sender.Tag)
         except WindowsError:
             MessageBox.Show("Error opening link", "Error!",
                             MessageBoxButtons.OK,
@@ -122,6 +141,9 @@ class AboutBox (Form):
         self.Controls.Add(pb)
         self.Controls.Add(AboutInfo())
 
+# ------------------------------------------------------------------
+
+# --- Help files ---
 
 HELP_PATH = os.path.join(os.path.dirname(__file__), r"..\docs")
 
@@ -161,7 +183,7 @@ def LaunchLCMBrowser(sender=None, event=None):
 
 # ------------------------------------------------------------------
 
-# To test the dialog standalone run (from the FlexTools directory):
+# To test the dialog standalone, run (from the FlexTools directory):
 # py -m flextoolslib.code.Help
 
 if __name__ == "__main__":

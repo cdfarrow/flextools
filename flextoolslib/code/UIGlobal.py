@@ -56,7 +56,7 @@ if "DEMO" in argv[1:]:
     collectionsWindowSize   = Size(850, 500)
     moduleInfoSize          = Size(500, 500)
     projectChooserSize      = Size(400, 300)
-    aboutBoxSize            = Size(600, 350)
+    aboutBoxSize            = Size(600, 330)
 
 else:
     # Font styles
@@ -70,7 +70,7 @@ else:
     collectionsWindowSize   = Size(650, 500)
     moduleInfoSize          = Size(400, 400)
     projectChooserSize      = Size(350, 250)
-    aboutBoxSize            = Size(400, 250)
+    aboutBoxSize            = Size(400, 220)
 
 # Colours
 
