@@ -80,3 +80,17 @@ helpDialogColor = Color.White
 
 accentColor     = Color.DarkSlateBlue   # For text headings/accents
 
+# --- Locale handling ---
+
+# List of supported translations, with the language name *in* the 
+# given language.
+   
+ALL_LOCALES = {
+    'de': "Deutsch",
+    'en': "English",
+    'es': "Español",
+    }
+
+DEFAULT_LOCALE = 'en'
+
+LANGUAGE_TO_LOCALE = {v: k for k, v in ALL_LOCALES.items()}

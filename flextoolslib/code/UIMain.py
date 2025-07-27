@@ -67,8 +67,8 @@ from cdfutils.DotNet import (
 
 import gettext
 
-if not FTConfig.UILanguage:
-    FTConfig.UILanguage = 'en'
+if FTConfig.UILanguage not in UIGlobal.ALL_LOCALES:
+    FTConfig.UILanguage = UIGlobal.DEFAULT_LOCALE
     
 # fallback = True makes it silently fall back to the original strings if
 # the language code is invalid (i.e. the .mo file isn't found).
