@@ -54,6 +54,7 @@ from . import UIModulesList, UIReport
 from .UIModuleInfo import ModuleInfoDialog
 from .UIProjectChooser import ProjectChooser
 from . import FTModules
+from . import UISettings
 from . import Help
 
 from cdfutils.DotNet import (
@@ -383,11 +384,12 @@ class FTMainForm (Form):
                           Keys.F5,
                           _("Re-import all modules")
                          ),
-                         ## (TODO, _("Settings)", None, None),
-                         #(self.Exit,
-                          #_("Exit"),
-                          #Keys.Control | Keys.Q,
-                          #None)
+                         (UISettings.Settings,
+                          # NOTE: Menu item
+                          _("Settings"),
+                          None,
+                          _("Open the FLExTools settings dialog")
+                         ),
                         ]
         if FTConfig.simplifiedRunOps:
             RunMenu = [(self.RunModify,
