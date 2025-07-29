@@ -42,7 +42,13 @@ from .code.FTModuleClass import (
 from .code.FTConfig import (
     FTConfig
     )
-    
+
+from .code.FTDialogs import (
+    FTDialogChoose,
+    FTDialogRadio,
+    FTDialogText,
+    )
+        
 # Expose RunModule for testing purposes (see TestAModule.py)
 from .misc.RunModule import (
     RunModule, 
