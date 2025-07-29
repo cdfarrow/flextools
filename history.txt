@@ -8,6 +8,23 @@ FLExTools History
 
 ====== History =======
 
+2.4.0_2025.TBD
+---------------
+
++ Added multi-lingual support with UI translations for:
+    + German
+    + Spanish
++ API updates:
+    + Added support for Lists (single or multiple) in GetCustomFieldValue()
++ New dialog functions for getting user input:
+    + FTDialogChoose: Select an item from a dropdown menu.
+    + FTDialogRadio:  Select an option via radio buttons.
+    + FTDialogText:   Enter free-form text.
+
++ Supports Fieldworks 9.0.17 - 9.2.10 (later versions will likely work, but are untested)
++ Supports Python 3.9 - 3.13
+
+
 2.3.2_2025.6.26
 ---------------
 
@@ -19,7 +36,7 @@ FLExTools History
 + Issue #30: Restore tooltips in menus
 
 + Supports Fieldworks 9.0.17 - 9.2.8 (later versions will likely work, but are untested)
-+ Supports Python 3.8 - 3.13
++ Supports Python 3.9 - 3.13
 
 
 2.3.1_2024.7.9
