@@ -22,6 +22,7 @@ from System.Drawing import (
     )
 
 from System.Windows.Forms import (
+    Application,
     DockStyle, View,
     ListView, ListViewItem, ColumnHeaderStyle,
     HorizontalAlignment, 
@@ -99,6 +100,8 @@ class ReportWindow(ListView):
         else:
             addedItem = self.Items.Add(reportItem)
         addedItem.EnsureVisible()
+        if self.Items.Count % 10 == 0:
+            Application.DoEvents()
 
     def CopyToClipboard(self):
         def __getData(item):

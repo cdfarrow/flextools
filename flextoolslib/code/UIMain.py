@@ -32,6 +32,7 @@ import System
 
 clr.AddReference("System.Windows.Forms")
 from System.Windows.Forms import (
+    Application,
     Form,
     Panel, 
     MessageBox, MessageBoxButtons, MessageBoxIcon, DialogResult,
@@ -767,6 +768,7 @@ class FTMainForm (Form):
         
         if self.StatusBar.Text != newText:
             self.StatusBar.Text = newText
+        
 
     def UpdateDisabledStates(self, disableRunAll):
         for menu in self.runallMenuItems:
@@ -791,6 +793,8 @@ class FTMainForm (Form):
             self.progressPercent = newPercent
             self.progressMessage = msg
             self.UpdateStatusBar()
+            # Give the report window a chance to refresh
+            Application.DoEvents()   
 
     # ---- Menu & Toolbar handlers ----
 
