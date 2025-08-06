@@ -856,6 +856,20 @@ class FTMainForm (Form):
             sender.Visible = True
 
     def RunModify(self, sender, event):
+        
+        # Hack to hide the tooltip immediately. [Issue #60]
+        # This is for the FLExTrans Rule Assistant (a Java application),
+        # which blocks the normal Windows Forms animation processes. 
+        if isinstance(sender, ToolStripButton):           
+            # Get ToolTip via reflection
+            ts = sender.Parent
+            tooltip = ts.GetType().GetProperty("ToolTip", 
+                          System.Reflection.BindingFlags.NonPublic 
+                        | System.Reflection.BindingFlags.Instance).GetValue(ts)
+            # Changing this flag causes the tooltip to be erased immediately.
+            tooltip.ShowAlways = True
+            tooltip.ShowAlways = False
+
         self.UIPanel.RunModify()
         
         # Hack to make the blue toolbar button highlight go away.
@@ -864,7 +878,8 @@ class FTMainForm (Form):
         if isinstance(sender, ToolStripButton):
             sender.Visible = False
             sender.Visible = True
-        
+
+
     def RunAll(self, sender, event):
         self.UIPanel.RunAll()
 
