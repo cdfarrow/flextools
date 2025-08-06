@@ -227,7 +227,8 @@ class FTPanel(Panel):
         # Make sure the progress indicator is off
         self.reportWindow.Reporter.ProgressStop()
         self.Parent.Enabled = True
-
+        self.Parent.BringToFront()
+        
     def RunAll(self, modifyAllowed=False):
         if len(self.listOfModules) > 0:
             self.__Run(_("Running all modules..."),
