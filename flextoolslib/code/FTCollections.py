@@ -67,7 +67,7 @@ class FTC_BadNameError(Error):
         self.message = message
 
 # ---------------------------------------------------------------------
-class CollectionsInfo(list):
+class Collection(list):
     """
     A wrapper class for the collections list of modules, with an extra
     property, "disableRunAll".
@@ -99,13 +99,13 @@ class CollectionsManager(object):
                 logger.warning(f"CollectionsManager init: Missing DEFAULT section in {collectionName}")
                 continue
             if result:
-                collectionsInfo = CollectionsInfo(cp.sections())
+                collection = Collection(cp.sections())
                 if cp.has_option(DEFAULTSECT, self.DISABLERUNALL):
-                    collectionsInfo.disableRunAll = True
+                    collection.disableRunAll = True
 
                 # Strip '.ini' for the collection name
                 name = os.path.splitext(collectionName)[0]
-                self.collections[name] = collectionsInfo
+                self.collections[name] = collection
             else:
                 logger.warning(f"CollectionsManager init: Failed to read {collectionName}")
 
@@ -126,7 +126,7 @@ class CollectionsManager(object):
         if collectionName in self.collections:
             # NOTE: Parameter = collection name
             raise FTC_ExistsError(_("'{}' already exists.").format(collectionName))
-        newCollection = CollectionsInfo()
+        newCollection = Collection()
         self.collections[collectionName] = newCollection
         self.WriteOne(collectionName, newCollection)
 
@@ -165,44 +165,44 @@ class CollectionsManager(object):
             self.collections[newName] = self.collections.pop(collectionName)
 
     def AddModule(self, collectionName, moduleName):
-        collectionsInfo = self.collections[collectionName]
-        if moduleName in collectionsInfo:
+        collection = self.collections[collectionName]
+        if moduleName in collection:
             # NOTE: Parameter = module name
             raise FTC_ExistsError(_("'{}' is already in the collection.").format(moduleName))
-        collectionsInfo.append(moduleName)
+        collection.append(moduleName)
 
     def RemoveModule(self, collectionName, moduleName):
-        collectionsInfo = self.collections[collectionName]
+        collection = self.collections[collectionName]
         try:
-            collectionsInfo.remove(moduleName)
+            collection.remove(moduleName)
         except ValueError:
             pass
 
     def MoveModuleUp(self, collectionName, moduleName):
-        collectionsInfo = self.collections[collectionName]
-        i = collectionsInfo.index(moduleName)
+        collection = self.collections[collectionName]
+        i = collection.index(moduleName)
         if i > 0:
-            collectionsInfo.insert(i - 1, collectionsInfo.pop(i))
+            collection.insert(i - 1, collection.pop(i))
 
     def MoveModuleDown(self, collectionName, moduleName):
-        collectionsInfo = self.collections[collectionName]
-        i = collectionsInfo.index(moduleName)
-        if i < len(collectionsInfo) - 1:
-            collectionsInfo.insert(i + 1, collectionsInfo.pop(i))
+        collection = self.collections[collectionName]
+        i = collection.index(moduleName)
+        if i < len(collection) - 1:
+            collection.insert(i + 1, collection.pop(i))
 
     # ---------
 
     def WriteAll(self):
-        for (name, collectionsInfo) in self.collections.items():
-            self.WriteOne(name, collectionsInfo)
+        for (name, collection) in self.collections.items():
+            self.WriteOne(name, collection)
 
-    def WriteOne(self, name, collectionsInfo):
+    def WriteOne(self, name, collection):
         # Create an empty section for each module. ConfigParser preserves 
         # the order.
         cp = ConfigParser(interpolation=None)
-        cp.read_dict({m : {} for m in collectionsInfo})
+        cp.read_dict({m : {} for m in collection})
 
-        if collectionsInfo.disableRunAll:
+        if collection.disableRunAll:
             cp[DEFAULTSECT][self.DISABLERUNALL] = repr(True)
             
         with open(os.path.join(COLLECTIONS_PATH,
