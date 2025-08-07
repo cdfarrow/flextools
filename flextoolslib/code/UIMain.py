@@ -712,7 +712,7 @@ class FTMainForm (Form):
             # The configuration value is bad... so reset everything.
             FTConfig.currentCollection = None
             FTConfig.collectionTabs = []
-            listOfModules = []
+            listOfModules = FTCollections.Collection()
 
         FTConfig.save()
 
