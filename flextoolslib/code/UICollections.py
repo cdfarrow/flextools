@@ -412,16 +412,16 @@ class CollectionsManagerUI(Panel):
         except ArgumentOutOfRangeException:
             return          # There is nothing selected
             
-        moduleName = itemToDelete.Text
+        collectionName = itemToDelete.Text
         message = _("Are you sure you want to delete the collection '{}'?")
         title = _("Confirm delete")
-        result = MessageBox.Show(message.format(moduleName), 
+        result = MessageBox.Show(message.format(collectionName), 
                                  title,
                                  MessageBoxButtons.YesNo,
                                  MessageBoxIcon.Question)
 
         if result == DialogResult.Yes:
-            self.collections.Delete(moduleName)
+            self.collections.Delete(collectionName)
             itemToDelete.Remove()
             # No collection is selected at this point, so just
             # clear the modules List.

@@ -181,19 +181,19 @@ class ModuleManager (object):
     def ListOfNames(self):
         return sorted(self.__modules.keys())
 
-    def GetDocs(self, module_name):
+    def GetDocs(self, moduleName):
         try:
-            return self.__modules[module_name].GetDocs()
+            return self.__modules[moduleName].GetDocs()
         except KeyError:
             return None
             
-    def CanModify(self, module_name):
-        docs = self.GetDocs(module_name)
+    def CanModify(self, moduleName):
+        docs = self.GetDocs(moduleName)
         return docs[FTM_ModifiesDB] if docs else False
 
-    def GetConfigurables(self, module_name):
+    def GetConfigurables(self, moduleName):
         try:
-            return self.__modules[module_name].GetConfigurables()
+            return self.__modules[moduleName].GetConfigurables()
         except KeyError:
             return None
 

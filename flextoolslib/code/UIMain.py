@@ -654,10 +654,10 @@ class FTMainForm (Form):
                 listOfModules = self.collectionsManager.ListOfModules(
                                         FTConfig.currentCollection)
             else:
-                listOfModules = []
+                listOfModules = FTCollections.Collection()
         else:
             FTConfig.collectionTabs = []
-            listOfModules = []
+            listOfModules = FTCollections.Collection()
 
         FTConfig.save()
         self.UpdateStatusBar()

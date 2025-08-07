@@ -96,9 +96,9 @@ class ModuleTree(TreeView):
 
 
 class ModuleBrowser(Panel):
-    def __init__(self, modules):
+    def __init__(self, moduleManager):
         Panel.__init__(self)
-        self.modules = modules
+        self.moduleManager = moduleManager
         self.Dock = DockStyle.Fill
 
         self.moduleActivatedHandler = None
@@ -108,7 +108,7 @@ class ModuleBrowser(Panel):
         self.infoPane = ModuleInfoPane()
 
         self.moduleTree = ModuleTree()
-        for m in self.modules.ListOfNames():
+        for m in self.moduleManager.ListOfNames():
             self.moduleTree.AddModuleName(m)
         self.moduleTree.ExpandAll()
         self.selectedNode = ""
@@ -133,7 +133,7 @@ class ModuleBrowser(Panel):
         else:
             # .Name == The Key given when adding to the TreeNodeCollection
             self.infoPane.SetFromDocs (
-                self.modules.GetDocs(sender.SelectedNode.Name))
+                self.moduleManager.GetDocs(sender.SelectedNode.Name))
             self.selectedNode = sender.SelectedNode.Name
         
     def SetActivatedHandler(self, handler):
