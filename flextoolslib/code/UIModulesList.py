@@ -30,19 +30,17 @@ from System.Windows.Forms import (
 
 # ------------------------------------------------------------------
 
-
 class ModulesList(ListBox):
     SPACING = 1
     ICON_SPACE = 34
 
-    def __init__(self, moduleManager, contents):
+    def __init__(self, moduleManager, collection):
         ListBox.__init__(self)
 
         self.moduleManager = moduleManager
 
         # behaviour
         self.LabelEdit = False
-        self.SelectionMode = SelectionMode.MultiExtended
 
         # appearance
         self.Dock = DockStyle.Fill
@@ -57,7 +55,7 @@ class ModulesList(ListBox):
         self.DrawItem += self.OnDrawItem
         self.MeasureItem += self.OnMeasureItem
 
-        self.UpdateAllItems(contents)
+        self.UpdateAllItems(collection)
 
     # ---- Custom drawing methods ----
 
@@ -113,15 +111,21 @@ class ModulesList(ListBox):
 
     # ---------------------------------
 
-    def UpdateAllItems(self, contents, keepSelection=False):
+    def UpdateAllItems(self, collection, keepSelection=False):
         if keepSelection:
             currentSelection = list(self.SelectedIndices)
+        
+        if collection.disableRunAll:
+            self.SelectionMode = SelectionMode.One
+        else:
+            self.SelectionMode = SelectionMode.MultiExtended
+
 
         # ListBox requires a .NET List; initialise to contain String types.
         formattedItems = List[String]()
         self.DataSource = None
 
-        for moduleName in contents:
+        for moduleName in collection:
             docs = self.moduleManager.GetDocs(moduleName)
             if docs:
                 # Issue #20 - only display the base name of the module 
