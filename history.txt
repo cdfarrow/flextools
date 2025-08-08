@@ -15,13 +15,18 @@ FLExTools History
     + German
     + Spanish
 + API updates:
+    + Added GetFieldID()
     + Added support for Lists (single or multiple) in GetCustomFieldValue()
+    + Added ListFieldPossibilityList()
+    + Added ListFieldPossibilities()
+    + Added ListFieldLookup()
+    + Added LexiconSetListFieldSingle() 
 + New dialog functions for getting user input:
     + FTDialogChoose: Select an item from a dropdown menu.
     + FTDialogRadio:  Select an option via radio buttons.
     + FTDialogText:   Enter free-form text.
 
-+ Supports Fieldworks 9.0.17 - 9.2.10 (later versions will likely work, but are untested)
++ Supports Fieldworks 9.0.17 - 9.3.0 (later versions will likely work, but are untested)
 + Supports Python 3.9 - 3.13
 
 
