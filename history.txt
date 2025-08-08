@@ -26,7 +26,7 @@ FLExTools History
     + FTDialogRadio:  Select an option via radio buttons.
     + FTDialogText:   Enter free-form text.
 
-+ Supports Fieldworks 9.0.17 - 9.3.0 (later versions will likely work, but are untested)
++ Supports Fieldworks 9.0.17 - 9.3.1 (later versions will likely work, but are untested)
 + Supports Python 3.9 - 3.13
 
 
