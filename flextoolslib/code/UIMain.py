@@ -390,7 +390,7 @@ class FTMainForm (Form):
                           # NOTE: Menu item
                           _("Settings"),
                           None,
-                          _("Open the FLExTools settings dialog")
+                          _("Edit the FLExTools settings")
                          ),
                         ]
         if FTConfig.simplifiedRunOps:

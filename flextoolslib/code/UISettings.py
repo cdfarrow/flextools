@@ -22,7 +22,7 @@ def Settings(sender=None, event=None):
     languages = sorted(UIGlobal.ALL_LOCALES.values())
     currentLanguge = UIGlobal.ALL_LOCALES[FTConfig.UILanguage]
     
-    selected = FTDialogChoose(_("Select the UI language"),
+    selected = FTDialogChoose(_("Display language"),
                               languages,
                               currentLanguge)
 
