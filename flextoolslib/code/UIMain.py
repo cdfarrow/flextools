@@ -600,8 +600,6 @@ class FTMainForm (Form):
 
     def __LoadModules(self):
         logger.debug("Loading modules")
-        if not hasattr(self, "moduleManager"):
-            self.moduleManager = FTModules.ModuleManager()
         errorList = self.moduleManager.LoadAll()
         if errorList:
             MessageBox.Show("\n".join(errorList), _("Import Error!"))
@@ -699,11 +697,13 @@ class FTMainForm (Form):
 
         self.Icon = UIGlobal.ApplicationIcon
 
-        self.collectionsManager = FTCollections.CollectionsManager()
+        self.moduleManager = FTModules.ModuleManager()
+        self.__LoadModules()
+
+        self.collectionsManager = FTCollections.CollectionsManager(
+                                        self.moduleManager)
 
         self.__EnsureTabsConsistent()
-        
-        self.__LoadModules()
 
         try:
             listOfModules = self.collectionsManager.ListOfModules(

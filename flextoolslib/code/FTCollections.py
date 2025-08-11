@@ -4,7 +4,8 @@
 #
 #   Manages user-defined collections of modules.
 #    - Loads and saves configuration from disk.
-#    - Provides an interface for UI manipulation of collections.
+#    - Provides functions for manipulation of collections for use by
+#      UICollections.py.
 #
 #   Craig Farrow
 #   2009-2023
@@ -83,7 +84,16 @@ class CollectionsManager(object):
     DISABLERUNALL = "DisableRunAll"
     COLLECTIONS_SUFFIX = ".ini"
 
-    def __init__(self):
+    def __init__(self, moduleManager):
+
+        # moduleManager provides mapping functions between module display 
+        # names and pathnames. We store the latter in the collections ini 
+        # file (for language independence). However, if the file can't be 
+        # found/loaded, then we save the module name. 
+        # (Aug2025: Changed to use pathname in the ini file for 
+        # multi-lingual support.)
+        self.mm = moduleManager
+        
         # Load all the collection info
 
         collectionNames = [f for f in os.listdir(COLLECTIONS_PATH)
@@ -99,7 +109,9 @@ class CollectionsManager(object):
                 logger.warning(f"CollectionsManager init: Missing DEFAULT section in {collectionName}")
                 continue
             if result:
-                collection = Collection(cp.sections())
+                modules = cp.sections()
+                converted = [self.mm.PathToName(p) for p in modules]
+                collection = Collection(converted)
                 if cp.has_option(DEFAULTSECT, self.DISABLERUNALL):
                     collection.disableRunAll = True
 
@@ -200,7 +212,8 @@ class CollectionsManager(object):
         # Create an empty section for each module. ConfigParser preserves 
         # the order.
         cp = ConfigParser(interpolation=None)
-        cp.read_dict({m : {} for m in collection})
+        paths = {self.mm.NameToPath(m) : {} for m in collection}
+        cp.read_dict(paths)
 
         if collection.disableRunAll:
             cp[DEFAULTSECT][self.DISABLERUNALL] = repr(True)

@@ -177,6 +177,25 @@ class ModuleManager (object):
 
         return self.__errors
 
+    # NameToPath() and PathToName() are used by FTCollections to map 
+    # between module display names (used throughout FlexTools for 
+    # referencing modules) and relative pathnames (saved in the 
+    # Collections ini files).
+    # If the lookup fails, then the passed-in value is returned. This
+    # allows the display name to act as a fallback when the file can't 
+    # be found/loaded. 
+
+    def NameToPath(self, moduleName):
+        docs = self.GetDocs(moduleName)
+        if docs:
+            return os.path.relpath(docs[FTM_Path], MODULES_PATH)
+        return moduleName
+
+    def PathToName(self, pathOrName):
+        for name, module in self.__modules.items():
+            if module.GetDocs()[FTM_Path].endswith(pathOrName):
+                return name
+        return pathOrName
 
     def ListOfNames(self):
         return sorted(self.__modules.keys())
@@ -186,7 +205,7 @@ class ModuleManager (object):
             return self.__modules[moduleName].GetDocs()
         except KeyError:
             return None
-            
+
     def CanModify(self, moduleName):
         docs = self.GetDocs(moduleName)
         return docs[FTM_ModifiesDB] if docs else False
