@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 24\n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
-"PO-Revision-Date: 2025-08-11 04:06\n"
+"PO-Revision-Date: 2025-08-11 04:43\n"
 
 #. NOTE: Parameter = collection name
 #: ../code/FTCollections.py:140 ../code/FTCollections.py:166
@@ -347,11 +347,11 @@ msgstr "Reimportar todos los módulos"
 #. NOTE: Menu item
 #: ../code/UIMain.py:391
 msgid "Settings"
-msgstr ""
+msgstr "Ajustes"
 
 #: ../code/UIMain.py:393
 msgid "Edit the FLExTools settings"
-msgstr ""
+msgstr "Editar la configuración de FLExTools"
 
 #. NOTE: Menu item
 #: ../code/UIMain.py:399
@@ -592,13 +592,13 @@ msgstr "Doble clic para abrir el archivo"
 
 #: ../code/UISettings.py:25
 msgid "Display language"
-msgstr ""
+msgstr "Mostrar idioma"
 
 #: ../code/UISettings.py:31
 msgid "Please restart FLExTools for the changes to take effect"
-msgstr ""
+msgstr "Por favor reinicie FLExTools para que los cambios surtan efecto"
 
 #: ../code/UISettings.py:32
 msgid "Settings changed"
-msgstr ""
+msgstr "Ajustes cambiados"
 
