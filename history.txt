@@ -11,7 +11,7 @@ FLExTools History
 2.4.0_2025.TBD
 ---------------
 
-+ Added multi-lingual support with UI translations for:
++ Added multi-lingual support with translations for:
     + German
     + Spanish
 + API updates:
@@ -25,6 +25,9 @@ FLExTools History
     + FTDialogChoose: Select an item from a dropdown menu.
     + FTDialogRadio:  Select an option via radio buttons.
     + FTDialogText:   Enter free-form text.
++ Added the following configuration option (set in flextools.ini):
+    + SortCollectionTabs - Set to False to disable alphabetical sorting
+                           of the Collections tabs.
 
 + Supports Fieldworks 9.0.17 - 9.3.1 (later versions will likely work, but are untested)
 + Supports Python 3.9 - 3.13

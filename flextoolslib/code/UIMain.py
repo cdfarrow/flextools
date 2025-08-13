@@ -613,12 +613,18 @@ class FTMainForm (Form):
         #   - the tab list may contain out-dated collections
         #     (e.g. they may have been renamed or deleted)
         #   - the current collection may no longer exist;
-        
-        # Add the current collection in case it isn't in the tab list
-        newTabs = set(FTConfig.collectionTabs + [FTConfig.currentCollection])
+
+        newList = FTConfig.collectionTabs
+        # Add the current collection if it isn't in the tab list
+        if FTConfig.currentCollection not in FTConfig.collectionTabs:
+            newList.append(FTConfig.currentCollection)
         # Filter out non-existing collections
-        newList = sorted(newTabs.intersection(self.collectionsManager.Names()))
-                          
+        allCollections = self.collectionsManager.Names()
+        newList = list(filter(lambda x: x in allCollections, newList))
+        # Sort, if required
+        if FTConfig.sortCollectionTabs:
+            newList = sorted(newList)
+            
         FTConfig.collectionTabs = newList
         logger.debug(f"Updated tab list: {newList}")
         
@@ -684,6 +690,8 @@ class FTMainForm (Form):
             FTConfig.disableDoubleClick = False
         if FTConfig.hideCollectionsButton is None:
             FTConfig.hideCollectionsButton = False
+        if FTConfig.sortCollectionTabs is None:
+            FTConfig.sortCollectionTabs = True
 
         if FTConfig.simplifiedRunOps:
             self.ClientSize = UIGlobal.mainWindowSizeNarrow
