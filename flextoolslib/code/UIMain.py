@@ -43,6 +43,7 @@ from System.Windows.Forms import (
     StatusBar,
     SplitContainer,
     Keys, Control,
+    MouseButtons,
     )
 
 from System.Threading import Thread, ThreadStart, ApartmentState
@@ -165,6 +166,7 @@ class FTPanel(Panel):
         
         self.ignoreTabChange = False
         self.collectionsTabControl.Selected += self.__OnTabSelected
+        self.collectionsTabControl.MouseDown += self.__OnTabMouseDown
         
         self.UpdateCollectionTabs()
         
@@ -258,15 +260,24 @@ class FTPanel(Panel):
     
     # Called when a tab is selected
     def __OnTabSelected(self, sender, event):
-        
+        # Avoid recursion
         if self.ignoreTabChange: return
+
         # Callback to parent Form to initiate refresh to new collection
-        if self.changeCollectionFunction:
-            if event.TabPage:
-                self.changeCollectionFunction(event.TabPage.Text)
-            else:
-                self.changeCollectionFunction(None)
-        
+        self.changeCollectionFunction(event.TabPage.Text)
+
+    # Called after __OnTabSelected when the mouse is clicked
+    def __OnTabMouseDown(self, sender, event):
+        # Make right-click select the tab, too, so that the "Close tab"
+        # menu item closes the tab that is clicked. (Issue #58)
+        if event.Button == MouseButtons.Right:
+            for i in range(sender.TabCount):
+                if sender.GetTabRect(i).Contains(event.Location):
+                    # This invokes __OnTabSelected()
+                    sender.SelectedIndex = i
+                    break
+            # The context menu will now be opened...
+
     # Called from the popup menu on the tabs
     def __OnMenuCloseTab(self, sender, event):
 
