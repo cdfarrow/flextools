@@ -78,7 +78,10 @@ leftPanelColor  = Color.FromArgb(0xFA, 0xF8, 0xF0) # Light wheat
 rightPanelColor = Color.FromArgb(0xFF, 0xFA, 0xE8) # Light cream
 helpDialogColor = Color.White
 
-accentColor     = Color.DarkSlateBlue   # For text headings/accents
+accentColor   = Color.DarkSlateBlue         # For text headings/accents
+toolbarColor  = Color.FromArgb(231,231,234) # Distinguish the toolbar from
+                                            # the menu and tab rows.
+tabColor      = Color.LightSteelBlue        # The selected collection tab
 
 # --- Locale handling ---
 

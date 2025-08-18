@@ -39,11 +39,21 @@ from System.Windows.Forms import (
     DockStyle, Orientation,
     ToolStripButton,
     TabControl, TabPage, TabAlignment,
+    TabDrawMode,
+    DrawItemState,
     ToolTip,
     StatusBar,
     SplitContainer,
     Keys, Control,
     MouseButtons,
+    )
+
+from System.Drawing import (
+    Color,
+    SolidBrush,
+    StringFormat,
+    StringAlignment,
+    RectangleF,
     )
 
 from System.Threading import Thread, ThreadStart, ApartmentState
@@ -103,6 +113,33 @@ MESSAGE_RunButtons = \
 # ------------------------------------------------------------------
 class FTPanel(Panel):
 
+    def __OnDrawTab(self, sender, e):
+        # Use custom draw to make the selected tab coloured
+        tabControl = sender
+        g = e.Graphics
+        tab = tabControl.TabPages[e.Index]
+
+        text_offset = 1
+        # Draw the background
+        if e.State == DrawItemState.Selected: 
+            text_offset = 0
+            g.FillRectangle(SolidBrush(UIGlobal.tabColor),
+                            e.Bounds)
+
+        # Draw the text
+        sf = StringFormat()
+        sf.Alignment     = StringAlignment.Center
+        sf.LineAlignment = StringAlignment.Center
+        # (convert to floating-point coords)
+        rect = tabControl.GetTabRect(e.Index)
+        rectF = RectangleF(rect.X+text_offset, rect.Y+text_offset, 
+                           rect.Width, rect.Height)
+        g.DrawString(tab.Text, 
+                     tabControl.Font, 
+                     SolidBrush(Color.Black),
+                     rectF,
+                     sf)
+
     def __init__(self, 
                  moduleManager, 
                  listOfModules, 
@@ -154,11 +191,15 @@ class FTPanel(Panel):
             self.startupToolTip.SetToolTip(self.modulesList, 
                                            "\n".join(startupTips))
 
+        self.reportWindow.Report(MESSAGE_RunButtons)
+
         # -- The collection tabs 
         self.collectionsTabControl = TabControl()
         self.collectionsTabControl.Dock = DockStyle.Fill
         self.collectionsTabControl.Alignment = TabAlignment.Top
         self.collectionsTabControl.TabStop = False
+        self.collectionsTabControl.DrawMode = TabDrawMode.OwnerDrawFixed
+        self.collectionsTabControl.DrawItem += self.__OnDrawTab
         
         cm = SimpleContextMenu([(self.__OnMenuCloseTab, 
                                 _("Close current collection tab")),])
@@ -167,11 +208,9 @@ class FTPanel(Panel):
         self.ignoreTabChange = False
         self.collectionsTabControl.Selected += self.__OnTabSelected
         self.collectionsTabControl.MouseDown += self.__OnTabMouseDown
-        
+
         self.UpdateCollectionTabs()
         
-        self.reportWindow.Report(MESSAGE_RunButtons)
-
         # -- Put it all together
         self.splitContainer1 = SplitContainer()
         self.splitContainer1.Dock = DockStyle.Fill
@@ -515,7 +554,7 @@ class FTMainForm (Form):
         self.MainMenuStrip = CustomMainMenu(MenuList)
         self.Controls.Add(self.MainMenuStrip)
 
-        # Pre-calculate the menu items to disable when DisableRunAll is defined
+        # Pre-calculate the menu items to disable when disableRunAll is defined
         # for a collection.
         runallIndices = [i for i, m in enumerate(RunMenu)
                          if m[0] in (self.RunAll, self.RunAllModify)]
@@ -600,6 +639,7 @@ class FTMainForm (Form):
         self.toolbar = CustomToolBar(ButtonList,
                                      UIGlobal.ToolbarIconParams)
         self.toolbar.Font = UIGlobal.normalFont
+        self.toolbar.BackColor = UIGlobal.toolbarColor
         self.Controls.Add(self.toolbar)
 
         # Pre-calculate the toolbar items to disable when DisableRunAll is defined
