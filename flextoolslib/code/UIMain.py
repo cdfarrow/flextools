@@ -197,7 +197,7 @@ class FTPanel(Panel):
         self.collectionsTabControl = TabControl()
         self.collectionsTabControl.Dock = DockStyle.Fill
         self.collectionsTabControl.Alignment = TabAlignment.Top
-        self.collectionsTabControl.TabStop = False
+        self.collectionsTabControl.TabStop = True
         self.collectionsTabControl.DrawMode = TabDrawMode.OwnerDrawFixed
         self.collectionsTabControl.DrawItem += self.__OnDrawTab
         
@@ -351,20 +351,22 @@ class FTPanel(Panel):
     def UpdateCollectionTabs(self):
         self.ignoreTabChange = True     # Avoid nested TabChanged events
 
-        # Clear out any old pages...
-        self.collectionsTabControl.TabPages.Clear()
+        tabs = [tab.Text for tab in self.collectionsTabControl.TabPages]
+        changed = tabs != FTConfig.collectionTabs
+        
+        if changed:
+            # Clear out any old pages...
+            self.collectionsTabControl.TabPages.Clear()
+            if FTConfig.currentCollection:
+                # ...and create them afresh
+                pages = [TabPage(name) for name in FTConfig.collectionTabs]
+                self.collectionsTabControl.TabPages.AddRange(pages)
 
         if FTConfig.currentCollection:
-            # ...and create them afresh
-            pages = [TabPage(name) for name in FTConfig.collectionTabs]
-
-            self.collectionsTabControl.TabPages.AddRange(pages)
-
             # Activate the selected tab
             index = FTConfig.collectionTabs.index(FTConfig.currentCollection)
             currentTab = self.collectionsTabControl.TabPages[index]
             currentTab.Controls.Add(self.modulesList)
-            currentTab.Focus()      # Removes dotted focus box from tab itself
             self.collectionsTabControl.SelectedTab = currentTab
 
         self.ignoreTabChange = False
