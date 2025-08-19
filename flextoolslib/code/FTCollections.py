@@ -113,7 +113,8 @@ class CollectionsManager(object):
                 converted = [self.mm.PathToName(p) for p in modules]
                 collection = Collection(converted)
                 if cp.has_option(DEFAULTSECT, self.DISABLERUNALL):
-                    collection.disableRunAll = True
+                    collection.disableRunAll = cp.getboolean(DEFAULTSECT, 
+                                                             self.DISABLERUNALL)
 
                 # Strip '.ini' for the collection name
                 name = os.path.splitext(collectionName)[0]
