@@ -112,6 +112,8 @@ class ModulesList(ListBox):
     # ---------------------------------
 
     def UpdateAllItems(self, collection, keepSelection=False):
+        self.BeginUpdate()
+        
         if keepSelection:
             currentSelection = list(self.SelectedIndices)
             savedTopIndex = self.TopIndex
@@ -158,11 +160,17 @@ class ModulesList(ListBox):
         self.DataSource = formattedItems
 
         if keepSelection:
-            for i in range(len(self.DataSource)):
-                self.SetSelected(i, i in currentSelection)
+            # Setting the selection is different for One and MultiExtended modes.
+            if self.SelectionMode == SelectionMode.One:
+                if currentSelection:
+                    self.SelectedIndex = currentSelection[0]
+            else:   # MultiExtended
+                for i in range(len(self.DataSource)):
+                    self.SetSelected(i, i in currentSelection)
             # Restore the scroll position
             self.TopIndex = savedTopIndex
 
+        self.EndUpdate()
 
     def SetActivatedHandler(self, handler):
         if handler:
