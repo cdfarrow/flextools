@@ -114,12 +114,12 @@ class ModulesList(ListBox):
     def UpdateAllItems(self, collection, keepSelection=False):
         if keepSelection:
             currentSelection = list(self.SelectedIndices)
+            savedTopIndex = self.TopIndex
         
         if collection.disableRunAll:
             self.SelectionMode = SelectionMode.One
         else:
             self.SelectionMode = SelectionMode.MultiExtended
-
 
         # ListBox requires a .NET List; initialise to contain String types.
         formattedItems = List[String]()
@@ -160,6 +160,9 @@ class ModulesList(ListBox):
         if keepSelection:
             for i in range(len(self.DataSource)):
                 self.SetSelected(i, i in currentSelection)
+            # Restore the scroll position
+            self.TopIndex = savedTopIndex
+
 
     def SetActivatedHandler(self, handler):
         if handler:
