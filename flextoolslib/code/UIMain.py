@@ -75,6 +75,9 @@ from cdfutils.DotNet import (
     SimpleContextMenu,
     )
 
+import ctypes
+user32 = ctypes.windll.user32
+
 # ------------------------------------------------------------------
 # Localisation
 
@@ -268,7 +271,18 @@ class FTPanel(Panel):
         # Make sure the progress indicator is off
         self.reportWindow.Reporter.ProgressStop()
         self.Parent.Enabled = True
-        self.Parent.BringToFront()
+
+        # After running a FLExTrans window, the FlexTools
+        # window goes behind any other window that is active.
+        # self.Parent.BringToFront() works to bring us to the
+        # front for the QT windows, but not for the Rule
+        # Assistant (a Java application). This hack seems to
+        # solve it. (Issue #59)
+        # [https://stackoverflow.com/a/19136480/19262107]
+        # [https://stackoverflow.com/a/30572826/19262107]
+        user32.keybd_event(0,0,0,0)
+        hwnd = self.Parent.Handle.ToInt32()
+        user32.SetForegroundWindow(hwnd)
         
     def RunAll(self, modifyAllowed=False):
         if len(self.listOfModules) > 0:
