@@ -355,6 +355,10 @@ class FTPanel(Panel):
             self.changeCollectionFunction(newCollection)
 
     # ---- Externally used methods ----
+ 
+    def OnShown(self, sender, e):
+        # Get the focus off the tabs and onto the list at startup.
+        self.modulesList.Focus()
 
     def UpdateModuleList(self, listOfModules):
         if self.startupToolTip:
@@ -821,6 +825,8 @@ class FTMainForm (Form):
         # Disable the RunAll menus and toolbar buttons if required
         self.UpdateDisabledStates(False if not listOfModules else
                                   listOfModules.disableRunAll)
+
+        self.Shown += self.UIPanel.OnShown
 
     # ----
     def UpdateStatusBar(self):
