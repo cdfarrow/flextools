@@ -8,7 +8,7 @@ FLExTools History
 
 ====== History =======
 
-2.4.0_2025.TBD
+2.3.2_2025.8.26
 ---------------
 
 + Added multi-lingual support with translations for:
@@ -28,6 +28,7 @@ FLExTools History
 + Added the following configuration option (set in flextools.ini):
     + SortCollectionTabs - Set to False to disable alphabetical sorting
                            of the Collections tabs.
++ Miscellaneous UI improvements
 
 + Supports Fieldworks 9.0.17 - 9.3.1 (later versions will likely work, but are untested)
 + Supports Python 3.9 - 3.13
