@@ -54,7 +54,7 @@ FOR %%C IN ("Init"
     pybabel compile -D flextools -d flextoolslib\locales\
 
     @REM Build the wheel for flextoolslib with setuptools
-    %PYTHON% -m build -w
+    %PYTHON% -m build -w -nx
     
     @REM Build the main FlexTools zip file
     %PYTHON% makezip.py

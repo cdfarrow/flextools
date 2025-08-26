@@ -1,3 +1,4 @@
 graft flextoolslib\docs
 graft flextoolslib\icons
-exclude flextoolslib\locales\*.pot
+graft flextoolslib\locales
+global-exclude *.pot

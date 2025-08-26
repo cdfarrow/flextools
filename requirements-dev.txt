@@ -1,5 +1,6 @@
 # Libraries required for building and publishing flextools.
 pytest
 build
+setuptools
 twine
-pybabel
+babel
