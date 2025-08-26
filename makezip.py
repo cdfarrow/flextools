@@ -43,6 +43,13 @@ FILTERED_SUFFIXES = (".pyd", ".pyc", ".bak", ".log", ".doc", ".tmp")
 
 #----------------------------------------------------------- 
 
+def modules_folder_underscore(path):
+    return (
+        "Modules" in path.parts
+        and (idx := path.parts.index("Modules")) + 1 < len(path.parts)
+        and path.parts[idx + 1].startswith("_")
+    )
+    
 def includeFile(path):
     if path.stem == "__pycache__":           
         return False
@@ -51,6 +58,9 @@ def includeFile(path):
         return False
     if path.is_file() and path.parent.name == "Archive":   
         return False
+    # Filter out private/development Modules folders
+    if modules_folder_underscore(path):
+       return False
     
     return not path.suffix in FILTERED_SUFFIXES
 
