@@ -1,2 +1,2 @@
 # Runtime requirements for FlexTools
-flextoolslib >= 2025.6.12
+flextoolslib >= 2025.8.26
