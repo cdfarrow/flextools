@@ -21,6 +21,8 @@ FLExTools History
     + Added ListFieldPossibilities()
     + Added ListFieldLookup()
     + Added LexiconSetListFieldSingle() 
+    + Added LexiconClearListFieldSingle() 
+    + Added LexiconSetListFieldMultiple() 
 + New dialog functions for getting user input:
     + FTDialogChoose: Select an item from a dropdown menu.
     + FTDialogRadio:  Select an option via radio buttons.
