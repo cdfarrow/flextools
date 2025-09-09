@@ -67,6 +67,12 @@ def Main(project, report, modifyAllowed):
     report.Info("   Sense level:")
     for cf in project.LexiconGetSenseCustomFields():
         report.Info("      %s [%i]" % (cf[1], cf[0]))
+    report.Info("   Example level:")
+    for cf in project.LexiconGetExampleCustomFields():
+        report.Info("      %s [%i]" % (cf[1], cf[0]))
+    report.Info("   Allomorph level:")
+    for cf in project.LexiconGetAllomorphCustomFields():
+        report.Info("      %s [%i]" % (cf[1], cf[0]))
     report.Blank()    
 
 

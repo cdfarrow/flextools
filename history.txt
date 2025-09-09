@@ -8,6 +8,15 @@ FLExTools History
 
 ====== History =======
 
+2.3.3_TBD
+---------------
+
++ API updates:
+    + Added LexiconSetLexemeForm()
+    + Added LexiconGetExampleCustomFields()
+    + Added LexiconGetAllomorphCustomFields()
+
+
 2.3.2_2025.8.26
 ---------------
 
