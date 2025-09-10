@@ -11,6 +11,9 @@ FLExTools History
 2.3.3_TBD
 ---------------
 
++ New Modules:
+    + Export/Export All Publications
+    + Export/Export Publication
 + API updates:
     + Added LexiconSetLexemeForm()
     + Added LexiconGetExampleCustomFields()
