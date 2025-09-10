@@ -25,6 +25,9 @@
 #    - Uses project.LexiconGetEntryCustomFieldNamed() for field ID lookup
 #    - Uses project.LexiconGetFieldText() for custom field value retrieval
 #    - Uses project.GetDefaultAnalysisWS() and project.GetDefaultVernacularWS()
+#    - Uses project.LexiconAllEntries() for scanning the lexicon
+#    - Uses project.LexiconGetLexemeForm() to get the audio content
+#    - Uses project.LexiconSetLexemeForm() to set the audio content
 #
 # 2. WRITING SYSTEM HANDLING
 #    - FlexTools methods return tuples (language-tag, name) for default WS
@@ -35,7 +38,8 @@
 #    - Uses FlexTools project.LexiconGetEntryCustomFieldNamed() for field ID lookup
 #    - Uses FlexTools project.LexiconGetFieldText() with proper writing system handling
 #    - No fallbacks - relies on FlexTools API methods that are known to work
-#    - Clean priority order: analysis WS, then vernacular WS, then default
+#    - Priority order is provided by LexiconGetFieldText(): analysis WS, then vernacular WS, then default
+#    - Replaced get_custom_field_value_flextools() with project.LexiconGetFieldText(), which robustly handles getting the best value from the field.
 #
 # 4. SIMPLIFIED FILE HANDLING
 #    - Removed unnecessary Unicode normalization (was fixing wrong issue)
@@ -47,12 +51,15 @@
 #    - Uses FlexTools methods where they exist, direct API only where necessary
 #    - TsStringUtils.MakeString() is reliable and doesn't need fallbacks
 #    - Clear error messages when FlexTools methods fail
+#    - Removed unnecessary try/except clauses
+#    - Moved field update code out of the try for file renaming
 #
 # 6. PERFORMANCE OPTIMIZATIONS
 #    - Fewer direct cache accesses
 #    - More efficient writing system lookups
 #    - Reduced object creation overhead
 #    - Streamlined field access patterns
+#    - Reduced indentation by using continue statements in the main for loop
 #
 # ========================================================================
 
@@ -74,7 +81,7 @@ logger = logging.getLogger(__name__)
 CUSTOM_FIELD = 'MediaFilename'
 
 #----------------------------------------------------------------
-docs = {FTM_Name            : "Rename Audio Files by Custom Field (FlexTools API Optimized)",
+docs = {FTM_Name            : "Rename Audio Files by Custom Field (CDF Corrected)",
         FTM_Version         : 3,
         FTM_ModifiesDB      : True,
         FTM_Synopsis        : "Renames audio files using FlexTools API methods for optimal performance and reliability.",
@@ -94,35 +101,6 @@ def sanitize_filename(filename):
     sanitized = re.sub(r'_{2,}', '_', sanitized)
     return sanitized.strip('_ ')
 
-def get_custom_field_value_flextools(project, entry, field_name):
-    """Get custom field value using FlexTools methods only"""
-    
-    # Use FlexTools custom field access - this is available in FlexTools API
-    field_id = project.LexiconGetEntryCustomFieldNamed(field_name)
-    if field_id:
-        # Try default analysis writing system first
-        default_analysis = project.GetDefaultAnalysisWS()
-        if default_analysis:
-            # default_analysis is a tuple (language-tag, name)
-            value = project.LexiconGetFieldText(entry, field_id, default_analysis[0])
-            if value and value.strip():
-                return value.strip()
-        
-        # Try default vernacular writing system
-        default_vernacular = project.GetDefaultVernacularWS()
-        if default_vernacular:
-            # default_vernacular is a tuple (language-tag, name)
-            value = project.LexiconGetFieldText(entry, field_id, default_vernacular[0])
-            if value and value.strip():
-                return value.strip()
-        
-        # Try without specifying writing system (use default)
-        value = project.LexiconGetFieldText(entry, field_id, None)
-        if value and value.strip():
-            return value.strip()
-    
-    return None
-
 #----------------------------------------------------------------
 def MainFunction(project, report, modifyAllowed):
     verbose = False  # Set to True for detailed debugging output
@@ -140,15 +118,11 @@ def MainFunction(project, report, modifyAllowed):
     # Use FlexTools method to get all vernacular writing systems
     audio_ws_codes = []
     
-    try:
-        vernacular_ws_set = project.GetAllVernacularWSs()
-        for ws_tag in vernacular_ws_set:
-            if ws_tag.endswith('-audio'):
-                report.Info(f"Found audio writing system: {ws_tag}")
-                audio_ws_codes.append(ws_tag)
-    except Exception as e:
-        report.Error(f"Failed to get vernacular writing systems: {e}")
-        return
+    vernacular_ws_set = project.GetAllVernacularWSs()
+    for ws_tag in vernacular_ws_set:
+        if ws_tag.endswith('-audio'):
+            report.Info(f"Found audio writing system: {ws_tag}")
+            audio_ws_codes.append(ws_tag)
     
     if len(audio_ws_codes) == 0:
         report.Warning("No audio writing systems found.")
@@ -167,136 +141,135 @@ def MainFunction(project, report, modifyAllowed):
         return
     report.Info(f"Numeric WS ID: {target_audio_ws_id}")
 
+    # Get custom media field handle
+    media_field_id = project.LexiconGetEntryCustomFieldNamed(CUSTOM_FIELD)
+    if not media_field_id:
+        report.Error(f"Custom field {CUSTOM_FIELD} not found at Entry level.")
+        return
+    report.Info(f"Media custom field ID: {media_field_id}")
+    
     # Use FlexTools method to iterate over lexical entries
     audio_entry_count = 0
     report.Info("=" * 50)
     report.Info("Scanning Lexical Entries for audio files...")
     report.Info("=" * 50)
-    
-    try:
-        entry_iterator = project.ObjectsIn(ILexEntryRepository)
         
-        for entry in entry_iterator:
-            count += 1
+    for entry in project.LexiconAllEntries():
+        count += 1
+        
+        # Check LexemeForm for audio files
+        audio_content = project.LexiconGetLexemeForm(entry, target_audio_ws_id)
+        if not audio_content:
+            continue
+
+        audio_entry_count += 1
+        report.Info(f"Processing entry #{count} (audio #{audio_entry_count}) - Audio file: {audio_content}")
+        
+        # Get custom field value using FlexTools method (a TsString)
+        media_filename = project.GetCustomFieldValue(
+                            entry,
+                            media_field_id)
+        
+        if not media_filename:                   
+            report.Info(f"  No MediaFilename field value found for entry {entry.Headword}")
+            continue
+        
+        media_filename = media_filename.Text
+        report.Info(f"  MediaFilename field value: '{media_filename}'")
+        
+        # Sanitize the filename
+        sanitized_filename = sanitize_filename(media_filename)
+        if verbose:
+            report.Info(f"  Sanitized filename: '{sanitized_filename}'")
+        
+        # Ensure .wav extension
+        if not sanitized_filename.lower().endswith('.wav'):
+            sanitized_filename += '.wav'
+            if verbose:
+                report.Info(f"  Added .wav extension: '{sanitized_filename}'")
+        
+        # Build file paths (simplified, no Unicode normalization)
+        if '/' in audio_content or '\\' in audio_content:
+            expected_audio_path = os.path.join(linked_files_root, audio_content)
+        else:
+            # Check common audio subfolders
+            audio_subfolders = ['AudioVisual', 'Audio', 'Media', '']
+            expected_audio_path = None
             
-            # Check LexemeForm for audio files
-            if entry.LexemeFormOA:
-                lexeme_form = entry.LexemeFormOA.Form
-                if lexeme_form and target_audio_ws_id in lexeme_form.AvailableWritingSystemIds:
-                    # Get the string content (file path for audio)
+            for subfolder in audio_subfolders:
+                if subfolder:
+                    test_path = os.path.join(linked_files_root, subfolder, audio_content)
+                else:
+                    test_path = os.path.join(linked_files_root, audio_content)
+                
+                if os.path.exists(test_path):
+                    expected_audio_path = test_path
+                    if verbose:
+                        report.Info(f"  Found audio in subfolder: {subfolder or 'root'}")
+                    break
+            
+            if not expected_audio_path:
+                expected_audio_path = os.path.join(linked_files_root, 'AudioVisual', audio_content)
+        
+        # Check if file exists
+        if not os.path.exists(expected_audio_path):
+            report.Warning(f"  Audio file not found: {audio_content}")
+            if verbose:
+                current_dir = os.path.dirname(expected_audio_path)
+                if os.path.exists(current_dir):
                     try:
-                        ts_string = lexeme_form.get_String(target_audio_ws_id)
-                        audio_content = ts_string.Text if ts_string else None
+                        wav_files = [f for f in os.listdir(current_dir) if f.lower().endswith('.wav')]
+                        report.Info(f"  Available .wav files: {len(wav_files)}")
+                        for wav_file in wav_files[:5]:  # Show first 5
+                            report.Info(f"    {wav_file}")
                     except Exception:
-                        audio_content = None
-                    
-                    if audio_content:
-                        audio_entry_count += 1
-                        report.Info(f"Processing entry #{count} (audio #{audio_entry_count}) - Audio file: {audio_content}")
-                        
-                        # Get custom field value using FlexTools method
-                        media_filename = get_custom_field_value_flextools(project, entry, CUSTOM_FIELD)
-                        
-                        if media_filename:
-                            report.Info(f"  MediaFilename field value: '{media_filename}'")
-                            
-                            # Sanitize the filename
-                            sanitized_filename = sanitize_filename(media_filename)
-                            if verbose:
-                                report.Info(f"  Sanitized filename: '{sanitized_filename}'")
-                            
-                            # Ensure .wav extension
-                            if not sanitized_filename.lower().endswith('.wav'):
-                                sanitized_filename += '.wav'
-                                if verbose:
-                                    report.Info(f"  Added .wav extension: '{sanitized_filename}'")
-                            
-                            # Build file paths (simplified, no Unicode normalization)
-                            if '/' in audio_content or '\\' in audio_content:
-                                expected_audio_path = os.path.join(linked_files_root, audio_content)
-                            else:
-                                # Check common audio subfolders
-                                audio_subfolders = ['AudioVisual', 'Audio', 'Media', '']
-                                expected_audio_path = None
-                                
-                                for subfolder in audio_subfolders:
-                                    if subfolder:
-                                        test_path = os.path.join(linked_files_root, subfolder, audio_content)
-                                    else:
-                                        test_path = os.path.join(linked_files_root, audio_content)
-                                    
-                                    if os.path.exists(test_path):
-                                        expected_audio_path = test_path
-                                        if verbose:
-                                            report.Info(f"  Found audio in subfolder: {subfolder or 'root'}")
-                                        break
-                                
-                                if not expected_audio_path:
-                                    expected_audio_path = os.path.join(linked_files_root, 'AudioVisual', audio_content)
-                            
-                            # Check if file exists
-                            if not os.path.exists(expected_audio_path):
-                                report.Warning(f"  Audio file not found: {audio_content}")
-                                if verbose:
-                                    current_dir = os.path.dirname(expected_audio_path)
-                                    if os.path.exists(current_dir):
-                                        try:
-                                            wav_files = [f for f in os.listdir(current_dir) if f.lower().endswith('.wav')]
-                                            report.Info(f"  Available .wav files: {len(wav_files)}")
-                                            for wav_file in wav_files[:5]:  # Show first 5
-                                                report.Info(f"    {wav_file}")
-                                        except Exception:
-                                            pass
-                                continue
-                            
-                            current_audio_path = expected_audio_path
-                            current_dir = os.path.dirname(current_audio_path)
-                            new_audio_path = os.path.join(current_dir, sanitized_filename)
-                            
-                            # Check if target file already exists
-                            if os.path.exists(new_audio_path):
-                                if os.path.samefile(current_audio_path, new_audio_path):
-                                    report.Info(f"  File already has correct name: {sanitized_filename}")
-                                else:
-                                    report.Warning(f"  Target file already exists: {sanitized_filename}")
-                                continue
-                            
-                            # Track working directories
-                            if current_dir not in seen_dirs:
-                                seen_dirs.add(current_dir)
-                                if verbose:
-                                    report.Info(f"  Working in directory: {current_dir}")
-                            
-                            # Perform the rename operation
-                            if modifyAllowed:
-                                try:
-                                    # Rename physical file
-                                    shutil.move(current_audio_path, new_audio_path)
-                                    report.Info(f"  ✓ RENAMED: {os.path.basename(current_audio_path)} → {sanitized_filename}")
-                                    
-                                    # Update lexeme form link (store filename only)
-                                    new_relative_path = sanitized_filename
-                                    
-                                    # Create TsString and update - TsStringUtils is reliable
-                                    new_ts_string = TsStringUtils.MakeString(new_relative_path, target_audio_ws_id)
-                                    lexeme_form.set_String(target_audio_ws_id, new_ts_string)
-                                    report.Info(f"  ✓ LINK UPDATED: {new_relative_path}")
-                                    
-                                    changed += 1
-                                    
-                                except Exception as e:
-                                    report.Error(f"  ✗ FAILED to rename {os.path.basename(current_audio_path)}: {e}")
-                            else:
-                                # Read-only mode
-                                report.Info(f"  [READ-ONLY] Would rename: {os.path.basename(current_audio_path)} → {sanitized_filename}")
-                                report.Info(f"  [READ-ONLY] Would update link to: {sanitized_filename}")
-                                changed += 1
-                        else:
-                            report.Info(f"  No MediaFilename field value found for entry #{count}")
-    
-    except Exception as e:
-        report.Error(f"Error during entry iteration: {e}")
-        return
+                        pass
+            continue
+        
+        current_audio_path = expected_audio_path
+        current_dir = os.path.dirname(current_audio_path)
+        new_audio_path = os.path.join(current_dir, sanitized_filename)
+        
+        # Check if target file already exists
+        if os.path.exists(new_audio_path):
+            if os.path.samefile(current_audio_path, new_audio_path):
+                report.Info(f"  File already has correct name: {sanitized_filename}")
+            else:
+                report.Warning(f"  Target file already exists: {sanitized_filename}")
+            continue
+        
+        # Track working directories
+        if current_dir not in seen_dirs:
+            seen_dirs.add(current_dir)
+            if verbose:
+                report.Info(f"  Working in directory: {current_dir}")
+        
+        # Perform the rename operation
+        if modifyAllowed:
+            try:
+                # Rename physical file
+                shutil.move(current_audio_path, new_audio_path)
+                report.Info(f"  ✓ RENAMED: {os.path.basename(current_audio_path)} → {sanitized_filename}")
+
+            except Exception as e:
+                report.Error(f"  ✗ FAILED to rename {os.path.basename(current_audio_path)}: {e}")
+                continue
+                
+            # Update lexeme form link (store filename only)
+            new_relative_path = sanitized_filename
+            
+            project.LexiconSetLexemeForm(entry, 
+                                         new_relative_path, 
+                                         target_audio_ws_id)            
+            report.Info(f"  ✓ LINK UPDATED: {new_relative_path}")
+            
+            changed += 1
+                
+        else:
+            # Read-only mode
+            report.Info(f"  [READ-ONLY] Would rename: {os.path.basename(current_audio_path)} → {sanitized_filename}")
+            report.Info(f"  [READ-ONLY] Would update link to: {sanitized_filename}")
+            changed += 1
     
     # Summary report
     report.Info("=" * 50)
