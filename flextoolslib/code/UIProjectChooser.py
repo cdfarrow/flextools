@@ -24,7 +24,8 @@ from System.Windows.Forms import (Application, BorderStyle, Button,
     DockStyle, Orientation, View, SortOrder,
     ListView, ListViewItem, ColumnHeaderStyle,
     HorizontalAlignment, ImageList,
-    RichTextBox, HtmlDocument, SplitContainer )
+    RichTextBox, HtmlDocument, SplitContainer,
+    OpenFileDialog )
 
 
 from System import ArgumentOutOfRangeException
@@ -95,7 +96,7 @@ class ProjectChooser(Form):
         Form.__init__(self)
 
         self.ClientSize = UIGlobal.projectChooserSize
-        self.Text = _("Choose Project")
+        self.Text = _("Choose Project") + " [DEBUG]"
         self.Icon = UIGlobal.ApplicationIcon
 
         self.projectName = currentProject
@@ -103,9 +104,20 @@ class ProjectChooser(Form):
         self.projectList = ProjectList(currentProject)
         self.projectList.SetActivatedHandler(self.__OnProjectActivated)
 
+        bottomPanel = Panel()
+        bottomPanel.Dock = DockStyle.Bottom
+        bottomPanel.Height = 35
+
+        browseButton = Button()
+        browseButton.Text = _("Browse...")
+        browseButton.Dock = DockStyle.Fill
+        browseButton.Click += self.__OnBrowse
+        bottomPanel.Controls.Add(browseButton)
+
         self.Load += self.__OnLoad
 
         self.Controls.Add(self.projectList)
+        self.Controls.Add(bottomPanel)
 
     def __OnLoad(self, sender, event):
         self.projectList.SetFocusOnCurrent()
@@ -115,6 +127,14 @@ class ProjectChooser(Form):
         # make selection available to caller
         self.projectName = projectName
         self.Close()
+
+    def __OnBrowse(self, sender, event):
+        dlg = OpenFileDialog()
+        dlg.Title = _("Select a FieldWorks project")
+        dlg.Filter = "FieldWorks projects (*.fwdata)|*.fwdata"
+        if dlg.ShowDialog() == DialogResult.OK:
+            self.projectName = dlg.FileName
+            self.Close()
 
 
 # ------------------------------------------------------------------

@@ -817,7 +817,8 @@ class FTMainForm (Form):
         # Toolbar
         self.InitToolBar()
         if FTConfig.currentProject:
-            self.toolbar.UpdateButtonText(0, FTConfig.currentProject)
+            self.toolbar.UpdateButtonText(
+                0, self.__ProjectDisplayName(FTConfig.currentProject))
 
         # Main Menu
         self.InitMainMenu(appMenu)
@@ -897,13 +898,22 @@ class FTMainForm (Form):
         self.__ChangeCollection(dlg.activatedCollection or 
                                 FTConfig.currentCollection)
 
+    @staticmethod
+    def __ProjectDisplayName(projectName):
+        """Extract a display name from a project name or full path."""
+        if projectName and projectName.endswith(".fwdata"):
+            import os
+            return os.path.splitext(os.path.basename(projectName))[0]
+        return projectName
+
     def ChooseProject(self, sender=None, event=None):
         dlg = ProjectChooser(FTConfig.currentProject)
         dlg.ShowDialog()
         if dlg.projectName != FTConfig.currentProject:
             FTConfig.currentProject = dlg.projectName
             FTConfig.save()
-            self.toolbar.UpdateButtonText(0, FTConfig.currentProject)
+            self.toolbar.UpdateButtonText(
+                0, self.__ProjectDisplayName(FTConfig.currentProject))
             self.UIPanel.MsgProjectSelected()
             #self.UpdateStatusBar()  #Apr2023: removed project from statusbar
 
