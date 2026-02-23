@@ -109,7 +109,7 @@ MESSAGE_SelectCollection = ""
 MESSAGE_SelectCollectionToolbar = \
     _("Select or create a collection by clicking the 'Collections' button in the toolbar.")
 MESSAGE_SelectCollectionMenu = \
-    _("Select or create a collection by using the 'FlexTools | Manage collections' menu, or pressing Ctrl-L.")
+    _("Open or create a collection by using the 'FLExTools | Manage collections' menu, or pressing Ctrl-L.")
 MESSAGE_RunButtons = \
     _("Use the Run buttons to run modules.")
 
@@ -173,6 +173,12 @@ class FTPanel(Panel):
         self.reportWindow.Reporter.RegisterProgressHandler(progressFunction)
 
         # -- Startup messages and getting started hint.
+        
+        if FTConfig.hideCollectionsButton:
+            MESSAGE_SelectCollection = MESSAGE_SelectCollectionMenu
+        else:
+            MESSAGE_SelectCollection = MESSAGE_SelectCollectionToolbar
+
         self.reportWindow.Report(MESSAGE_Welcome)
         
         self.startupToolTip = None
@@ -585,8 +591,6 @@ class FTMainForm (Form):
 
     def InitToolBar(self):
 
-        global MESSAGE_SelectCollection
-        
         # (Handler, Text, Image, Tooltip)
         ButtonListA = [
                        (self.ChooseProject,
@@ -650,9 +654,6 @@ class FTMainForm (Form):
             
         if FTConfig.hideCollectionsButton:
             ButtonListA.pop(1)
-            MESSAGE_SelectCollection = MESSAGE_SelectCollectionMenu
-        else:
-            MESSAGE_SelectCollection = MESSAGE_SelectCollectionToolbar
         
         ButtonList = ButtonListA + ButtonListB
 
