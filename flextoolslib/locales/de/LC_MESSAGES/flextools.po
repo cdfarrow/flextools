@@ -52,8 +52,8 @@ msgid "Error opening project:"
 msgstr "Fehler beim Öffnen des Projekts:"
 
 #: ../code/FTModules.py:229
-msgid "This project is in use by another program. To allow shared access to this project, turn on the sharing option in the Sharing tab of the Fieldworks Project Properties dialog."
-msgstr "Dieses Projekt wird von einem anderen Programm verwendet. Um gemeinsamen Zugriff zu ermöglichen, aktivieren Sie die Freigabeoption im Reiter 'Freigabe' des Dialogs 'Fieldworks-Projekteigenschaften'."
+msgid "This project is in use by another program. To allow shared access to this project, turn on the sharing option in the Sharing tab of the FieldWorks Project Properties dialog."
+msgstr "Dieses Projekt wird von einem anderen Programm verwendet. Um gemeinsamen Zugriff zu ermöglichen, aktivieren Sie die Freigabeoption im Reiter 'Freigabe' des Dialogs 'FieldWorks-Projekteigenschaften'."
 
 #: ../code/FTModules.py:234
 msgid "This project needs to be opened in FieldWorks in order for it to be migrated to the latest format."
@@ -249,12 +249,12 @@ msgid "Collection '{}' selected."
 msgstr "Sammlung '{}' ausgewählt."
 
 #: ../code/UIMain.py:96
-msgid "Select or create a collection by clicking the 'Collections' button in the toolbar."
+msgid "Open or create a collection by clicking the 'Collections' button in the toolbar."
 msgstr "Wählen oder erstellen Sie eine Sammlung, indem Sie auf die Schaltfläche 'Sammlungen' in der Symbolleiste klicken."
 
 #: ../code/UIMain.py:98
-msgid "Select or create a collection by using the 'FlexTools | Manage collections' menu, or pressing Ctrl-L."
-msgstr "Wählen oder erstellen Sie eine Sammlung über das Menü 'FlexTools | Sammlungen verwalten' oder drücken Sie Strg-L."
+msgid "Open or create a collection by using the 'FLExTools | Manage collections' menu, or pressing Ctrl-L."
+msgstr "Wählen oder erstellen Sie eine Sammlung über das Menü 'FLExTools | Sammlungen verwalten' oder drücken Sie Strg-L."
 
 #: ../code/UIMain.py:100
 msgid "Use the Run buttons to run modules."
@@ -423,8 +423,8 @@ msgid "Help"
 msgstr "Hilfe"
 
 #: ../code/UIMain.py:456
-msgid "Help on using FlexTools"
-msgstr "Hilfe zur Verwendung von FlexTools"
+msgid "Help on using FLExTools"
+msgstr "Hilfe zur Verwendung von FLExTools"
 
 #. NOTE: Menu item
 #: ../code/UIMain.py:460
@@ -432,8 +432,8 @@ msgid "Programming help"
 msgstr "Programmierhilfe"
 
 #: ../code/UIMain.py:462
-msgid "Help on how to program a FlexTools module"
-msgstr "Hilfe zum Programmieren eines FlexTools-Moduls"
+msgid "Help on how to program a FLExTools module"
+msgstr "Hilfe zum Programmieren eines FLExTools-Moduls"
 
 #. NOTE: Menu item
 #: ../code/UIMain.py:466
@@ -583,8 +583,8 @@ msgid "Choose Project"
 msgstr "Projekt auswählen"
 
 #: ../code/UIReport.py:91
-msgid "Double-click to jump to Fieldworks"
-msgstr "Doppelklicken Sie, um zu Fieldworks zu springen"
+msgid "Double-click to jump to FieldWorks"
+msgstr "Doppelklicken Sie, um zu FieldWorks zu springen"
 
 #: ../code/UIReport.py:93
 msgid "Double-click to open file"

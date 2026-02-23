@@ -1,5 +1,5 @@
 #
-#   Project: FlexTools
+#   Project: FLExTools
 #   Module:  UIMain
 #   Platform: .NET v2 Windows.Forms (Python.NET 2.7)
 #
@@ -107,7 +107,7 @@ MESSAGE_CollectionSelected = \
     _("Collection '{}' selected.")
 MESSAGE_SelectCollection = ""
 MESSAGE_SelectCollectionToolbar = \
-    _("Select or create a collection by clicking the 'Collections' button in the toolbar.")
+    _("Open or create a collection by clicking the 'Collections' button in the toolbar.")
 MESSAGE_SelectCollectionMenu = \
     _("Open or create a collection by using the 'FLExTools | Manage collections' menu, or pressing Ctrl-L.")
 MESSAGE_RunButtons = \
@@ -529,13 +529,13 @@ class FTMainForm (Form):
                           # NOTE: Menu item
                           _("Help"),
                           Keys.F1,
-                          _("Help on using FlexTools")
+                          _("Help on using FLExTools")
                          ),
                          (Help.ProgrammingHelp,
                           # NOTE: Menu item
                           _("Programming help"),
                           None,
-                          _("Help on how to program a FlexTools module")
+                          _("Help on how to program a FLExTools module")
                          ),
                          (Help.APIHelp,
                           # NOTE: Menu item
