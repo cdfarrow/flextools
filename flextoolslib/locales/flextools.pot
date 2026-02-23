@@ -244,7 +244,7 @@ msgid "Collection '{}' selected."
 msgstr ""
 
 #: ../code/UIMain.py:110
-msgid "Select or create a collection by clicking the 'Collections' button in the toolbar."
+msgid "Open or create a collection by clicking the 'Collections' button in the toolbar."
 msgstr ""
 
 #: ../code/UIMain.py:112
@@ -418,7 +418,7 @@ msgid "Help"
 msgstr ""
 
 #: ../code/UIMain.py:532
-msgid "Help on using FlexTools"
+msgid "Help on using FLExTools"
 msgstr ""
 
 #. NOTE: Menu item
@@ -427,7 +427,7 @@ msgid "Programming help"
 msgstr ""
 
 #: ../code/UIMain.py:538
-msgid "Help on how to program a FlexTools module"
+msgid "Help on how to program a FLExTools module"
 msgstr ""
 
 #. NOTE: Menu item

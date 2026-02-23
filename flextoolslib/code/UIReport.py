@@ -88,7 +88,7 @@ class ReportWindow(ListView):
             if extra:
                 try:
                     if extra.startswith("silfw:"):
-                        item.ToolTipText = _("Double-click to jump to Fieldworks")
+                        item.ToolTipText = _("Double-click to jump to FieldWorks")
                     elif extra.startswith("file:"):
                         item.ToolTipText = _("Double-click to open file")
                     else:

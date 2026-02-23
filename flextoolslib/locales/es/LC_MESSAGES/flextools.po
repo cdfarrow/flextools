@@ -253,8 +253,8 @@ msgid "Open or create a collection by clicking the 'Collections' button in the t
 msgstr "Seleccione o cree una colección haciendo clic en el botón 'Colecciones' de la barra de herramientas."
 
 #: ../code/UIMain.py:98
-msgid "Select or create a collection by using the 'FlexTools | Manage collections' menu, or pressing Ctrl-L."
-msgstr "Seleccione o cree una colección usando el menú 'FlexTools | Administrar colecciones', o presione Ctrl-L."
+msgid "Open or create a collection by using the 'FLExTools | Manage collections' menu, or pressing Ctrl-L."
+msgstr "Seleccione o cree una colección usando el menú 'FLExTools | Administrar colecciones', o presione Ctrl-L."
 
 #: ../code/UIMain.py:100
 msgid "Use the Run buttons to run modules."
@@ -423,8 +423,8 @@ msgid "Help"
 msgstr "Ayuda"
 
 #: ../code/UIMain.py:456
-msgid "Help on using FlexTools"
-msgstr "Ayuda sobre el uso de FlexTools"
+msgid "Help on using FLExTools"
+msgstr "Ayuda sobre el uso de FLExTools"
 
 #. NOTE: Menu item
 #: ../code/UIMain.py:460
@@ -432,8 +432,8 @@ msgid "Programming help"
 msgstr "Ayuda de programación"
 
 #: ../code/UIMain.py:462
-msgid "Help on how to program a FlexTools module"
-msgstr "Ayuda sobre cómo programar un módulo FlexTools"
+msgid "Help on how to program a FLExTools module"
+msgstr "Ayuda sobre cómo programar un módulo FLExTools"
 
 #. NOTE: Menu item
 #: ../code/UIMain.py:466
@@ -583,8 +583,8 @@ msgid "Choose Project"
 msgstr "Elegir proyecto"
 
 #: ../code/UIReport.py:91
-msgid "Double-click to jump to Fieldworks"
-msgstr "Doble clic para saltar a Fieldworks"
+msgid "Double-click to jump to FieldWorks"
+msgstr "Doble clic para saltar a FieldWorks"
 
 #: ../code/UIReport.py:93
 msgid "Double-click to open file"
