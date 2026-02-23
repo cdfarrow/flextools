@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 24\n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
-"PO-Revision-Date: 2026-02-23 23:36\n"
+"PO-Revision-Date: 2026-02-23 23:48\n"
 
 #. NOTE: Parameter = collection name
 #: ../code/FTCollections.py:141 ../code/FTCollections.py:167
@@ -254,7 +254,7 @@ msgstr "Seleccione o cree una colección haciendo clic en el botón 'Colecciones
 
 #: ../code/UIMain.py:112
 msgid "Open or create a collection by using the 'FLExTools | Manage collections' menu, or pressing Ctrl-L."
-msgstr "Seleccione o cree una colección haciendo clic en el botón 'Colecciones' de la barra de herramientas."
+msgstr "Seleccione o cree una colección usando el menú 'FLExTools | Administrar colecciones', o presione Ctrl-L."
 
 #: ../code/UIMain.py:114
 msgid "Use the Run buttons to run modules."
@@ -423,8 +423,8 @@ msgid "Help"
 msgstr "Ayuda"
 
 #: ../code/UIMain.py:532
-msgid "Help on using FlexTools"
-msgstr "Ayuda sobre el uso de FlexTools"
+msgid "Help on using FLExTools"
+msgstr "Ayuda sobre el uso de FLExTools"
 
 #. NOTE: Menu item
 #: ../code/UIMain.py:536
@@ -432,8 +432,8 @@ msgid "Programming help"
 msgstr "Ayuda de programación"
 
 #: ../code/UIMain.py:538
-msgid "Help on how to program a FlexTools module"
-msgstr "Ayuda sobre cómo programar un módulo FlexTools"
+msgid "Help on how to program a FLExTools module"
+msgstr "Ayuda sobre cómo programar un módulo FLExTools"
 
 #. NOTE: Menu item
 #: ../code/UIMain.py:542
