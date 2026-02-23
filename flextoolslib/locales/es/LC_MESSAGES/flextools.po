@@ -52,8 +52,8 @@ msgid "Error opening project:"
 msgstr "Error abriendo proyecto:"
 
 #: ../code/FTModules.py:229
-msgid "This project is in use by another program. To allow shared access to this project, turn on the sharing option in the Sharing tab of the Fieldworks Project Properties dialog."
-msgstr "Este proyecto está siendo utilizado por otro programa. Para permitir el acceso compartido a este proyecto, activa la opción de compartir en la pestaña Compartir del diálogo Propiedades del Proyecto Fieldworks."
+msgid "This project is in use by another program. To allow shared access to this project, turn on the sharing option in the Sharing tab of the FieldWorks Project Properties dialog."
+msgstr "Este proyecto está siendo utilizado por otro programa. Para permitir el acceso compartido a este proyecto, activa la opción de compartir en la pestaña Compartir del diálogo Propiedades del Proyecto FieldWorks."
 
 #: ../code/FTModules.py:234
 msgid "This project needs to be opened in FieldWorks in order for it to be migrated to the latest format."
@@ -249,7 +249,7 @@ msgid "Collection '{}' selected."
 msgstr "Colección '{}' seleccionada."
 
 #: ../code/UIMain.py:96
-msgid "Select or create a collection by clicking the 'Collections' button in the toolbar."
+msgid "Open or create a collection by clicking the 'Collections' button in the toolbar."
 msgstr "Seleccione o cree una colección haciendo clic en el botón 'Colecciones' de la barra de herramientas."
 
 #: ../code/UIMain.py:98
