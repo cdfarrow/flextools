@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 24\n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
-"PO-Revision-Date: 2026-02-23 23:10\n"
+"PO-Revision-Date: 2026-02-23 23:36\n"
 
 #. NOTE: Parameter = collection name
 #: ../code/FTCollections.py:141 ../code/FTCollections.py:167
@@ -249,7 +249,7 @@ msgid "Collection '{}' selected."
 msgstr "Colección '{}' seleccionada."
 
 #: ../code/UIMain.py:110
-msgid "Select or create a collection by clicking the 'Collections' button in the toolbar."
+msgid "Open or create a collection by clicking the 'Collections' button in the toolbar."
 msgstr "Seleccione o cree una colección haciendo clic en el botón 'Colecciones' de la barra de herramientas."
 
 #: ../code/UIMain.py:112
