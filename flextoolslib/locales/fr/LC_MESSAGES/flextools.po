@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 24\n"
 "Language-Team: French\n"
 "Language: fr_FR\n"
-"PO-Revision-Date: 2026-02-23 23:36\n"
+"PO-Revision-Date: 2026-02-23 23:48\n"
 
 #. NOTE: Parameter = collection name
 #: ../code/FTCollections.py:141 ../code/FTCollections.py:167
@@ -423,8 +423,8 @@ msgid "Help"
 msgstr "Aide"
 
 #: ../code/UIMain.py:532
-msgid "Help on using FlexTools"
-msgstr "Aide sur l'utilisation de FlexTools"
+msgid "Help on using FLExTools"
+msgstr ""
 
 #. NOTE: Menu item
 #: ../code/UIMain.py:536
@@ -432,8 +432,8 @@ msgid "Programming help"
 msgstr "Aide à la programmation"
 
 #: ../code/UIMain.py:538
-msgid "Help on how to program a FlexTools module"
-msgstr "Aide sur la façon de programmer un module FlexTools"
+msgid "Help on how to program a FLExTools module"
+msgstr ""
 
 #. NOTE: Menu item
 #: ../code/UIMain.py:542
