@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 24\n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
-"PO-Revision-Date: 2026-02-23 05:57\n"
+"PO-Revision-Date: 2026-02-23 23:10\n"
 
 #. NOTE: Parameter = collection name
 #: ../code/FTCollections.py:141 ../code/FTCollections.py:167
@@ -53,7 +53,7 @@ msgstr "Error abriendo proyecto:"
 
 #: ../code/FTModules.py:229
 msgid "This project is in use by another program. To allow shared access to this project, turn on the sharing option in the Sharing tab of the FieldWorks Project Properties dialog."
-msgstr ""
+msgstr "Este proyecto está siendo utilizado por otro programa. Para permitir el acceso compartido a este proyecto, activa la opción de compartir en la pestaña Compartir del diálogo Propiedades del Proyecto FieldWorks."
 
 #: ../code/FTModules.py:234
 msgid "This project needs to be opened in FieldWorks in order for it to be migrated to the latest format."
@@ -254,7 +254,7 @@ msgstr "Seleccione o cree una colección haciendo clic en el botón 'Colecciones
 
 #: ../code/UIMain.py:112
 msgid "Open or create a collection by using the 'FLExTools | Manage collections' menu, or pressing Ctrl-L."
-msgstr ""
+msgstr "Seleccione o cree una colección haciendo clic en el botón 'Colecciones' de la barra de herramientas."
 
 #: ../code/UIMain.py:114
 msgid "Use the Run buttons to run modules."
