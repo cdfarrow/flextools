@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 24\n"
 "Language-Team: French\n"
 "Language: fr_FR\n"
-"PO-Revision-Date: 2026-02-23 05:57\n"
+"PO-Revision-Date: 2026-02-23 23:36\n"
 
 #. NOTE: Parameter = collection name
 #: ../code/FTCollections.py:141 ../code/FTCollections.py:167
@@ -249,8 +249,8 @@ msgid "Collection '{}' selected."
 msgstr "Collection '{}' sélectionnée."
 
 #: ../code/UIMain.py:110
-msgid "Select or create a collection by clicking the 'Collections' button in the toolbar."
-msgstr "Sélectionnez ou créez une collection en cliquant sur le bouton « Collections » dans la barre d'outils."
+msgid "Open or create a collection by clicking the 'Collections' button in the toolbar."
+msgstr ""
 
 #: ../code/UIMain.py:112
 msgid "Open or create a collection by using the 'FLExTools | Manage collections' menu, or pressing Ctrl-L."
