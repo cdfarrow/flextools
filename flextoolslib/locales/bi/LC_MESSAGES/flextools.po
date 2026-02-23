@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 24\n"
 "Language-Team: Bislama\n"
 "Language: bi_VU\n"
-"PO-Revision-Date: 2026-02-23 05:57\n"
+"PO-Revision-Date: 2026-02-23 23:36\n"
 
 #. NOTE: Parameter = collection name
 #: ../code/FTCollections.py:141 ../code/FTCollections.py:167
@@ -248,7 +248,7 @@ msgid "Collection '{}' selected."
 msgstr "Koleksen '{}' hemi bin jusum finis."
 
 #: ../code/UIMain.py:110
-msgid "Select or create a collection by clicking the 'Collections' button in the toolbar."
+msgid "Open or create a collection by clicking the 'Collections' button in the toolbar."
 msgstr ""
 
 #: ../code/UIMain.py:112
