@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 24\n"
 "Language-Team: French\n"
 "Language: fr_FR\n"
-"PO-Revision-Date: 2026-02-23 23:48\n"
+"PO-Revision-Date: 2026-02-24 00:35\n"
 
 #. NOTE: Parameter = collection name
 #: ../code/FTCollections.py:141 ../code/FTCollections.py:167
@@ -53,7 +53,7 @@ msgstr "Erreur d'ouverture du projet :"
 
 #: ../code/FTModules.py:229
 msgid "This project is in use by another program. To allow shared access to this project, turn on the sharing option in the Sharing tab of the FieldWorks Project Properties dialog."
-msgstr ""
+msgstr "Ce projet est utilisé par un autre programme. Pour autoriser l'accès partagé à ce projet, activez l'option de partage dans l'onglet Partage des propriétés du projet FieldWorks."
 
 #: ../code/FTModules.py:234
 msgid "This project needs to be opened in FieldWorks in order for it to be migrated to the latest format."
@@ -250,11 +250,11 @@ msgstr "Collection '{}' sélectionnée."
 
 #: ../code/UIMain.py:110
 msgid "Open or create a collection by clicking the 'Collections' button in the toolbar."
-msgstr ""
+msgstr "Ouvrez ou créez une collection en cliquant sur le bouton « Collections » dans la barre d'outils."
 
 #: ../code/UIMain.py:112
 msgid "Open or create a collection by using the 'FLExTools | Manage collections' menu, or pressing Ctrl-L."
-msgstr ""
+msgstr "Ouvrez ou créez une collection en utilisant le menu 'FLExTools | Gérer les collections' ou en appuyant sur Ctrl-L."
 
 #: ../code/UIMain.py:114
 msgid "Use the Run buttons to run modules."
@@ -424,7 +424,7 @@ msgstr "Aide"
 
 #: ../code/UIMain.py:532
 msgid "Help on using FLExTools"
-msgstr ""
+msgstr "Aide sur l'utilisation de FLExTools"
 
 #. NOTE: Menu item
 #: ../code/UIMain.py:536
@@ -433,7 +433,7 @@ msgstr "Aide à la programmation"
 
 #: ../code/UIMain.py:538
 msgid "Help on how to program a FLExTools module"
-msgstr ""
+msgstr "Aide sur la façon de programmer un module FLExTools"
 
 #. NOTE: Menu item
 #: ../code/UIMain.py:542
