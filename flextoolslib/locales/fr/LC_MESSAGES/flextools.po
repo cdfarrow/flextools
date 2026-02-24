@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 24\n"
 "Language-Team: French\n"
 "Language: fr_FR\n"
-"PO-Revision-Date: 2026-02-24 00:35\n"
+"PO-Revision-Date: 2026-02-24 01:24\n"
 
 #. NOTE: Parameter = collection name
 #: ../code/FTCollections.py:141 ../code/FTCollections.py:167
@@ -583,8 +583,8 @@ msgid "Choose Project"
 msgstr "Choisir un projet"
 
 #: ../code/UIReport.py:91
-msgid "Double-click to jump to FieldWorks"
-msgstr "Double-cliquez pour aller à FieldWorks"
+msgid "Double-click to jump to Fieldworks"
+msgstr "Double-cliquez pour aller à Fieldworks"
 
 #: ../code/UIReport.py:93
 msgid "Double-click to open file"
