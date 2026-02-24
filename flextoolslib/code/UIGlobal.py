@@ -92,6 +92,7 @@ ALL_LOCALES = {
     'de': "Deutsch",
     'en': "English",
     'es': "Español",
+    'fr': "Français",
     }
 
 DEFAULT_LOCALE = 'en'
