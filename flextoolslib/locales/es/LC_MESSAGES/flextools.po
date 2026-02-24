@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 24\n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
-"PO-Revision-Date: 2026-02-24 00:35\n"
+"PO-Revision-Date: 2026-02-24 03:10\n"
 
 #. NOTE: Parameter = collection name
 #: ../code/FTCollections.py:141 ../code/FTCollections.py:167
@@ -202,7 +202,7 @@ msgstr "Módulos"
 
 #: ../code/UICollections.py:352
 msgid "Duplicate module"
-msgstr "Duplicate module"
+msgstr "Duplicar module"
 
 #: ../code/UICollections.py:372
 #, python-brace-format
