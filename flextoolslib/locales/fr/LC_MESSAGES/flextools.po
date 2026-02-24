@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 24\n"
 "Language-Team: French\n"
 "Language: fr_FR\n"
-"PO-Revision-Date: 2026-02-24 00:35\n"
+"PO-Revision-Date: 2026-02-24 01:24\n"
 
 #. NOTE: Parameter = collection name
 #: ../code/FTCollections.py:141 ../code/FTCollections.py:167
@@ -86,7 +86,7 @@ msgstr "Le module a échoué avec l'exception {} !"
 #: ../code/FTModules.py:293
 #, python-brace-format
 msgid "Processing completed. Errors: {}; Warnings: {}"
-msgstr "Traitement terminé. Erreurs : {}; Avertissements : {}"
+msgstr "Traitement terminé. Erreurs : {} ; Avertissements : {}"
 
 #: ../code/Help.py:66
 msgid "A framework for running Python scripts on a FieldWorks Language Explorer project."
@@ -100,7 +100,7 @@ msgstr "Modules installés : {}"
 #: ../code/Help.py:79
 #, python-brace-format
 msgid "Python version: {}"
-msgstr "Python version: {}"
+msgstr "Version Python : {}"
 
 #: ../code/Help.py:81
 #, python-brace-format
@@ -220,7 +220,7 @@ msgstr "Nouvelle collection"
 #: ../code/UICollections.py:416
 #, python-brace-format
 msgid "Are you sure you want to delete the collection '{}'?"
-msgstr "Êtes-vous sûr de vouloir supprimer la collection '{}'?"
+msgstr "Êtes-vous sûr de vouloir supprimer la collection '{}' ?"
 
 #: ../code/UICollections.py:417
 msgid "Confirm delete"
@@ -410,7 +410,7 @@ msgstr "Copier le contenu du rapport dans le presse-papiers"
 #. NOTE: Menu item
 #: ../code/UIMain.py:522
 msgid "Clear"
-msgstr "Nettoyer"
+msgstr "Effacer"
 
 #: ../code/UIMain.py:524
 msgid "Clear the current report"
@@ -540,7 +540,7 @@ msgstr "Aide :"
 #: ../code/UIModuleInfo.py:105
 #, python-brace-format
 msgid "Source file: {}"
-msgstr "Fichier source: {}"
+msgstr "Fichier source : {}"
 
 #: ../code/UIModuleInfo.py:116
 #, python-brace-format
@@ -549,7 +549,7 @@ msgstr "Erreur lors de l'ouverture du lien : {}"
 
 #: ../code/UIModuleInfo.py:117
 msgid "Error!"
-msgstr "Erreur!"
+msgstr "Erreur !"
 
 #: ../code/UIModuleInfo.py:127
 msgid "Module Details"
@@ -583,8 +583,8 @@ msgid "Choose Project"
 msgstr "Choisir un projet"
 
 #: ../code/UIReport.py:91
-msgid "Double-click to jump to FieldWorks"
-msgstr "Double-cliquez pour aller à FieldWorks"
+msgid "Double-click to jump to Fieldworks"
+msgstr "Double-cliquez pour aller à Fieldworks"
 
 #: ../code/UIReport.py:93
 msgid "Double-click to open file"
