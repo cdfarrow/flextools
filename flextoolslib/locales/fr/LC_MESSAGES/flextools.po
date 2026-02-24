@@ -583,8 +583,8 @@ msgid "Choose Project"
 msgstr "Choisir un projet"
 
 #: ../code/UIReport.py:91
-msgid "Double-click to jump to Fieldworks"
-msgstr "Double-cliquez pour aller à Fieldworks"
+msgid "Double-click to jump to FieldWorks"
+msgstr "Double-cliquez pour aller à FieldWorks"
 
 #: ../code/UIReport.py:93
 msgid "Double-click to open file"
