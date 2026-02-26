@@ -18,7 +18,9 @@ FLExTools History
     + Added LexiconSetLexemeForm()
     + Added LexiconGetExampleCustomFields()
     + Added LexiconGetAllomorphCustomFields()
-
++ Bug fixes
+    + Keep tab labels from wrapping
+    
 
 2.3.2_2025.8.26
 ---------------
