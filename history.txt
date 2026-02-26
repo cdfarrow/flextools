@@ -18,6 +18,8 @@ FLExTools History
     + Added LexiconSetLexemeForm()
     + Added LexiconGetExampleCustomFields()
     + Added LexiconGetAllomorphCustomFields()
++ Added UI translations for:
+    + French
 + Bug fixes
     + Keep tab labels from wrapping
     
