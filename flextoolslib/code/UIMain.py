@@ -40,6 +40,7 @@ from System.Windows.Forms import (
     ToolStripButton,
     TabControl, TabPage, TabAlignment,
     TabDrawMode,
+    TextRenderer, TextFormatFlags,
     DrawItemState,
     ToolTip,
     StatusBar,
@@ -53,7 +54,6 @@ from System.Drawing import (
     SolidBrush,
     StringFormat,
     StringAlignment,
-    RectangleF,
     )
 
 from System.Threading import Thread, ThreadStart, ApartmentState
@@ -122,26 +122,21 @@ class FTPanel(Panel):
         g = e.Graphics
         tab = tabControl.TabPages[e.Index]
 
-        text_offset = 1
         # Draw the background
         if e.State == DrawItemState.Selected: 
-            text_offset = 0
             g.FillRectangle(SolidBrush(UIGlobal.tabColor),
                             e.Bounds)
-
+        
         # Draw the text
-        sf = StringFormat()
-        sf.Alignment     = StringAlignment.Center
-        sf.LineAlignment = StringAlignment.Center
-        # (convert to floating-point coords)
-        rect = tabControl.GetTabRect(e.Index)
-        rectF = RectangleF(rect.X+text_offset, rect.Y+text_offset, 
-                           rect.Width, rect.Height)
-        g.DrawString(tab.Text, 
-                     tabControl.Font, 
-                     SolidBrush(Color.Black),
-                     rectF,
-                     sf)
+        TextRenderer.DrawText(g,
+                              tab.Text, 
+                              e.Font, 
+                              tabControl.GetTabRect(e.Index),
+                              Color.Black,
+                              TextFormatFlags.HorizontalCenter |
+                              TextFormatFlags.VerticalCenter |
+                              TextFormatFlags.SingleLine)
+
 
     def __init__(self, 
                  moduleManager, 
