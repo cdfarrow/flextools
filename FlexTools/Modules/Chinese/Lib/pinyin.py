@@ -24,6 +24,7 @@
 #   Restored unicode_literals to reinstate Python 2 support 
 #   Write the test output to a file to avoid confusion with encoding 
 #   at the (Windows) command line.
+#   Removed unused old diaeresis format handling.
 # 2024-06-12 cdf
 #   Removed unicode_2 flag and future imports
 # 2008-3-21 gna
@@ -183,7 +184,6 @@ high_vowels = 'iu'  \
     '\N{LATIN CAPITAL LETTER U WITH DIAERESIS}'
 
 ambiguity_pat = re.compile(r'([1-5])([%s%s])' % (low_vowels, mid_vowels), re.I)
-old_u_diaeresis_pat = re.compile(r'([ln])(yu)', re.I)
 u_diaeresis_pat = re.compile(r'(u)(e?):', re.I)
 e_circumflex_pat = re.compile(r'(e)\^', re.I)
 
@@ -203,8 +203,8 @@ def old_sub_u_diaeresis(m):
     if centre == 'YU':
         return front + '\N{LATIN CAPITAL LETTER U WITH DIAERESIS}'
     else:
-        return front + '\N{LATIN SMALL LETTER U WITH DIAERESIS}'
-
+        return front + '\N{LATIN SMALL LETTER U WITH DIAERESIS}' 
+        
 def sub_u_diaeresis(m):
     centre, tail = m.groups()
     if centre == 'U':
@@ -224,12 +224,6 @@ def sub_tone(m):
     letter = centre[0]
     tail = centre[1:]
     return tones[(letter, tone)] + tail
-
-def oldtonenum_pinyin(s):
-    s = ambiguity_pat.sub(add_apostrophe, s) 
-    s = old_u_diaeresis_pat.sub(old_sub_u_diaeresis, s)
-    s = tone_pat.sub(sub_tone, s)
-    return s
 
 def tonenum_pinyin(s):
     s = ambiguity_pat.sub(add_apostrophe, s)
