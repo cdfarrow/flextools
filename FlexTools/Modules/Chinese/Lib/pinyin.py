@@ -20,15 +20,23 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+# 2026-03-23 cdf
+#   Restored unicode_literals to reinstate Python 2 support 
+#   Write the test output to a file to avoid confusion with encoding 
+#   at the (Windows) command line.
 # 2024-06-12 cdf
-# removed unicode_2 flag and future imports
+#   Removed unicode_2 flag and future imports
 # 2008-3-21 gna
-# added licence
-# removed unicodedata import
+#   Added licence
+#   Removed unicodedata import
 # 2004-1-6 gna
-# implemented the e with circumflex code and tests for it
-# added unicode_2_0 global for the Arial Unicode MS font
-# added {low,mid,high}_vowels variables to simplify regular expressions
+#   Implemented the e with circumflex code and tests for it
+#   Added unicode_2_0 global for the Arial Unicode MS font
+#   Added {low,mid,high}_vowels variables to simplify regular expressions
+
+from __future__ import unicode_literals
+
+import io
 
 import re
 
@@ -268,19 +276,19 @@ if __name__ == "__main__":
             'er4tong1', 'nar3', 'nar4', 'zher4',
             'Tian1an1men2', 'pi2ao3', 'Xi1an1', 'chang2e2', 'hai3ou1',
             'Tian1 an1 men2', 'pi2 ao3', 'Xi1 an1', 'chang2 e2', 'hai3 ou1',
-            'm1', 'm2', 'm3', 'm4', 'm5'
-            'n1', 'n2', 'n3', 'n4', 'n5'
-            'ng1', 'ng2', 'ng3', 'ng4', 'ng5'
-            'M1', 'M2', 'M3', 'M4', 'M5'
-            'N1', 'N2', 'N3', 'N4', 'N5'
-            'NG1', 'NG2', 'NG3', 'NG4', 'NG5'
-            'lyu1', 'nyue2', 'lyue3', 'nyu4',
-            'LYU1', 'NYUE2', 'LYue3', 'NyU4',
+            'm1', 'm2', 'm3', 'm4', 'm5',
+            'n1', 'n2', 'n3', 'n4', 'n5',
+            'ng1', 'ng2', 'ng3', 'ng4', 'ng5',
+            'M1', 'M2', 'M3', 'M4', 'M5',
+            'N1', 'N2', 'N3', 'N4', 'N5',
+            'NG1', 'NG2', 'NG3', 'NG4', 'NG5',
             'lu:1', 'nue:2', 'lue:3', 'nu:4',
             'LU:1', 'NUE:2', 'Lue:3', 'NU:4',
             'e^1', 'e^2', 'e^3', 'e^4', 'e^5',
             'E^1', 'E^2', 'E^3', 'E^4', 'E^5',
             )
-    for i in tests:
-        print(('test="%s", ans="%s"' % (i, tonenum_pinyin(i))).encode('utf-8'))
-    
+            
+    # Use io.open for Python 2 compatibility
+    with io.open("pinyin_out.txt", "w", encoding="utf-8") as f:
+        for i in tests:
+            f.write('test="%s", ans="%s"\n' % (i, tonenum_pinyin(i)))

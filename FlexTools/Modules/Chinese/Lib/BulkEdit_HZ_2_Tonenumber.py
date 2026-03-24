@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 #   BulkEdit_HZ_2_Tonenumber
 #    - A Fieldworks Writing System transducer
@@ -26,6 +27,8 @@ separated by a vertical bar '|', e.g. 'zhong1|zhong4'.
 
 """ 
 
+from __future__ import unicode_literals
+
 import site
 site.addsitedir(r"Lib")
 
@@ -38,4 +41,4 @@ from ChineseUtilities import ChineseParser
 def Convert(hz):
 
     Parser = ChineseParser()
-    return Parser.Tonenum(hz)
+    return Parser.Tonenum(hz, None)

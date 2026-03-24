@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 #   BulkEdit_Tonenumber_2_Pinyin
 #    - A Fieldworks Writing System transducer
@@ -16,6 +17,7 @@ If the tone number has any unresolved ambiguities or problems
 then the output will be blank.
 """
 
+from __future__ import unicode_literals
 
 from ChineseUtilities import TonenumberToPinyin
 
