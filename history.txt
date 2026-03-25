@@ -2,6 +2,10 @@
 FLExTools History
 -----------------
 
++ Supports: Fieldworks 9.0.17 - 9.3.7
+            (Later versions will most likely work, but are untested)
++ Supports: Python 3.9 - 3.13
+
 ==== Known Issues ====
 
 
@@ -19,9 +23,10 @@ FLExTools History
     + Added LexiconGetExampleCustomFields()
     + Added LexiconGetAllomorphCustomFields()
 + Added UI translations for:
-    + French
-+ Bug fixes
+    + French (Machine-translated draft)
++ Bug fixes:
     + Keep tab labels from wrapping
+    + #72: Fix Chinese converters for Flex Bulk Edit 
     
 
 2.3.2_2025.8.26
