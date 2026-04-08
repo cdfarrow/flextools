@@ -98,6 +98,24 @@ except Exception as e:
 
 logger.info(f"flexlibs imported successfully")
 
+# -----------------------------------------------------------
+# Windows DPI setting
+# -----------------------------------------------------------
+
+if platform.system() == "Windows":
+       
+    # Define the DPI awareness levels (from PROCESS_DPI_AWARENESS enum)
+    # 0: Unaware, 1: System Aware, 2: Per-Monitor Aware
+    PROCESS_DPI_UNAWARE = 0
+    PROCESS_SYSTEM_DPI_AWARE = 1
+    PROCESS_PER_MONITOR_DPI_AWARE = 2
+
+    # Qt (used by FlexTrans) sets the DPI setting to PROCESS_PER_MONITOR_DPI_AWARE
+    # which messes up all the font and window sizing (issue #65). 
+    # Set it here before Qt gets a chance to (this can only be set once).
+    # res = 0 means success.
+    res = ctypes.windll.shcore.SetProcessDpiAwareness(PROCESS_DPI_UNAWARE)
+    logging.debug(f"SetProcessDpiAwareness: {res}")
 
 #----------------------------------------------------------- 
 # UI
