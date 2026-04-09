@@ -8,6 +8,22 @@ FLExTools History
 
 ====== History =======
 
+2.3.3_TBD
+---------------
+
++ New Modules:
+    + Export/Export All Publications
+    + Export/Export Publication
++ API updates:
+    + Added LexiconSetLexemeForm()
+    + Added LexiconGetExampleCustomFields()
+    + Added LexiconGetAllomorphCustomFields()
++ Added UI translations for:
+    + French
++ Bug fixes
+    + Keep tab labels from wrapping
+    
+
 2.3.2_2025.8.26
 ---------------
 
@@ -21,6 +37,8 @@ FLExTools History
     + Added ListFieldPossibilities()
     + Added ListFieldLookup()
     + Added LexiconSetListFieldSingle() 
+    + Added LexiconClearListFieldSingle() 
+    + Added LexiconSetListFieldMultiple() 
 + New dialog functions for getting user input:
     + FTDialogChoose: Select an item from a dropdown menu.
     + FTDialogRadio:  Select an option via radio buttons.

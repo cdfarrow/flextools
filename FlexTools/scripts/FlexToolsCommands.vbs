@@ -63,7 +63,7 @@ End Function
 
 Function DoInstall()
     ' Use CMD so we can do a pause to keep the output visible.
-    rc = WshShell.Run("%comspec%  /c """&PYTHON&" -m pip install --upgrade -r scripts\requirements.txt & pause""", 1, True)
+    rc = WshShell.Run("%comspec%  /c """&PYTHON&" -m pip install --upgrade --upgrade-strategy eager -r scripts\requirements.txt & pause""", 1, True)
 End Function
 
 Function DoList()

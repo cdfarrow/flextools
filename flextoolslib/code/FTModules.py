@@ -226,7 +226,7 @@ class ModuleManager (object):
         except FP_FileLockedError as e:
             logger.error(e.message)
             reporter.Error(_("Error opening project:") +\
-                _("This project is in use by another program. To allow shared access to this project, turn on the sharing option in the Sharing tab of the Fieldworks Project Properties dialog."))
+                _("This project is in use by another program. To allow shared access to this project, turn on the sharing option in the Sharing tab of the FieldWorks Project Properties dialog."))
             return False
         except FP_MigrationRequired as e:
             logger.error(e.message)

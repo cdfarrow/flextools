@@ -1,5 +1,5 @@
 #
-#   Project: FlexTools
+#   Project: FLExTools
 #   Module:  UIMain
 #   Platform: .NET v2 Windows.Forms (Python.NET 2.7)
 #
@@ -40,6 +40,7 @@ from System.Windows.Forms import (
     ToolStripButton,
     TabControl, TabPage, TabAlignment,
     TabDrawMode,
+    TextRenderer, TextFormatFlags,
     DrawItemState,
     ToolTip,
     StatusBar,
@@ -53,7 +54,6 @@ from System.Drawing import (
     SolidBrush,
     StringFormat,
     StringAlignment,
-    RectangleF,
     )
 
 from System.Threading import Thread, ThreadStart, ApartmentState
@@ -107,9 +107,9 @@ MESSAGE_CollectionSelected = \
     _("Collection '{}' selected.")
 MESSAGE_SelectCollection = ""
 MESSAGE_SelectCollectionToolbar = \
-    _("Select or create a collection by clicking the 'Collections' button in the toolbar.")
+    _("Open or create a collection by clicking the 'Collections' button in the toolbar.")
 MESSAGE_SelectCollectionMenu = \
-    _("Select or create a collection by using the 'FlexTools | Manage collections' menu, or pressing Ctrl-L.")
+    _("Open or create a collection by using the 'FLExTools | Manage collections' menu, or pressing Ctrl-L.")
 MESSAGE_RunButtons = \
     _("Use the Run buttons to run modules.")
 
@@ -122,26 +122,21 @@ class FTPanel(Panel):
         g = e.Graphics
         tab = tabControl.TabPages[e.Index]
 
-        text_offset = 1
         # Draw the background
         if e.State == DrawItemState.Selected: 
-            text_offset = 0
             g.FillRectangle(SolidBrush(UIGlobal.tabColor),
                             e.Bounds)
-
+        
         # Draw the text
-        sf = StringFormat()
-        sf.Alignment     = StringAlignment.Center
-        sf.LineAlignment = StringAlignment.Center
-        # (convert to floating-point coords)
-        rect = tabControl.GetTabRect(e.Index)
-        rectF = RectangleF(rect.X+text_offset, rect.Y+text_offset, 
-                           rect.Width, rect.Height)
-        g.DrawString(tab.Text, 
-                     tabControl.Font, 
-                     SolidBrush(Color.Black),
-                     rectF,
-                     sf)
+        TextRenderer.DrawText(g,
+                              tab.Text, 
+                              e.Font, 
+                              tabControl.GetTabRect(e.Index),
+                              Color.Black,
+                              TextFormatFlags.HorizontalCenter |
+                              TextFormatFlags.VerticalCenter |
+                              TextFormatFlags.SingleLine)
+
 
     def __init__(self, 
                  moduleManager, 
@@ -173,6 +168,12 @@ class FTPanel(Panel):
         self.reportWindow.Reporter.RegisterProgressHandler(progressFunction)
 
         # -- Startup messages and getting started hint.
+        
+        if FTConfig.hideCollectionsButton:
+            MESSAGE_SelectCollection = MESSAGE_SelectCollectionMenu
+        else:
+            MESSAGE_SelectCollection = MESSAGE_SelectCollectionToolbar
+
         self.reportWindow.Report(MESSAGE_Welcome)
         
         self.startupToolTip = None
@@ -523,13 +524,13 @@ class FTMainForm (Form):
                           # NOTE: Menu item
                           _("Help"),
                           Keys.F1,
-                          _("Help on using FlexTools")
+                          _("Help on using FLExTools")
                          ),
                          (Help.ProgrammingHelp,
                           # NOTE: Menu item
                           _("Programming help"),
                           None,
-                          _("Help on how to program a FlexTools module")
+                          _("Help on how to program a FLExTools module")
                          ),
                          (Help.APIHelp,
                           # NOTE: Menu item
@@ -585,8 +586,6 @@ class FTMainForm (Form):
 
     def InitToolBar(self):
 
-        global MESSAGE_SelectCollection
-        
         # (Handler, Text, Image, Tooltip)
         ButtonListA = [
                        (self.ChooseProject,
@@ -650,9 +649,6 @@ class FTMainForm (Form):
             
         if FTConfig.hideCollectionsButton:
             ButtonListA.pop(1)
-            MESSAGE_SelectCollection = MESSAGE_SelectCollectionMenu
-        else:
-            MESSAGE_SelectCollection = MESSAGE_SelectCollectionToolbar
         
         ButtonList = ButtonListA + ButtonListB
 
