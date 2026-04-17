@@ -14,7 +14,7 @@ version = "2026.3.24b"
 # Minimum and maximum supported versions of Fieldworks
 # (Later versions should work if the LCM interface hasn't changed.)
 MinFWVersion = "9.0.17"
-MaxFWVersion = "9.3.7"
+MaxFWVersion = "9.3.8"
 
 
 #----------------------------------------------------------------------------
