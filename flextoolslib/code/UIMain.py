@@ -378,7 +378,9 @@ class FTPanel(Panel):
             self.collectionsTabControl.TabPages.Clear()
             if FTConfig.currentCollection:
                 # ...and create them afresh
-                pages = [TabPage(name) for name in FTConfig.collectionTabs]
+                # The default padding is sometimes too tight, so pad with 
+                # a space on each side of the tab text.
+                pages = [TabPage(f" {name} ") for name in FTConfig.collectionTabs]
                 self.collectionsTabControl.TabPages.AddRange(pages)
 
         if FTConfig.currentCollection:
