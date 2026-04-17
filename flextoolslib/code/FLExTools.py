@@ -46,6 +46,8 @@ from System.Windows.Forms import (
         MessageBoxButtons, 
         MessageBoxIcon)
 
+from System.Drawing import Icon
+
 # -----------------------------------------------------------
 # Logging
 # -----------------------------------------------------------
@@ -98,21 +100,42 @@ except Exception as e:
 
 logger.info(f"flexlibs imported successfully")
 
+# -----------------------------------------------------------
+# Windows DPI setting
+# -----------------------------------------------------------
+
+if platform.system() == "Windows":
+       
+    # Define the DPI awareness levels (from PROCESS_DPI_AWARENESS enum)
+    # 0: Unaware, 1: System Aware, 2: Per-Monitor Aware
+    PROCESS_DPI_UNAWARE = 0
+    PROCESS_SYSTEM_DPI_AWARE = 1
+    PROCESS_PER_MONITOR_DPI_AWARE = 2
+
+    # Qt (used by FlexTrans) sets the DPI setting to PROCESS_PER_MONITOR_DPI_AWARE
+    # which messes up all the font and window sizing (issue #65). 
+    # Set it here before Qt gets a chance to (this can only be set once).
+    # res = 0 means success.
+    res = ctypes.windll.shcore.SetProcessDpiAwareness(PROCESS_DPI_UNAWARE)
+    logging.debug(f"SetProcessDpiAwareness: {res}")
 
 #----------------------------------------------------------- 
 # UI
 #----------------------------------------------------------- 
 
 from .UIMain import FTMainForm
+from . import UIGlobal
 
 mainForm = None
 # ------------------------------------------------------------------
-def main(appTitle=None, customMenu=None, statusbarCallback=None):
+def main(appTitle=None, customMenu=None, statusbarCallback=None,
+         iconPath=None):
     """
-    Parameters:
+    Applications can be built on top of FlexTools with their own custom
+    title, menu, status bar information and application icon. Such 
+    applications call this function with the following parameters:
         appTitle - a string with the name and version to display in 
-            the main title bar. This allows systems built on FlexTools 
-            to supply a custom title.
+            the main title bar. 
         customMenu - a tuple defining a custom menu that is inserted
             before the Help menu:
                 (Menu Title, Menu Items)
@@ -128,15 +151,33 @@ def main(appTitle=None, customMenu=None, statusbarCallback=None):
                     If the tuple is None, then a separator is inserted.
         statusbarCallback - a function that returns a string to be
             included in the status bar.
+        iconPath - the path to an .ico file to replace the FlexTools 
+                    application (window) icons.
         
     """
     global FTConfig
     global mainForm
 
     FLExInitialize()
+    
+    if iconPath:
+        try:
+            icon = Icon(iconPath)
+        except:
+            raise ValueError(f"iconPath couldn't be converted to System.Drawing.Icon: {iconPath!r}")
+        UIGlobal.ApplicationIcon = icon
+        
+    # Set this parameter to replace the Python icon in the Windows Taskbar 
+    # with our icon. Using a different id for customised applications causes
+    # Windows to group its windows separately from vanilla FlexTools windows.
+    if platform.system() == "Windows":
+        myappid = 'org.sil.software.FlexTools' # Unique string
+        if iconPath: myappid += os.path.basename(iconPath)
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
     logger.debug("Creating MainForm")
     mainForm = FTMainForm(appTitle, customMenu, statusbarCallback)
+
     logger.debug("Launching WinForms Application")
     Application.Run(mainForm)
 

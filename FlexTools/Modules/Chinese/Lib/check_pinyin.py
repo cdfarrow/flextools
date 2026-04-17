@@ -21,6 +21,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+from __future__ import unicode_literals
+from builtins import str
+
+import io
+
 import segmenter
 import chin_utils
 import re
@@ -36,7 +41,8 @@ def get_tonenum_dict(fname):
     @return: list of Chinese lexemes with pronunciations
     @rtype: list of tuples
     """
-    word_file = open(fname, encoding="utf-8")
+    # Use io.open for Python 2 compatibility
+    word_file = io.open(fname, encoding="utf-8")
     line_num = 0
     word_tonenum = list()
     digits = set('123456789')

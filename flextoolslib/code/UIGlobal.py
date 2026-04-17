@@ -34,6 +34,7 @@ ICON_SUFFIX1    = "_16.gif"
 ICON_PATH2      = os.path.join(ICON_PATH0, "Fugue")
 ICON_SUFFIX2    = ".png"
 
+# Note: The application icon can be overridden by custom applications
 ApplicationIconFile = os.path.join(ICON_PATH0, "Flextools.ico")
 ApplicationIcon   = Icon(ApplicationIconFile)
 ModuleIconFile    = os.path.join(ICON_PATH0, "Module.ico")

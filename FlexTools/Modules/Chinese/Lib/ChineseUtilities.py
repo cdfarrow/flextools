@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 #   ChineseUtilities
 #
@@ -6,7 +7,14 @@
 #
 #   Support functions for processing Chinese and Pinyin in FLExTools.
 #
+#   See test_ChineseUtilities.py for tests for this module.
 #
+
+from __future__ import unicode_literals
+from __future__ import print_function
+from __future__ import absolute_import
+
+from builtins import str
 
 import codecs
 import re
@@ -16,7 +24,7 @@ import os, sys
 import datafiles
 from chin_utils import *
 from check_pinyin import *
-from pinyin import *
+from pinyin import tonenum_pinyin
 
 
 # --- Chinese Writing Systems ---
