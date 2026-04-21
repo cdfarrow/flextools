@@ -45,7 +45,7 @@ class ProjectList(ListView):
         self.View = View.Details
         self.FullRowSelect = True
         self.HeaderStyle = getattr(ColumnHeaderStyle, "None")
-        self.Columns.Add("", -2, HorizontalAlignment.Left);
+        self.Columns.Add("", -2, HorizontalAlignment.Left)
 
         # behaviour
         self.LabelEdit = False
@@ -107,6 +107,7 @@ class ProjectChooser(Form):
         bottomPanel = Panel()
         bottomPanel.Dock = DockStyle.Bottom
         bottomPanel.Height = 35
+        bottomPanel.Padding = Padding(5)
 
         browseButton = Button()
         browseButton.Text = _("Browse...")
