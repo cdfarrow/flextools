@@ -37,9 +37,72 @@ from System.Windows.Forms import (Application, BorderStyle, Button,
     )
 
 
-# ------------------------------------------------------------------
+# --- Check for updates --------------------------------------------
 
-# --- About dialog ---
+import subprocess
+from importlib.metadata import version as package_version
+
+
+class UpdateFailed(Exception):
+    def __init__(self, message):
+        self.message = message
+
+
+def updatePackage(package_name):
+    """
+    Use pip to upgrade the given package. 
+    Returns a 2-tuple with: 
+        - the status (True if the package was upgraded, else False);
+        - a message to report to the user.
+    Exception:
+        Raises UpdateFailed if there was an error in the call to pip.
+    """
+    
+    try:
+        before = package_version(package_name)
+    except:
+        before = ""
+        
+    try:
+        subprocess.check_call(
+            [sys.executable, "-m", "pip", "install", "--upgrade", package_name],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
+            )
+    except subprocess.CalledProcessError as e:
+        raise UpdateFailed(_("Failed to update {}. Error: {}").format(
+                           package_name, e))
+
+    after = package_version(package_name)
+
+    if before == after:
+        return False, _("No update available: {} {}").format(
+                        package_name, after)
+    else:
+        return True, _("{} updated successfully! ({} \u2192 {})").format(
+                       package_name, before, after)  # (\u2192 = right arrow)
+
+
+def DoUpdate(user_message):
+    """
+    Attempt to update the FlexTools libraries and report the results
+    via the `user_message` function.
+    """
+
+    restartRequired = False
+
+    for pkg in ["flextoolslib",]:
+        try:
+            updated, msg = updatePackage(pkg)
+            user_message(msg)
+            restartRequired |= updated
+        except UpdateFailed as e:
+            user_message(e.message)
+
+    return restartRequired
+
+
+# --- About dialog -------------------------------------------------
 
 class AboutInfo(RichTextBox):
     def __init__(self):
@@ -141,9 +204,8 @@ class AboutBox (Form):
         self.Controls.Add(pb)
         self.Controls.Add(AboutInfo())
 
-# ------------------------------------------------------------------
 
-# --- Help files ---
+# --- Help files ---------------------------------------------------
 
 HELP_PATH = os.path.join(os.path.dirname(__file__), r"..\docs")
 
@@ -162,7 +224,7 @@ def Help(helpfile):
                         MessageBoxIcon.Error)
 
 
-# --- Exported functions ---
+# --- Exported event handlers --------------------------------------
 
 def About(sender=None, event=None):
     dlg = AboutBox()

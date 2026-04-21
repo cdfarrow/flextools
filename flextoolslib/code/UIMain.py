@@ -538,7 +538,7 @@ class FTMainForm (Form):
                           # NOTE: Menu item
                           _("API help"),
                           None,
-                          ("Help on the Programming Interface")
+                          _("Help on the FLExTools programming interface")
                          ),
                          None,     # Separator
                          (Help.LaunchLCMBrowser,
@@ -548,6 +548,12 @@ class FTMainForm (Form):
                           _("Open the FieldWorks LCMBrowser application")
                          ),
                          None,     # Separator
+                         (self.CheckForUpdates,
+                          # NOTE: Menu item
+                          _("Check for updates"),
+                          None,
+                          None
+                         ),
                          (Help.About,
                           # NOTE: Menu item
                           _("About"),
@@ -974,3 +980,14 @@ class FTMainForm (Form):
 
     def RunAllModify(self, sender, event):
         self.UIPanel.RunAllModify()
+
+    def CheckForUpdates(self, sender, event):
+        report = self.UIPanel.reportWindow.Report
+        
+        report(_("Checking for updates..."))
+        self.UIPanel.reportWindow.Refresh()
+        restartRequired = Help.DoUpdate(report)       
+        report(_("Done"))
+    
+        if restartRequired:
+            report(_("Restart FLExTools to use the latest version."))

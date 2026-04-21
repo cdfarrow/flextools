@@ -27,6 +27,7 @@ FLExTools History
 + Bug fixes & new features:
     + #4 Added a browse button to the Choose Project dialog to open projects
       from a non-standard location.
+    + Added "Check for updates" to the Help menu.
     + Keep tab labels from wrapping.
     + #72: Fix Chinese converters for Flex Bulk Edit.
     
