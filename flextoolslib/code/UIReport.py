@@ -81,6 +81,31 @@ class ReportWindow(ListView):
                     logger.error(f"os.startfile failed with {item.Tag}")
 
     def Report(self, reportItem):
+        """
+        Output a new status or error message by appending an item to 
+        the ListView. Messages can be shown with icons and tooltips for
+        extra information. They can optionally provide a hyperlink to a
+        FieldWorks data element or a file to open when the list item is
+        double-clicked.
+        
+        reportItem is either a tuple or a plain string. 
+        
+        Plain strings (including empty strings) are simply added as a 
+        new line in the output.
+        
+        Tuples define a message type (which determines the icon), and
+        optional tooltip text or hyperlink. The tuple is of the form
+            (messageType, message, extraInfo), where:
+                messageType: one of the four values defined in FTReport.FTReporter
+                for Info, Warning, Error and blank messages;
+                message: the string to display;
+                extraInfo: either the tooltip text, or a FieldWorks 
+                    hyperlink starting with "silfw:" or a file hyperlink 
+                    starting with "file:".
+                    Additionally, if extraInfo is not a string (such as 
+                    a FieldWorks object) then the tooltip displays its
+                    representation (using repr()).
+        """
         if type(reportItem) == tuple:
             msgType, msg, extra = reportItem
             if msg == None: msg = ""            # If None then no icon shows
