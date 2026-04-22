@@ -126,11 +126,11 @@ class FTPanel(Panel):
         if e.State == DrawItemState.Selected: 
             g.FillRectangle(SolidBrush(UIGlobal.tabColor),
                             e.Bounds)
-        
+
         # Draw the text
         TextRenderer.DrawText(g,
                               tab.Text, 
-                              e.Font, 
+                              e.Font,
                               tabControl.GetTabRect(e.Index),
                               Color.Black,
                               TextFormatFlags.HorizontalCenter |
@@ -202,6 +202,8 @@ class FTPanel(Panel):
         self.collectionsTabControl.Dock = DockStyle.Fill
         self.collectionsTabControl.Alignment = TabAlignment.Top
         self.collectionsTabControl.TabStop = True
+        self.collectionsTabControl.Font = UIGlobal.normalFont
+
         self.collectionsTabControl.DrawMode = TabDrawMode.OwnerDrawFixed
         self.collectionsTabControl.DrawItem += self.__OnDrawTab
         
@@ -318,7 +320,7 @@ class FTPanel(Panel):
         if self.ignoreTabChange: return
 
         # Callback to parent Form to initiate refresh to new collection
-        self.changeCollectionFunction(event.TabPage.Text)
+        self.changeCollectionFunction(event.TabPage.Name)
 
     # Called after __OnTabSelected when the mouse is clicked
     def __OnTabMouseDown(self, sender, event):
@@ -339,10 +341,10 @@ class FTPanel(Panel):
         
         # Remove the collection from the tab list
         # (FTConfig only supports assignment, so do this in two steps)
-        tempCollections = FTConfig.collectionTabs
-        index = tempCollections.index(currentTab.Text)
-        tempCollections.remove(currentTab.Text)
-        FTConfig.collectionTabs = tempCollections
+        t = FTConfig.collectionTabs
+        index = t.index(currentTab.Name)
+        t.remove(currentTab.Name)
+        FTConfig.collectionTabs = t
 
         if len(FTConfig.collectionTabs):
             # Select the next tab to the left
@@ -370,7 +372,7 @@ class FTPanel(Panel):
     def UpdateCollectionTabs(self):
         self.ignoreTabChange = True     # Avoid nested TabChanged events
 
-        tabs = [tab.Text for tab in self.collectionsTabControl.TabPages]
+        tabs = [tab.Name for tab in self.collectionsTabControl.TabPages]
         changed = tabs != FTConfig.collectionTabs
         
         if changed:
@@ -378,10 +380,14 @@ class FTPanel(Panel):
             self.collectionsTabControl.TabPages.Clear()
             if FTConfig.currentCollection:
                 # ...and create them afresh
-                # The default padding is sometimes too tight, so pad with 
-                # a space on each side of the tab text.
-                pages = [TabPage(f" {name} ") for name in FTConfig.collectionTabs]
+                pages = [TabPage(name) for name in FTConfig.collectionTabs]
                 self.collectionsTabControl.TabPages.AddRange(pages)
+                for t in self.collectionsTabControl.TabPages:
+                    # The default padding is sometimes too tight, so pad with 
+                    # a space on each side of the tab text, and use Name
+                    # for the real collection name.
+                    t.Name = t.Text
+                    t.Text = f" {t.Text} "
 
         if FTConfig.currentCollection:
             # Activate the selected tab
