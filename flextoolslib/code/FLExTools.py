@@ -186,7 +186,18 @@ def main(appTitle=None, customMenu=None, statusbarCallback=None,
     
     FLExCleanup()
     
+# -----------------------------------------------------------
+# Helper hooks for applications built on FlexTools
+# -----------------------------------------------------------
 
 def refreshStatusbar():
     global mainForm
     mainForm.UpdateStatusBar()
+
+def lockUI(lock):
+    """
+    Disable the FLExTools menu, toolbar and keyboard shortcuts.
+    Use this around any UI that is opened from the custom menu. 
+    """
+    global mainForm
+    mainForm.LockUI(lock)

@@ -22,14 +22,16 @@ FLExTools History
     + Added LexiconSetLexemeForm()
     + Added LexiconGetExampleCustomFields()
     + Added LexiconGetAllomorphCustomFields()
-+ Added UI translations for:
-    + French (Machine-translated draft)
++ Translations:
+    + Added French (Machine-translated draft)
 + Bug fixes & new features:
     + #4 Added a browse button to the Choose Project dialog to open projects
       from a non-standard location.
     + Added "Check for updates" to the Help menu.
-    + Keep tab labels from wrapping.
+    + Keep tab labels from wrapping and added more space around them.
     + #72: Fix Chinese converters for Flex Bulk Edit.
+    + #59: Stop the main window going behind other windows.
+    + Block menus and keyboard shortcuts while modules are running.
     
 
 2.3.2_2025.8.26

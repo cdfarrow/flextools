@@ -37,6 +37,7 @@ from System.Windows.Forms import (
     Panel, 
     MessageBox, MessageBoxButtons, MessageBoxIcon, DialogResult,
     DockStyle, Orientation,
+    ToolStripMenuItem,
     ToolStripButton,
     TabControl, TabPage, TabAlignment,
     TabDrawMode,
@@ -75,11 +76,10 @@ from cdfutils.DotNet import (
     SimpleContextMenu,
     )
 
-import ctypes
-user32 = ctypes.windll.user32
 
 # ------------------------------------------------------------------
 # Localisation
+# ------------------------------------------------------------------
 
 import gettext
 
@@ -96,6 +96,7 @@ translator.install()
 
 # ------------------------------------------------------------------
 # UI Messages & text
+# ------------------------------------------------------------------
 
 MESSAGE_Welcome = \
     _("Welcome to FLExTools!")
@@ -114,6 +115,10 @@ MESSAGE_RunButtons = \
     _("Use the Run buttons to run modules.")
 
 # ------------------------------------------------------------------
+# The main FLExTools Panel, which contains the collections list above 
+# and the message (Report) list below.
+# ------------------------------------------------------------------
+
 class FTPanel(Panel):
 
     def __OnDrawTab(self, sender, e):
@@ -141,19 +146,20 @@ class FTPanel(Panel):
     def __init__(self, 
                  moduleManager, 
                  listOfModules, 
+                 lockUIFunction,
                  reloadFunction, 
                  progressFunction,
-                 changeCollectionFunction):
+                 changeCollectionFunction,
+                 ):
         Panel.__init__(self)
 
         self.Dock = DockStyle.Fill
         self.Font = UIGlobal.normalFont
 
-        self.__ManageCollectionsHandler = None
-
         # -- Module list and Report window
         self.moduleManager = moduleManager
         self.listOfModules = listOfModules
+        self.lockUIFunction = lockUIFunction
         self.reloadFunction = reloadFunction
         self.changeCollectionFunction = changeCollectionFunction
 
@@ -265,27 +271,22 @@ class FTPanel(Panel):
         self.reportWindow.Reporter.Info(message)
         self.reportWindow.Refresh()
         
-        # Freeze our UI for when a module does its own UI (e.g. FLExTrans)
-        self.Parent.Enabled = False
+        # Freeze our UI when modules are running by disabling all 
+        # controls (menu, toolbar, and keyboard shortcuts) on the main 
+        # form.
+        
+        self.lockUIFunction(True)
+
         self.moduleManager.RunModules(FTConfig.currentProject,
                                       modules,
                                       self.reportWindow.Reporter,
                                       modifyAllowed)
+                                                  
         # Make sure the progress indicator is off
         self.reportWindow.Reporter.ProgressStop()
-        self.Parent.Enabled = True
-
-        # After running a FLExTrans window, the FlexTools
-        # window goes behind any other window that is active.
-        # self.Parent.BringToFront() works to bring us to the
-        # front for the QT windows, but not for the Rule
-        # Assistant (a Java application). This hack seems to
-        # solve it. (Issue #59)
-        # [https://stackoverflow.com/a/19136480/19262107]
-        # [https://stackoverflow.com/a/30572826/19262107]
-        user32.keybd_event(0,0,0,0)
-        hwnd = self.Parent.Handle.ToInt32()
-        user32.SetForegroundWindow(hwnd)
+        
+        # Re-enable
+        self.lockUIFunction(False)
         
     def RunAll(self, modifyAllowed=False):
         if len(self.listOfModules) > 0:
@@ -428,6 +429,62 @@ class FTPanel(Panel):
         self.modulesList.UpdateAllItems(self.listOfModules,
                                         keepSelection=True)
 
+# ------------------------------------------------------------------
+# A class to manage disabling and enabling the menu shortcut keys
+# during a Run operation.
+# ------------------------------------------------------------------
+
+class MenuShortcutManager(object):
+    def __init__(self, menu_strip):
+        self._menu_strip = menu_strip
+        self._saved = None      # item -> ShortcutKeys
+        self._enabled = True
+
+    @property
+    def Enabled(self):
+        return self._enabled
+
+    @Enabled.setter
+    def Enabled(self, value):
+        if self._enabled == value:
+            return
+
+        self._enabled = value
+
+        if value:
+            self._restore()
+        else:
+            self._disable()
+
+    def _walk(self, items):
+        for item in items:
+            if isinstance(item, ToolStripMenuItem):
+                yield item
+                if item.DropDownItems:
+                    for child in self._walk(item.DropDownItems):
+                        yield child
+    
+    def _build_cache(self):
+        self._saved = {}
+        for item in self._walk(self._menu_strip.Items):
+            self._saved[item] = item.ShortcutKeys
+
+    def _disable(self):
+        if self._saved is None:
+            self._build_cache()
+
+        for item in self._saved.keys():
+            item.ShortcutKeys = getattr(Keys, "None")
+
+    def _restore(self):
+        if self._saved is None:
+            return  # nothing cached yet
+
+        for item, keys in self._saved.items():
+            item.ShortcutKeys = keys
+        
+# ------------------------------------------------------------------
+# The main Form for the FLExTools application.
 # ------------------------------------------------------------------
 
 class FTMainForm (Form):
@@ -588,6 +645,9 @@ class FTMainForm (Form):
         # to the Controls collection of the form.")
         self.MainMenuStrip = CustomMainMenu(MenuList)
         self.Controls.Add(self.MainMenuStrip)
+        
+        # Install the shortcut enabler/disabler
+        self._menuShortcutManager = MenuShortcutManager(self.MainMenuStrip)
 
         # Pre-calculate the menu items to disable when disableRunAll is defined
         # for a collection.
@@ -808,6 +868,7 @@ class FTMainForm (Form):
         # Main panel (modules' list & report window)
         self.UIPanel = FTPanel(self.moduleManager,
                                listOfModules,
+                               self.LockUI,
                                self.__LoadModules,
                                self.__ProgressBar,
                                self.__ChangeCollection,
@@ -839,7 +900,27 @@ class FTMainForm (Form):
 
         self.Shown += self.UIPanel.OnShown
 
-    # ----
+    # ---- UI/update functions ----
+    
+    @property
+    def MenuShortcutsEnabled(self):
+        return self._menuShortcutManager.Enabled
+    
+    @MenuShortcutsEnabled.setter
+    def MenuShortcutsEnabled(self, value):
+        self._menuShortcutManager.Enabled = value
+        
+    def LockUI(self, lock):
+        """
+        Disable the menu, toolbar and keyboard shortcuts while modules
+        are being run. This is a better fix for issue #47.
+        """
+        enable = not lock
+        
+        self.MenuShortcutsEnabled = enable
+        for c in self.Controls:
+            c.Enabled = enable
+
     def UpdateStatusBar(self):
         collectionText = _("Collection: {}").format(FTConfig.currentCollection)
 
@@ -861,7 +942,6 @@ class FTMainForm (Form):
         
         if self.StatusBar.Text != newText:
             self.StatusBar.Text = newText
-        
 
     def UpdateDisabledStates(self, disableRunAll):
         for menu in self.runallMenuItems:
@@ -979,7 +1059,6 @@ class FTMainForm (Form):
         if isinstance(sender, ToolStripButton):
             sender.Visible = False
             sender.Visible = True
-
 
     def RunAll(self, sender, event):
         self.UIPanel.RunAll()

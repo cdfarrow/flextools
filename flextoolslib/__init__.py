@@ -19,11 +19,13 @@ MaxFWVersion = "9.3.8"
 
 #----------------------------------------------------------------------------
 # Define exported classes, etc. at the top level of the package
+#----------------------------------------------------------------------------
 
 # The main application
 from .code.FLExTools import (
     main, 
     refreshStatusbar,
+    lockUI,
     )
 
 # The Modules class and documentation constants
