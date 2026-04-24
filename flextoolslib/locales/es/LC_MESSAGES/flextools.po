@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 24\n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
-"PO-Revision-Date: 2026-02-24 00:35\n"
+"PO-Revision-Date: 2026-04-24 09:13\n"
 
 #. NOTE: Parameter = collection name
 #: ../code/FTCollections.py:141 ../code/FTCollections.py:167
@@ -88,30 +88,45 @@ msgstr "¡El módulo ha fallado con la excepción {}!"
 msgid "Processing completed. Errors: {}; Warnings: {}"
 msgstr "Procesamiento completado. Errores: {}; Avisos: {}"
 
-#: ../code/Help.py:66
+#: ../code/Help.py:73
+#, python-brace-format
+msgid "Failed to update {}. Error: {}"
+msgstr "Error al actualizar {}. Error: {}"
+
+#: ../code/Help.py:79
+#, python-brace-format
+msgid "No update available: {} {}"
+msgstr "No hay actualizaciones disponibles: {} {}"
+
+#: ../code/Help.py:82
+#, python-brace-format
+msgid "{} updated successfully! ({} → {})"
+msgstr "{} actualizado con éxito! ({} → {})"
+
+#: ../code/Help.py:129
 msgid "A framework for running Python scripts on a FieldWorks Language Explorer project."
 msgstr "Un framework para ejecutar scripts Python en un proyecto de Explorador de Lenguaje de FieldWorks."
 
-#: ../code/Help.py:77
+#: ../code/Help.py:140
 #, python-brace-format
 msgid "Modules installed: {}"
 msgstr "Módulos instalados: {}"
 
-#: ../code/Help.py:79
+#: ../code/Help.py:142
 #, python-brace-format
 msgid "Python version: {}"
 msgstr "Python versión: {}"
 
-#: ../code/Help.py:81
+#: ../code/Help.py:144
 #, python-brace-format
 msgid "FieldWorks version: {}"
 msgstr "Versión de FieldWorks: {}"
 
-#: ../code/Help.py:95
+#: ../code/Help.py:158
 msgid "E-mail"
 msgstr "E-mail"
 
-#: ../code/Help.py:129
+#: ../code/Help.py:192
 msgid "About FLExTools"
 msgstr "Acerca de FLExTools"
 
@@ -192,7 +207,7 @@ msgid "Remove the selected module from the current collection"
 msgstr "Eliminar el módulo seleccionado de la colección actual"
 
 #. NOTE: Toolbar item
-#: ../code/UICollections.py:298 ../code/UIMain.py:603
+#: ../code/UICollections.py:298 ../code/UIMain.py:672
 msgid "Collections"
 msgstr "Colecciones"
 
@@ -202,7 +217,7 @@ msgstr "Módulos"
 
 #: ../code/UICollections.py:352
 msgid "Duplicate module"
-msgstr "Duplicate module"
+msgstr "Duplicar module"
 
 #: ../code/UICollections.py:372
 #, python-brace-format
@@ -230,295 +245,316 @@ msgstr "Confirmar eliminación"
 msgid "Collections Manager"
 msgstr "Gestor de colecciones"
 
-#: ../code/UIMain.py:101
+#: ../code/UIMain.py:102
 msgid "Welcome to FLExTools!"
 msgstr "¡Bienvenido a FLExTools!"
 
-#: ../code/UIMain.py:103
+#: ../code/UIMain.py:104
 msgid "Select a project by clicking the 'Select project' button in the toolbar."
 msgstr "Seleccione un proyecto haciendo clic en el botón 'Seleccionar proyecto' en la barra de herramientas."
 
-#: ../code/UIMain.py:105
+#: ../code/UIMain.py:106
 #, python-brace-format
 msgid "Project '{}' selected."
 msgstr "Proyecto '{}' seleccionado."
 
-#: ../code/UIMain.py:107
+#: ../code/UIMain.py:108
 #, python-brace-format
 msgid "Collection '{}' selected."
 msgstr "Colección '{}' seleccionada."
 
-#: ../code/UIMain.py:110
+#: ../code/UIMain.py:111
 msgid "Open or create a collection by clicking the 'Collections' button in the toolbar."
 msgstr "Abrir o cree una colección haciendo clic en el botón 'Colecciones' de la barra de herramientas."
 
-#: ../code/UIMain.py:112
+#: ../code/UIMain.py:113
 msgid "Open or create a collection by using the 'FLExTools | Manage collections' menu, or pressing Ctrl-L."
 msgstr "Abrir o cree una colección usando el menú 'FLExTools | Administrar colecciones', o presione Ctrl-L."
 
-#: ../code/UIMain.py:114
+#: ../code/UIMain.py:115
 msgid "Use the Run buttons to run modules."
 msgstr "Utilice los botones Ejecutar para ejecutar módulos."
 
-#: ../code/UIMain.py:197
+#: ../code/UIMain.py:198
 msgid "Getting started"
 msgstr "Comenzando"
 
-#: ../code/UIMain.py:214
+#: ../code/UIMain.py:217
 msgid "Close current collection tab"
 msgstr "Cerrar la pestaña de colección actual"
 
-#: ../code/UIMain.py:243
+#: ../code/UIMain.py:246
 msgid "No project selected! Use the 'Select project' button in the toolbar."
 msgstr "Ningún proyecto seleccionado! Utilice el botón 'Seleccionar proyecto' en la barra de herramientas."
 
-#: ../code/UIMain.py:255
+#: ../code/UIMain.py:258
 #, python-brace-format
 msgid "Are you sure you want to make changes to the '{}' project? Please back up the project first."
 msgstr "¿Está seguro que desea realizar cambios en el proyecto '{}'? Por favor, haga una copia de seguridad del proyecto primero."
 
-#: ../code/UIMain.py:257
+#: ../code/UIMain.py:260
 msgid "Allow changes?"
 msgstr "¿Permitir cambios?"
 
 #. NOTE: Keep the space at the beginning if your language uses spaces.
-#: ../code/UIMain.py:266
+#: ../code/UIMain.py:269
 msgid " (Changes enabled)"
 msgstr " (Cambios habilitados)"
 
-#: ../code/UIMain.py:295
+#: ../code/UIMain.py:293
 msgid "Running all modules..."
 msgstr "Ejecutando todos los módulos..."
 
-#: ../code/UIMain.py:303
+#: ../code/UIMain.py:301
 msgid "Running module..."
 msgstr "Ejecutando módulo..."
 
-#: ../code/UIMain.py:305
+#: ../code/UIMain.py:303
 msgid "Running selected modules..."
 msgstr "Ejecutando módulos seleccionados..."
 
 #. NOTE: Menu item
 #. NOTE: Toolbar item
-#: ../code/UIMain.py:437 ../code/UIMain.py:598
+#: ../code/UIMain.py:497 ../code/UIMain.py:667
 msgid "Select project"
 msgstr "Seleccionar proyecto"
 
-#: ../code/UIMain.py:439 ../code/UIMain.py:600
+#: ../code/UIMain.py:499 ../code/UIMain.py:669
 msgid "Select the FieldWorks project to operate on"
 msgstr "Seleccione el proyecto FieldWorks en el que operar"
 
 #. NOTE: Menu item
-#: ../code/UIMain.py:443
+#: ../code/UIMain.py:503
 msgid "Open project in FieldWorks"
 msgstr "Abrir proyecto en FieldWorks"
 
-#: ../code/UIMain.py:445
+#: ../code/UIMain.py:505
 msgid "Open the current project in FieldWorks"
 msgstr "Abrir el proyecto actual en FieldWorks"
 
 #. NOTE: Menu item
-#: ../code/UIMain.py:449
+#: ../code/UIMain.py:509
 msgid "Manage collections"
 msgstr "Administrar colecciones"
 
-#: ../code/UIMain.py:451 ../code/UIMain.py:605
+#: ../code/UIMain.py:511 ../code/UIMain.py:674
 msgid "Manage and select a collection of modules"
 msgstr "Administrar y seleccionar una colección de módulos"
 
 #. NOTE: Menu item
-#: ../code/UIMain.py:455
+#: ../code/UIMain.py:515
 msgid "Module information"
 msgstr "Información del módulo"
 
-#: ../code/UIMain.py:457
+#: ../code/UIMain.py:517
 msgid "Show help information on the selected module"
 msgstr "Mostrar información de ayuda en el módulo seleccionado"
 
 #. NOTE: Menu item
-#: ../code/UIMain.py:461
+#: ../code/UIMain.py:521
 msgid "Re-load modules"
 msgstr "Volver a cargar módulos"
 
-#: ../code/UIMain.py:463
+#: ../code/UIMain.py:523
 msgid "Re-import all modules"
 msgstr "Reimportar todos los módulos"
 
 #. NOTE: Menu item
-#: ../code/UIMain.py:467
+#: ../code/UIMain.py:527
 msgid "Settings"
 msgstr "Ajustes"
 
-#: ../code/UIMain.py:469
+#: ../code/UIMain.py:529
 msgid "Edit the FLExTools settings"
 msgstr "Editar la configuración de FLExTools"
 
 #. NOTE: Menu item
-#: ../code/UIMain.py:475
+#: ../code/UIMain.py:535
 msgid "Run module"
 msgstr "Ejecutar módulo"
 
-#: ../code/UIMain.py:477
+#: ../code/UIMain.py:537
 msgid "Run the selected module"
 msgstr "Ejecutar el módulo seleccionado"
 
 #. NOTE: Menu item
-#: ../code/UIMain.py:481 ../code/UIMain.py:501
+#: ../code/UIMain.py:541 ../code/UIMain.py:561
 msgid "Run all modules"
 msgstr "Ejecutar todos los módulos"
 
-#: ../code/UIMain.py:483 ../code/UIMain.py:503 ../code/UIMain.py:629
+#: ../code/UIMain.py:543 ../code/UIMain.py:563 ../code/UIMain.py:698
 msgid "Run all the modules"
 msgstr "Ejecutar todos los módulos"
 
 #. NOTE: Menu item
-#: ../code/UIMain.py:489
+#: ../code/UIMain.py:549
 msgid "Run module(s)"
 msgstr "Ejecutar módulo(s)"
 
-#: ../code/UIMain.py:491 ../code/UIMain.py:624
+#: ../code/UIMain.py:551 ../code/UIMain.py:693
 msgid "Run the selected module(s)"
 msgstr "Ejecutar el(los) módulo(s) seleccionados"
 
 #. NOTE: Menu item
-#: ../code/UIMain.py:495
+#: ../code/UIMain.py:555
 msgid "Run module(s) (Modify enabled)"
 msgstr "Ejecutar módulo(s) (Modificar habilitado)"
 
-#: ../code/UIMain.py:497 ../code/UIMain.py:647
+#: ../code/UIMain.py:557 ../code/UIMain.py:716
 msgid "Run the selected module(s) and allow changes to the project"
 msgstr "Ejecutar el/los módulo(s) seleccionados y permitir cambios en el proyecto"
 
 #. NOTE: Menu item
-#: ../code/UIMain.py:507
+#: ../code/UIMain.py:567
 msgid "Run all modules (Modify enabled)"
 msgstr "Ejecutar todos los módulos (Modificar habilitado)"
 
-#: ../code/UIMain.py:509 ../code/UIMain.py:652
+#: ../code/UIMain.py:569 ../code/UIMain.py:721
 msgid "Run all the modules and allow changes to the project"
 msgstr "Ejecutar todos los módulos y permitir cambios en el proyecto"
 
 #. NOTE: Menu item
-#: ../code/UIMain.py:514
+#: ../code/UIMain.py:574
 msgid "Copy to clipboard"
 msgstr "Copiar al portapapeles"
 
-#: ../code/UIMain.py:516
+#: ../code/UIMain.py:576
 msgid "Copy the report contents to the clipboard"
 msgstr "Copiar el contenido del informe al portapapeles"
 
 #. NOTE: Menu item
-#: ../code/UIMain.py:522
+#: ../code/UIMain.py:582
 msgid "Clear"
 msgstr "Claro"
 
-#: ../code/UIMain.py:524
+#: ../code/UIMain.py:584
 msgid "Clear the current report"
 msgstr "Borrar el informe actual"
 
 #. NOTE: Menu item
 #. NOTE: Menu title
-#: ../code/UIMain.py:530 ../code/UIMain.py:570
+#: ../code/UIMain.py:590 ../code/UIMain.py:636
 msgid "Help"
 msgstr "Ayuda"
 
-#: ../code/UIMain.py:532
+#: ../code/UIMain.py:592
 msgid "Help on using FLExTools"
 msgstr "Ayuda sobre el uso de FLExTools"
 
 #. NOTE: Menu item
-#: ../code/UIMain.py:536
+#: ../code/UIMain.py:596
 msgid "Programming help"
 msgstr "Ayuda de programación"
 
-#: ../code/UIMain.py:538
+#: ../code/UIMain.py:598
 msgid "Help on how to program a FLExTools module"
 msgstr "Ayuda sobre cómo programar un módulo FLExTools"
 
 #. NOTE: Menu item
-#: ../code/UIMain.py:542
+#: ../code/UIMain.py:602
 msgid "API help"
 msgstr "API help"
 
+#: ../code/UIMain.py:604
+msgid "Help on the FLExTools programming interface"
+msgstr "Ayuda en la interfaz de programación de FLExTools"
+
 #. NOTE: Menu item
-#: ../code/UIMain.py:549
+#: ../code/UIMain.py:609
 msgid "Launch LCMBrowser"
 msgstr "Iniciar LCMBrowser"
 
-#: ../code/UIMain.py:551
+#: ../code/UIMain.py:611
 msgid "Open the FieldWorks LCMBrowser application"
 msgstr "Abrir la aplicación FieldWorks LCMBrowser"
 
 #. NOTE: Menu item
-#: ../code/UIMain.py:556
+#: ../code/UIMain.py:616
+msgid "Check for updates"
+msgstr "Buscar actualizaciones"
+
+#. NOTE: Menu item
+#: ../code/UIMain.py:622
 msgid "About"
 msgstr "Acerca de"
 
 #. NOTE: Menu title
-#: ../code/UIMain.py:564
+#: ../code/UIMain.py:630
 msgid "FLExTools"
 msgstr "FLExTools"
 
 #. NOTE: Menu title
 #. NOTE: Toolbar item
-#: ../code/UIMain.py:566 ../code/UIMain.py:622 ../code/UIMain.py:635
+#: ../code/UIMain.py:632 ../code/UIMain.py:691 ../code/UIMain.py:704
 msgid "Run"
 msgstr "Ejecutar"
 
 #. NOTE: Menu title
-#: ../code/UIMain.py:568
+#: ../code/UIMain.py:634
 msgid "Report"
 msgstr "Reporte"
 
 #. NOTE: Toolbar item
-#: ../code/UIMain.py:608
+#: ../code/UIMain.py:677
 msgid "Module info"
 msgstr "Información del módulo"
 
-#: ../code/UIMain.py:610
+#: ../code/UIMain.py:679
 msgid "Show the module documentation"
 msgstr "Mostrar la documentación del módulo"
 
 #. NOTE: Toolbar item
-#: ../code/UIMain.py:627 ../code/UIMain.py:640
+#: ../code/UIMain.py:696 ../code/UIMain.py:709
 msgid "Run all"
 msgstr "Ejecutar todo"
 
-#: ../code/UIMain.py:637
+#: ../code/UIMain.py:706
 msgid "Run the selected module(s) in preview mode"
 msgstr "Ejecutar el/los módulo(s) seleccionados en modo de vista previa"
 
-#: ../code/UIMain.py:642
+#: ../code/UIMain.py:711
 msgid "Run all the modules in preview mode"
 msgstr "Ejecutar todos los módulos en modo vista previa"
 
 #. NOTE: Toolbar item
-#: ../code/UIMain.py:645
+#: ../code/UIMain.py:714
 msgid "Run (Modify)"
 msgstr "Ejecutar (Modificar)"
 
 #. NOTE: Toolbar item
-#: ../code/UIMain.py:650
+#: ../code/UIMain.py:719
 msgid "Run all (Modify)"
 msgstr "Ejecutar todo (modificar)"
 
-#: ../code/UIMain.py:677
+#: ../code/UIMain.py:746
 msgid "Import Error!"
 msgstr "¡Error de importación!"
 
-#: ../code/UIMain.py:834
+#: ../code/UIMain.py:925
 #, python-brace-format
 msgid "Collection: {}"
 msgstr "Colección: {}"
 
-#: ../code/UIMain.py:845
+#: ../code/UIMain.py:936
 msgid "Progress"
 msgstr "Progreso"
 
-#: ../code/UIMain.py:914
+#: ../code/UIMain.py:1013
 #, python-brace-format
 msgid "Opening project '{}' in FieldWorks..."
 msgstr "Abriendo proyecto '{}' en FieldWorks..."
+
+#: ../code/UIMain.py:1072
+msgid "Checking for updates..."
+msgstr "Buscando actualizaciones..."
+
+#: ../code/UIMain.py:1075
+msgid "Done"
+msgstr "Hecho"
+
+#: ../code/UIMain.py:1078
+msgid "Restart FLExTools to use the latest version."
+msgstr "Reinicie FLExTools para usar la última versión."
 
 #: ../code/UIModuleBrowser.py:54
 msgid "Double-click a module to add it to the current collection"
@@ -578,15 +614,23 @@ msgstr "Nota: Este módulo tiene parámetros configurables."
 msgid "Module '{}' is missing or failed to import!"
 msgstr "¡El módulo '{}' no se encuentra o no se ha importado!"
 
-#: ../code/UIProjectChooser.py:98
+#: ../code/UIProjectChooser.py:99
 msgid "Choose Project"
 msgstr "Elegir proyecto"
 
-#: ../code/UIReport.py:91
+#: ../code/UIProjectChooser.py:113
+msgid "Browse..."
+msgstr "Navegar..."
+
+#: ../code/UIProjectChooser.py:134
+msgid "Select a FieldWorks project"
+msgstr "Seleccione un proyecto de FieldWorks"
+
+#: ../code/UIReport.py:116
 msgid "Double-click to jump to FieldWorks"
 msgstr "Doble clic para saltar a FieldWorks"
 
-#: ../code/UIReport.py:93
+#: ../code/UIReport.py:118
 msgid "Double-click to open file"
 msgstr "Doble clic para abrir el archivo"
 
