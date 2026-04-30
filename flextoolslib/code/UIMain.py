@@ -613,7 +613,7 @@ class FTMainForm (Form):
                          None,     # Separator
                          (self.CheckForUpdates,
                           # NOTE: Menu item
-                          _("Check for updates"),
+                          _("Update"),
                           None,
                           None
                          ),
@@ -1067,12 +1067,13 @@ class FTMainForm (Form):
         self.UIPanel.RunAllModify()
 
     def CheckForUpdates(self, sender, event):
-        report = self.UIPanel.reportWindow.Report
+        reporter = self.UIPanel.reportWindow
+        reporter.Clear()
         
-        report(_("Checking for updates..."))
+        reporter.Report(_("Checking for updates..."))
         self.UIPanel.reportWindow.Refresh()
-        restartRequired = Help.DoUpdate(report)       
-        report(_("Done"))
+        restartRequired = Help.TryUpdate(reporter.Report)
+        reporter.Report(_("Done"))
     
         if restartRequired:
-            report(_("Restart FLExTools to use the latest version."))
+            reporter.Report(_("Restart FLExTools to use the latest version."))

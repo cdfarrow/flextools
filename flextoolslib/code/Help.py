@@ -40,6 +40,7 @@ from System.Windows.Forms import (Application, BorderStyle, Button,
 # --- Check for updates --------------------------------------------
 
 import subprocess
+import socket
 from importlib.metadata import version as package_version
 
 
@@ -47,6 +48,12 @@ class UpdateFailed(Exception):
     def __init__(self, message):
         self.message = message
 
+def internetAvailable(host="pypi.org", port=443, timeout=3):
+    try:
+        socket.create_connection((host, port), timeout=timeout)
+        return True
+    except OSError:
+        return False
 
 def updatePackage(package_name):
     """
@@ -62,7 +69,7 @@ def updatePackage(package_name):
         before = package_version(package_name)
     except:
         before = ""
-        
+
     try:
         subprocess.check_call(
             [sys.executable, "-m", "pip", "install", "--upgrade", package_name],
@@ -83,11 +90,15 @@ def updatePackage(package_name):
                        package_name, before, after)  # (\u2192 = right arrow)
 
 
-def DoUpdate(user_message):
+def TryUpdate(user_message):
     """
     Attempt to update the FlexTools libraries and report the results
     via the `user_message` function.
     """
+
+    if not internetAvailable():
+        user_message(_("Internet not available."))
+        return False
 
     restartRequired = False
 
@@ -95,7 +106,7 @@ def DoUpdate(user_message):
         try:
             updated, msg = updatePackage(pkg)
             user_message(msg)
-            restartRequired |= updated
+            restartRequired = restartRequired or updated
         except UpdateFailed as e:
             user_message(e.message)
 
