@@ -14,6 +14,7 @@
 '
 '   The commands are (case insensitive):
 '       Run      - run FlexTools
+'       Demo     - run FlexTools in demonstration mode (larger fonts and windows)
 '       Debug    - run FlexTools with debugging output
 '       Install  - run pip to install or upgrade flextoolslib
 '       List     - output a list of all the FieldWorks projects
@@ -35,6 +36,11 @@ If WScript.Arguments.Count > 1 Then
     FLEXTOOLS = FLEXTOOLS & " " & WScript.Arguments.Item(1)
 End If
 
+If WScript.Arguments.Count < 1 Then
+    WScript.Echo "Usage: FlexToolsCommands.vbs <command>"
+    WScript.Quit 1
+End If
+
 ' Jump table: call the function matching the command
 func = GetRef("Do" & WScript.Arguments.Item(0))
 
@@ -47,6 +53,11 @@ End Function
 
 Function DoRun()
     rc = WshShell.Run(FLEXTOOLS, 0, True)
+    If rc <> 0 Then ErrorMsg
+End Function
+
+Function DoDemo()
+    rc = WshShell.Run(FLEXTOOLS & " DEMO", 0, True)
     If rc <> 0 Then ErrorMsg
 End Function
 
