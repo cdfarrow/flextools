@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 24\n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
-"PO-Revision-Date: 2026-04-24 09:13\n"
+"PO-Revision-Date: 2026-05-04 22:18\n"
 
 #. NOTE: Parameter = collection name
 #: ../code/FTCollections.py:141 ../code/FTCollections.py:167
@@ -88,45 +88,49 @@ msgstr "¡El módulo ha fallado con la excepción {}!"
 msgid "Processing completed. Errors: {}; Warnings: {}"
 msgstr "Procesamiento completado. Errores: {}; Avisos: {}"
 
-#: ../code/Help.py:73
+#: ../code/Help.py:80
 #, python-brace-format
 msgid "Failed to update {}. Error: {}"
 msgstr "Error al actualizar {}. Error: {}"
 
-#: ../code/Help.py:79
+#: ../code/Help.py:86
 #, python-brace-format
 msgid "No update available: {} {}"
 msgstr "No hay actualizaciones disponibles: {} {}"
 
-#: ../code/Help.py:82
+#: ../code/Help.py:89
 #, python-brace-format
 msgid "{} updated successfully! ({} → {})"
 msgstr "{} actualizado con éxito! ({} → {})"
 
-#: ../code/Help.py:129
+#: ../code/Help.py:100
+msgid "Internet not available."
+msgstr ""
+
+#: ../code/Help.py:140
 msgid "A framework for running Python scripts on a FieldWorks Language Explorer project."
 msgstr "Un framework para ejecutar scripts Python en un proyecto de Explorador de Lenguaje de FieldWorks."
 
-#: ../code/Help.py:140
+#: ../code/Help.py:151
 #, python-brace-format
 msgid "Modules installed: {}"
 msgstr "Módulos instalados: {}"
 
-#: ../code/Help.py:142
+#: ../code/Help.py:153
 #, python-brace-format
 msgid "Python version: {}"
 msgstr "Python versión: {}"
 
-#: ../code/Help.py:144
+#: ../code/Help.py:155
 #, python-brace-format
 msgid "FieldWorks version: {}"
 msgstr "Versión de FieldWorks: {}"
 
-#: ../code/Help.py:158
+#: ../code/Help.py:169
 msgid "E-mail"
 msgstr "E-mail"
 
-#: ../code/Help.py:192
+#: ../code/Help.py:203
 msgid "About FLExTools"
 msgstr "Acerca de FLExTools"
 
@@ -470,8 +474,8 @@ msgstr "Abrir la aplicación FieldWorks LCMBrowser"
 
 #. NOTE: Menu item
 #: ../code/UIMain.py:616
-msgid "Check for updates"
-msgstr "Buscar actualizaciones"
+msgid "Update"
+msgstr ""
 
 #. NOTE: Menu item
 #: ../code/UIMain.py:622
@@ -544,15 +548,15 @@ msgstr "Progreso"
 msgid "Opening project '{}' in FieldWorks..."
 msgstr "Abriendo proyecto '{}' en FieldWorks..."
 
-#: ../code/UIMain.py:1072
+#: ../code/UIMain.py:1073
 msgid "Checking for updates..."
 msgstr "Buscando actualizaciones..."
 
-#: ../code/UIMain.py:1075
+#: ../code/UIMain.py:1076
 msgid "Done"
 msgstr "Hecho"
 
-#: ../code/UIMain.py:1078
+#: ../code/UIMain.py:1079
 msgid "Restart FLExTools to use the latest version."
 msgstr "Reinicie FLExTools para usar la última versión."
 
