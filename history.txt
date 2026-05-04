@@ -12,7 +12,7 @@ FLExTools History
 
 ====== History =======
 
-2.3.3_TBD
+2.3.3_2026.5.4
 ---------------
 
 + New Modules:
@@ -27,7 +27,8 @@ FLExTools History
 + Bug fixes & new features:
     + #4 Added a browse button to the Choose Project dialog to open projects
       from a non-standard location.
-    + Added "Check for updates" to the Help menu.
+    + Added "Update" Help menu item, which checks for updates and installs
+      them if available.
     + Keep tab labels from wrapping and added more space around them.
     + #72: Fix Chinese converters for Flex Bulk Edit.
     + #59: Stop the main window going behind other windows.
