@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 24\n"
 "Language-Team: French\n"
 "Language: fr_FR\n"
-"PO-Revision-Date: 2026-05-04 22:18\n"
+"PO-Revision-Date: 2026-05-04 22:22\n"
 
 #. NOTE: Parameter = collection name
 #: ../code/FTCollections.py:141 ../code/FTCollections.py:167
@@ -105,7 +105,7 @@ msgstr "{} mis à jour avec succès ! ({} → {})"
 
 #: ../code/Help.py:100
 msgid "Internet not available."
-msgstr ""
+msgstr "Internet non disponible."
 
 #: ../code/Help.py:140
 msgid "A framework for running Python scripts on a FieldWorks Language Explorer project."
@@ -475,7 +475,7 @@ msgstr "Ouvrir l'application FieldWorks LCMBrowser"
 #. NOTE: Menu item
 #: ../code/UIMain.py:616
 msgid "Update"
-msgstr ""
+msgstr "Mise à jour"
 
 #. NOTE: Menu item
 #: ../code/UIMain.py:622
