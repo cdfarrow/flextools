@@ -9,7 +9,7 @@
 #----------------------------------------------------------------------------
 
 # We use the date of release for the version number: YYYY.M.D
-version = "2026.5.4"
+version = "2026.5.5"
 
 # Minimum and maximum supported versions of Fieldworks
 # (Later versions should work if the LCM interface hasn't changed.)
