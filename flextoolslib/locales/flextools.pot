@@ -83,45 +83,49 @@ msgstr ""
 msgid "Processing completed. Errors: {}; Warnings: {}"
 msgstr ""
 
-#: ../code/Help.py:73
+#: ../code/Help.py:80
 #, python-brace-format
 msgid "Failed to update {}. Error: {}"
 msgstr ""
 
-#: ../code/Help.py:79
+#: ../code/Help.py:86
 #, python-brace-format
 msgid "No update available: {} {}"
 msgstr ""
 
-#: ../code/Help.py:82
+#: ../code/Help.py:89
 #, python-brace-format
 msgid "{} updated successfully! ({} → {})"
 msgstr ""
 
-#: ../code/Help.py:129
-msgid "A framework for running Python scripts on a FieldWorks Language Explorer project."
+#: ../code/Help.py:100
+msgid "Internet not available."
 msgstr ""
 
 #: ../code/Help.py:140
+msgid "A framework for running Python scripts on a FieldWorks Language Explorer project."
+msgstr ""
+
+#: ../code/Help.py:151
 #, python-brace-format
 msgid "Modules installed: {}"
 msgstr ""
 
-#: ../code/Help.py:142
+#: ../code/Help.py:153
 #, python-brace-format
 msgid "Python version: {}"
 msgstr ""
 
-#: ../code/Help.py:144
+#: ../code/Help.py:155
 #, python-brace-format
 msgid "FieldWorks version: {}"
 msgstr ""
 
-#: ../code/Help.py:158
+#: ../code/Help.py:169
 msgid "E-mail"
 msgstr ""
 
-#: ../code/Help.py:192
+#: ../code/Help.py:203
 msgid "About FLExTools"
 msgstr ""
 
@@ -465,7 +469,7 @@ msgstr ""
 
 #. NOTE: Menu item
 #: ../code/UIMain.py:616
-msgid "Check for updates"
+msgid "Update"
 msgstr ""
 
 #. NOTE: Menu item
@@ -539,15 +543,15 @@ msgstr ""
 msgid "Opening project '{}' in FieldWorks..."
 msgstr ""
 
-#: ../code/UIMain.py:1072
+#: ../code/UIMain.py:1073
 msgid "Checking for updates..."
 msgstr ""
 
-#: ../code/UIMain.py:1075
+#: ../code/UIMain.py:1076
 msgid "Done"
 msgstr ""
 
-#: ../code/UIMain.py:1078
+#: ../code/UIMain.py:1079
 msgid "Restart FLExTools to use the latest version."
 msgstr ""
 
