@@ -2,7 +2,7 @@
 FLExTools History
 -----------------
 
-+ Supports: Fieldworks 9.0.17 - 9.3.8
++ Supports: Fieldworks 9.0.17 - 9.3.11
             (Later versions will most likely work, but are untested)
 + Supports: Python 3.9 - 3.13
 
